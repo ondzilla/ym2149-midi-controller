@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-body overflow-hidden;
+  }
+}
+
+@layer utilities {
+  .solder-point::before, .solder-point::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #f5ce53;
+      border-radius: 50%;
+      box-shadow: 0 0 4px #f5ce53;
+  }
+  .solder-tl::before { top: 4px; left: 4px; }
+  .solder-tr::after { top: 4px; right: 4px; }
+  .solder-bl::before { bottom: 4px; left: 4px; }
+  .solder-br::after { bottom: 4px; right: 4px; }
+  
+  .trace-line-h { height: 1px; background: #8eff71; opacity: 0.3; }
+  .trace-line-v { width: 1px; background: #8eff71; opacity: 0.3; }
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.knob-base {
+    background: radial-gradient(circle, #3a1a37 0%, #1b061a 100%);
+    box-shadow: inset 0 2px 4px rgba(255, 219, 246, 0.1);
+}
+.circuit-trace {
+    background: linear-gradient(90deg, transparent 0%, #8eff71 50%, transparent 100%);
+    height: 1px;
+    opacity: 0.3;
+}
+.silk-screen {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
