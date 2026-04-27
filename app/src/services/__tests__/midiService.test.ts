@@ -3,6 +3,7 @@ import { MidiService } from '../midiService';
 
 describe('MidiService', () => {
   let midiService: MidiService;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockOutputDevice: any;
 
   beforeEach(() => {
@@ -18,6 +19,7 @@ describe('MidiService', () => {
       onstatechange: null,
     };
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.spyOn(globalThis.navigator, 'requestMIDIAccess').mockResolvedValue(mockMIDIAccess as any);
     
     // Create new instance before each test
