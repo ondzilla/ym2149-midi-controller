@@ -33,19 +33,21 @@ describe('Arpeggiator', () => {
 
   it('should trigger CC 8 when Arp Octave changes', () => {
     render(<Arpeggiator />);
-    const octaveSelect = screen.getByRole('spinbutton', { name: /octave/i });
-    fireEvent.change(octaveSelect, { target: { value: '3' } });
+    const octaveSelect = screen.getByRole('combobox', { name: /octave/i });
+    fireEvent.change(octaveSelect, { target: { value: '+3' } });
     
-    // Expectation depends on user's arbitrary mapping logic, stubbing typical output
-    expect(midiService.sendCC).toHaveBeenCalledWith(1, 8, expect.any(Number));
+    expect(midiService.sendCC).toHaveBeenCalledWith(1, 8, 127); // CC8 value for +3
   });
 
   it('should trigger CC 6 when selecting an Arp Pattern', async () => {
     render(<Arpeggiator />);
-    const patternBtn = screen.getByRole('button', { name: /pattern 3/i });
-    await userEvent.click(patternBtn);
+    const patternSelect = screen.getByRole('combobox', { name: /pattern/i });
+    fireEvent.change(patternSelect, { target: { value: '3' } });
 
     expect(midiService.sendCC).toHaveBeenCalledWith(1, 6, 3); // Emitting index 3
+
+    // Check that display updates
+    expect(screen.getByText('PTN_3')).toBeInTheDocument();
   });
 
   it('should trigger CC 7 when Arp Mode changes', async () => {
