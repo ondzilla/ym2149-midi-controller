@@ -3,7 +3,7 @@ import { MidiService } from '../midiService';
 
 describe('MidiService', () => {
   let midiService: MidiService;
-  let mockOutputDevice: any;
+  let mockOutputDevice: { id: string; send: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     mockOutputDevice = {
@@ -18,7 +18,7 @@ describe('MidiService', () => {
       onstatechange: null,
     };
     
-    vi.spyOn(globalThis.navigator, 'requestMIDIAccess').mockResolvedValue(mockMIDIAccess as any);
+    vi.spyOn(globalThis.navigator, 'requestMIDIAccess').mockResolvedValue(mockMIDIAccess as unknown as MIDIAccess);
     
     // Create new instance before each test
     midiService = new MidiService();
