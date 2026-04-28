@@ -29,8 +29,14 @@ export const DrumPads: React.FC = () => {
           return (
             <button
               key={i}
-              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center cursor-pointer active:scale-95 transition-all group ${!isMapped ? 'hidden md:flex' : ''}`}
+              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center cursor-pointer active:scale-95 transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${!isMapped ? 'hidden md:flex' : ''}`}
               onMouseDown={() => isMapped && handleTrigger(drum.note)}
+              onKeyDown={(e) => {
+                if (isMapped && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  handleTrigger(drum.note);
+                }
+              }}
             >
               <div className={`w-1/2 h-1/2 border transition-all ${isMapped 
                 ? 'bg-surface-container-low border-secondary/40 group-hover:bg-secondary group-hover:shadow-[0_0_15px_#f5ce53]' 
