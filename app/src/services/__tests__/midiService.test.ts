@@ -11,17 +11,17 @@ describe('MidiService', () => {
       id: 'test-output',
       send: vi.fn(),
     };
-    
+
     // Globally mock the requestMIDIAccess to return an output device automatically
     const mockMIDIAccess = {
       inputs: new Map(),
       outputs: new Map([['test-output', mockOutputDevice]]),
       onstatechange: null,
     };
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.spyOn(globalThis.navigator, 'requestMIDIAccess').mockResolvedValue(mockMIDIAccess as any);
-    
+
     // Create new instance before each test
     midiService = new MidiService();
   });
@@ -32,7 +32,7 @@ describe('MidiService', () => {
 
     midiService.setOutputDevice('test-output');
     // Channel 1, CC 10, Value 127
-    midiService.sendCC(1, 10, 127); 
+    midiService.sendCC(1, 10, 127);
 
     // Expect status byte 0xB0 (Channel 1 implies zero-index 0)
     expect(mockOutputDevice.send).toHaveBeenCalledWith([0xB0, 10, 127]);
@@ -43,7 +43,7 @@ describe('MidiService', () => {
 
     midiService.setOutputDevice('test-output');
     // Channel 10, CC 1, Value 64
-    midiService.sendCC(10, 1, 64); 
+    midiService.sendCC(10, 1, 64);
 
     // Expect status byte 0xB9
     expect(mockOutputDevice.send).toHaveBeenCalledWith([0xB9, 1, 64]);
@@ -52,10 +52,10 @@ describe('MidiService', () => {
   it('should correctly format and send a Pitch Bend message', async () => {
     await new Promise(process.nextTick);
     midiService.setOutputDevice('test-output');
-    
+
     // Channel 1, Value 8192 (Center)
     midiService.sendPitchBend(1, 8192);
-    
+
     // Expected: status 0xE0, LSB 0, MSB 64
     expect(mockOutputDevice.send).toHaveBeenCalledWith([0xE0, 0, 64]);
   });
