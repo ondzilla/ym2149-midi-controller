@@ -47,14 +47,14 @@ export const Arpeggiator: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 flex-1">
         
         <div className="space-y-6 flex flex-col justify-center">
-          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group">
+          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
             <span className="font-headline text-[10px] text-tertiary">PATTERN_SELECT</span>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">PTN_{pattern}</span>
             <select aria-label="Pattern" value={pattern} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" onChange={(e) => playPattern(Number(e.target.value))}>
               {Array.from({ length: 16 }, (_, i) => <option key={i} value={i}>Pattern {i}</option>)}
             </select>
           </div>
-          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group">
+          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
             <span className="font-headline text-[10px] text-tertiary">OCTAVE_RANGE</span>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{octave}</span>
             <select aria-label="Octave" value={octave} onChange={handleOctave} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
@@ -63,7 +63,7 @@ export const Arpeggiator: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group">
+          <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
             <span className="font-headline text-[10px] text-tertiary">GATE_TIME</span>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{rate}%</span>
             <input type="range" min="0" max="100" aria-label="Rate" value={rate} onChange={handleRate} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" />
