@@ -1,6 +1,8 @@
 import React from 'react';
 import { midiService } from '../services/midiService';
 
+const PAD_COUNT = Array.from({ length: 16 });
+
 export const DrumPads: React.FC = () => {
   const drumMap = [
     { label: 'Kick', note: 48 },
@@ -22,7 +24,7 @@ export const DrumPads: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-4 sm:grid-cols-8 md:grid-cols-16 gap-3">
-        {Array.from({ length: 16 }).map((_, i) => {
+        {PAD_COUNT.map((_, i) => {
           const drum = drumMap[i];
           const isMapped = !!drum; // only map first 5 logically to keep test passing
           
