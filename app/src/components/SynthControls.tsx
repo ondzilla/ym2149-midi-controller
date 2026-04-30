@@ -2,33 +2,91 @@ import React, { useState } from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 
-export const SynthControls: React.FC = () => {
-  const activeChannel = 1;
+const AttackSlider: React.FC = () => {
   const [attack, setAttack] = useState('20');
-  const [decay, setDecay] = useState('50');
-  const [detune, setDetune] = useState('64');
-  const [pitchBend, setPitchBend] = useState('8192');
-
   const handleAttack = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAttack(e.target.value);
-    midiService.sendCC(activeChannel, 12, percentageToMidi(Number(e.target.value)));
+    midiService.sendCC(1, 12, percentageToMidi(Number(e.target.value)));
   };
+  return (
+    <div className="space-y-4">
+      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
+        <input type="range" min="0" max="100" aria-label="Attack" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={attack} onChange={handleAttack} />
+        <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${attack}%` }}></div>
+        <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${attack}%` }}></div>
+      </div>
+      <div className="text-center">
+        <div className="font-headline text-[10px] text-secondary">{attack}ms</div>
+        <div className="font-headline text-[10px] text-primary font-bold">ATTACK</div>
+      </div>
+    </div>
+  );
+};
 
+const DecaySlider: React.FC = () => {
+  const [decay, setDecay] = useState('50');
   const handleDecay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDecay(e.target.value);
-    midiService.sendCC(activeChannel, 11, percentageToMidi(Number(e.target.value)));
+    midiService.sendCC(1, 11, percentageToMidi(Number(e.target.value)));
   };
+  return (
+    <div className="space-y-4">
+      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
+        <input type="range" min="0" max="100" aria-label="Decay" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={decay} onChange={handleDecay} />
+        <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${decay}%` }}></div>
+        <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${decay}%` }}></div>
+      </div>
+      <div className="text-center">
+        <div className="font-headline text-[10px] text-secondary">{decay}ms</div>
+        <div className="font-headline text-[10px] text-primary font-bold">DECAY</div>
+      </div>
+    </div>
+  );
+};
 
+const DetuneSlider: React.FC = () => {
+  const [detune, setDetune] = useState('64');
   const handleDetune = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetune(e.target.value);
-    midiService.sendCC(activeChannel, 1, Number(e.target.value));
+    midiService.sendCC(1, 1, Number(e.target.value));
   };
+  return (
+    <div className="flex flex-col items-center gap-4 group">
+      <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-tertiary/20 p-1 cursor-pointer">
+        <input type="range" min="0" max="127" aria-label="Detune" value={detune} onChange={handleDetune} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
+        <div className="absolute bottom-1 left-1 right-1 bg-tertiary/40 rounded-full transition-all" style={{ height: `${(Number(detune) / 127) * 100}%` }}></div>
+        <div className="absolute left-1 right-1 h-4 bg-tertiary rounded-full shadow-[0_0_10px_#ff9cf4]" style={{ bottom: `calc(${(Number(detune) / 127) * 100}% - 8px)` }}></div>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <div className="font-headline text-[10px] text-tertiary">{Number(detune) - 64}</div>
+        <div className="font-headline text-[10px] text-tertiary font-bold">DETUNE</div>
+      </div>
+    </div>
+  );
+};
 
+const PitchBendSlider: React.FC = () => {
+  const [pitchBend, setPitchBend] = useState('8192');
   const handlePitchBend = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPitchBend(e.target.value);
-    midiService.sendPitchBend(activeChannel, Number(e.target.value));
+    midiService.sendPitchBend(1, Number(e.target.value));
   };
+  return (
+    <div className="flex flex-col items-center gap-4 group">
+      <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-secondary/20 p-1 cursor-pointer">
+        <input type="range" min="0" max="16383" aria-label="Pitch Bend" value={pitchBend} onChange={handlePitchBend} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
+        <div className="absolute bottom-1 left-1 right-1 bg-secondary/40 rounded-full transition-all" style={{ height: `${(Number(pitchBend) / 16383) * 100}%` }}></div>
+        <div className="absolute left-1 right-1 h-4 bg-secondary rounded-full shadow-[0_0_10px_#f5ce53]" style={{ bottom: `calc(${(Number(pitchBend) / 16383) * 100}% - 8px)` }}></div>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <div className="font-headline text-[10px] text-secondary">{Math.round(((Number(pitchBend) - 8192) / 8192) * 100)}%</div>
+        <div className="font-headline text-[10px] text-secondary font-bold">PITCH_BEND</div>
+      </div>
+    </div>
+  );
+};
 
+export const SynthControls: React.FC = () => {
   return (
     <>
       <h2 className="sr-only">Synth Controls</h2>
@@ -37,57 +95,10 @@ export const SynthControls: React.FC = () => {
         <h3 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">ENVELOPE_SHAPER_MOD</h3>
         
         <div className="grid grid-cols-4 gap-6 flex-1">
-          {/* Attack Slider */}
-          <div className="space-y-4">
-            <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
-              <input type="range" min="0" max="100" aria-label="Attack" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={attack} onChange={handleAttack} />
-              <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${attack}%` }}></div>
-              <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${attack}%` }}></div>
-            </div>
-            <div className="text-center">
-              <div className="font-headline text-[10px] text-secondary">{attack}ms</div>
-              <div className="font-headline text-[10px] text-primary font-bold">ATTACK</div>
-            </div>
-          </div>
-
-          {/* Decay Slider */}
-          <div className="space-y-4">
-            <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
-              <input type="range" min="0" max="100" aria-label="Decay" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={decay} onChange={handleDecay} />
-              <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${decay}%` }}></div>
-              <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${decay}%` }}></div>
-            </div>
-            <div className="text-center">
-              <div className="font-headline text-[10px] text-secondary">{decay}ms</div>
-              <div className="font-headline text-[10px] text-primary font-bold">DECAY</div>
-            </div>
-          </div>
-
-          {/* Detune Slider */}
-          <div className="flex flex-col items-center gap-4 group">
-            <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-tertiary/20 p-1 cursor-pointer">
-              <input type="range" min="0" max="127" aria-label="Detune" value={detune} onChange={handleDetune} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
-              <div className="absolute bottom-1 left-1 right-1 bg-tertiary/40 rounded-full transition-all" style={{ height: `${(Number(detune) / 127) * 100}%` }}></div>
-              <div className="absolute left-1 right-1 h-4 bg-tertiary rounded-full shadow-[0_0_10px_#ff9cf4]" style={{ bottom: `calc(${(Number(detune) / 127) * 100}% - 8px)` }}></div>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="font-headline text-[10px] text-tertiary">{Number(detune) - 64}</div>
-              <div className="font-headline text-[10px] text-tertiary font-bold">DETUNE</div>
-            </div>
-          </div>
-
-          {/* Pitch Bend Slider */}
-          <div className="flex flex-col items-center gap-4 group">
-            <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-secondary/20 p-1 cursor-pointer">
-              <input type="range" min="0" max="16383" aria-label="Pitch Bend" value={pitchBend} onChange={handlePitchBend} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
-              <div className="absolute bottom-1 left-1 right-1 bg-secondary/40 rounded-full transition-all" style={{ height: `${(Number(pitchBend) / 16383) * 100}%` }}></div>
-              <div className="absolute left-1 right-1 h-4 bg-secondary rounded-full shadow-[0_0_10px_#f5ce53]" style={{ bottom: `calc(${(Number(pitchBend) / 16383) * 100}% - 8px)` }}></div>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div className="font-headline text-[10px] text-secondary">{Math.round(((Number(pitchBend) - 8192) / 8192) * 100)}%</div>
-              <div className="font-headline text-[10px] text-secondary font-bold">PITCH_BEND</div>
-            </div>
-          </div>
+          <AttackSlider />
+          <DecaySlider />
+          <DetuneSlider />
+          <PitchBendSlider />
         </div>
       </section>
     </>
