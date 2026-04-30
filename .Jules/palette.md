@@ -1,3 +1,3 @@
-## 2024-04-28 - Fixing Keyboard Accessibility for Low-Latency Buttons
-**Learning:** Musical interfaces often use `onMouseDown` or `onPointerDown` for zero-latency interactions on drum pads/keys. However, standard `<button>` elements trigger via keyboard (Enter/Space) using the `onClick` event. Relying solely on `onMouseDown` completely breaks keyboard activation.
-**Action:** When building low-latency buttons, add explicit `onKeyDown` handlers listening for 'Enter' and ' ' (Space) to fire the same action as `onMouseDown`, and ensure `focus-visible` styles are included so keyboard users know which pad is focused.
+## 2024-04-29 - [Added `has-[:focus-visible]` styles to custom components]
+**Learning:** For components that hide native inputs with `opacity-0` but style their parent container (such as custom sliders or dropdowns), keyboard focus outlines are naturally hidden, destroying accessibility. Adding `:has(:focus-visible)` pseudo-class styling on the parent container successfully surfaces native input focus states onto custom UI components.
+**Action:** When building or enhancing custom UI elements where a native interactive element is visually hidden, systematically check for focus management and apply parent-level `:has(:focus-visible)` classes.
