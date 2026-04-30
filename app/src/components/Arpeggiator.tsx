@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 
+const PATTERNS = Array.from({ length: 16 });
+const OCTAVES = ['OFF', '-3', '-2', '-1', '0', '+1', '+2', '+3'];
+const GATE_LIGHTS = Array.from({ length: 8 });
+
 export const Arpeggiator: React.FC = () => {
   const channel = 1;
   const [rate, setRate] = useState('50');
@@ -51,14 +55,14 @@ export const Arpeggiator: React.FC = () => {
             <span className="font-headline text-[10px] text-tertiary">PATTERN_SELECT</span>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">PTN_{pattern}</span>
             <select aria-label="Pattern" value={pattern} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" onChange={(e) => playPattern(Number(e.target.value))}>
-              {Array.from({ length: 16 }, (_, i) => <option key={i} value={i}>Pattern {i}</option>)}
+              {PATTERNS.map((_, i) => <option key={i} value={i}>Pattern {i}</option>)}
             </select>
           </div>
           <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group">
             <span className="font-headline text-[10px] text-tertiary">OCTAVE_RANGE</span>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{octave}</span>
             <select aria-label="Octave" value={octave} onChange={handleOctave} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
-              {['OFF', '-3', '-2', '-1', '0', '+1', '+2', '+3'].map(opt => (
+              {OCTAVES.map(opt => (
                 <option key={opt} value={opt}>{opt} OCT</option>
               ))}
             </select>
@@ -72,7 +76,7 @@ export const Arpeggiator: React.FC = () => {
 
         <div className="flex flex-col gap-4 justify-center">
           <div className="flex-1 bg-surface-container-lowest border border-primary/20 p-2 flex flex-wrap gap-2 content-start min-h-[100px]">
-            {Array.from({ length: 8 }, (_, i) => (
+            {GATE_LIGHTS.map((_, i) => (
               <div key={i} className={`w-4 h-4 ${i % 2 === 0 ? 'bg-primary shadow-[0_0_5px_#8eff71]' : 'bg-primary/20 border border-primary/40'}`}></div>
             ))}
           </div>
@@ -82,7 +86,7 @@ export const Arpeggiator: React.FC = () => {
             MODE: {arpMode ? 'SELF' : 'VOICE A'}
           </button>
           <div className="sr-only">
-            {Array.from({ length: 16 }, (_, i) => (
+            {PATTERNS.map((_, i) => (
               <button key={i} onClick={() => playPattern(i)}>Pattern {i}</button>
             ))}
           </div>

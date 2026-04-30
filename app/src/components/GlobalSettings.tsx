@@ -48,6 +48,8 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
   </div>
 );
 
+const CHANNELS = Array.from({ length: 16 });
+
 export const GlobalSettings: React.FC = () => {
   const [channel, setChannel] = useState('1');
   const [polyphony, setPolyphony] = useState(false);
@@ -87,7 +89,7 @@ export const GlobalSettings: React.FC = () => {
           onChange={handleChannel}
           className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
         >
-          {Array.from({ length: 16 }, (_, i) => (
+          {CHANNELS.map((_, i) => (
             <option key={i + 1} value={String(i + 1)}>
               {String(i + 1).padStart(2, '0')}
             </option>
