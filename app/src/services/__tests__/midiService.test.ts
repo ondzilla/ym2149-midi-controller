@@ -59,4 +59,27 @@ describe('MidiService', () => {
     // Expected: status 0xE0, LSB 0, MSB 64
     expect(mockOutputDevice.send).toHaveBeenCalledWith([0xE0, 0, 64]);
   });
+
+  it('should correctly format and send a Note On message on MIDI Channel 1', async () => {
+    await new Promise(process.nextTick);
+    midiService.setOutputDevice('test-output');
+
+    // Channel 1, Note 60 (Middle C), Velocity 127
+    midiService.sendNoteOn(1, 60, 127);
+
+    // Expected: status 0x90, Note 60, Velocity 127
+    expect(mockOutputDevice.send).toHaveBeenCalledWith([0x90, 60, 127]);
+  });
+
+  it('should correctly format and send a Note On message on MIDI Channel 10', async () => {
+    await new Promise(process.nextTick);
+    midiService.setOutputDevice('test-output');
+
+    // Channel 10, Note 60, Velocity 64
+    midiService.sendNoteOn(10, 60, 64);
+
+    // Expected: status 0x99, Note 60, Velocity 64
+    expect(mockOutputDevice.send).toHaveBeenCalledWith([0x99, 60, 64]);
+  });
+
 });
