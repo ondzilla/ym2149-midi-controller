@@ -27,7 +27,7 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
   activeTextColorClass,
   inactiveTextColorClass = 'text-primary'
 }) => (
-  <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-0">
+  <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-0 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
     <button
       type="button"
       className="absolute inset-0 w-full h-full cursor-pointer z-10 opacity-0"
@@ -78,7 +78,7 @@ export const GlobalSettings: React.FC = () => {
     <>
       <h2 className="sr-only">Global Settings</h2>
       
-      <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest flex justify-between items-center group relative cursor-pointer hover:bg-black/60 transition-colors">
+      <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest flex justify-between items-center group relative cursor-pointer hover:bg-black/60 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
         <label className="font-headline text-[10px] text-tertiary tracking-widest block opacity-60">MIDI_CHANNEL</label>
         <span className="font-headline text-secondary text-sm font-bold w-12 text-right pointer-events-none">CH_{channel}</span>
         <select 

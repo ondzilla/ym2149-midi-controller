@@ -1,3 +1,3 @@
-## 2024-04-28 - Fixing Keyboard Accessibility for Low-Latency Buttons
-**Learning:** Musical interfaces often use `onMouseDown` or `onPointerDown` for zero-latency interactions on drum pads/keys. However, standard `<button>` elements trigger via keyboard (Enter/Space) using the `onClick` event. Relying solely on `onMouseDown` completely breaks keyboard activation.
-**Action:** When building low-latency buttons, add explicit `onKeyDown` handlers listening for 'Enter' and ' ' (Space) to fire the same action as `onMouseDown`, and ensure `focus-visible` styles are included so keyboard users know which pad is focused.
+## 2024-04-30 - Accessible Custom Form Controls
+**Learning:** Using `opacity-0` on native interactive elements (like inputs or selects) layered over custom UI removes native keyboard focus indicators, causing severe accessibility issues for keyboard users.
+**Action:** Use Tailwind's `has-[:focus-visible]` utility classes on the parent wrapper element to apply standardized, visible focus indicators (e.g., `has-[:focus-visible]:ring-2`) when the hidden native element receives focus.
