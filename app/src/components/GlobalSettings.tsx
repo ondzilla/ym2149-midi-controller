@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { midiService } from '../services/midiService';
+import { usePatchState } from '../hooks/usePatchState';
 
 
 interface SettingToggleProps {
@@ -51,10 +52,19 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
 const CHANNELS = Array.from({ length: 16 });
 
 export const GlobalSettings: React.FC = () => {
-  const [channel, setChannel] = useState('1');
-  const [polyphony, setPolyphony] = useState(false);
-  const [bank, setBank] = useState('A');
-  const [velocity, setVelocity] = useState(false);
+  const [channel, setChannel] = usePatchState('globalChannel', '1');
+
+  const [polyphony, setPolyphony] = usePatchState('globalPolyphony', false, (val) => {
+    try { midiService.sendCC(Number(channel), 10, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [bank, setBank] = usePatchState('globalBank', 'A', (val) => {
+    try { midiService.sendCC(Number(channel), 9, val === 'B' ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [velocity, setVelocity] = usePatchState('globalVelocity', false, (val) => {
+    try { midiService.sendCC(Number(channel), 4, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
+import { usePatchState } from '../hooks/usePatchState';
 
 const PATTERNS = Array.from({ length: 16 });
 const OCTAVES = ['OFF', '-3', '-2', '-1', '0', '+1', '+2', '+3'];
@@ -8,10 +9,32 @@ const GATE_LIGHTS = Array.from({ length: 8 });
 
 export const Arpeggiator: React.FC = () => {
   const channel = 1;
-  const [rate, setRate] = useState('50');
-  const [octave, setOctave] = useState('0');
-  const [arpMode, setArpMode] = useState(false);
-  const [pattern, setPattern] = useState(0);
+  const [rate, setRate] = usePatchState('arpRate', '50', (val) => {
+    try { midiService.sendCC(channel, 5, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [octave, setOctave] = usePatchState('arpOctave', '0', (val) => {
+    let ccValue = 0;
+    switch (val) {
+      case 'OFF': ccValue = 0; break;
+      case '-3': ccValue = 10; break;
+      case '-2': ccValue = 32; break;
+      case '-1': ccValue = 53; break;
+      case '0': ccValue = 74; break;
+      case '+1': ccValue = 95; break;
+      case '+2': ccValue = 116; break;
+      case '+3': ccValue = 127; break;
+    }
+    try { midiService.sendCC(channel, 8, ccValue); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [arpMode, setArpMode] = usePatchState('arpMode', false, (val) => {
+    try { midiService.sendCC(channel, 7, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [pattern, setPattern] = usePatchState('arpPattern', 0, (val) => {
+    try { midiService.sendCC(channel, 6, val); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRate(e.target.value);
