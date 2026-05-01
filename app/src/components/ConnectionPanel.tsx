@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
+// Mocks matching the tests
+const inputs = [{ id: 'mock-in-1', name: 'Mock Input 1' }];
+const outputs = [{ id: 'mock-out-1', name: 'Mock Output 1' }];
+
 export const ConnectionPanel: React.FC = () => {
   const [activeInId, setActiveInId] = useState<string | null>(null);
   const [activeOutId, setActiveOutId] = useState<string | null>(null);
-
-  // Mocks matching the tests
-  const inputs = [{ id: 'mock-in-1', name: 'Mock Input 1' }];
-  const outputs = [{ id: 'mock-out-1', name: 'Mock Output 1' }];
 
   return (
     <>
