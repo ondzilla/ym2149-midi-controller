@@ -1,3 +1,0 @@
-## 2024-04-29 - [Added `has-[:focus-visible]` styles to custom components]
-**Learning:** For components that hide native inputs with `opacity-0` but style their parent container (such as custom sliders or dropdowns), keyboard focus outlines are naturally hidden, destroying accessibility. Adding `:has(:focus-visible)` pseudo-class styling on the parent container successfully surfaces native input focus states onto custom UI components.
-**Action:** When building or enhancing custom UI elements where a native interactive element is visually hidden, systematically check for focus management and apply parent-level `:has(:focus-visible)` classes.
