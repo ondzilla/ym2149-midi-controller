@@ -1,4 +1,25 @@
+import { presetManager } from '../../services/presetManager';
+
 export function Sidebar() {
+  const handleSavePatch = () => {
+    const name = window.prompt('Enter patch name to save:');
+    if (name) {
+      presetManager.savePreset(name);
+    }
+  };
+
+  const handleLoadPatch = () => {
+    const names = presetManager.getPresetNames();
+    if (names.length === 0) {
+      window.alert('No saved patches found.');
+      return;
+    }
+    const name = window.prompt(`Enter patch name to load (${names.join(', ')}):`);
+    if (name) {
+      presetManager.loadPreset(name);
+    }
+  };
+
   return (
     <aside className="fixed left-0 top-0 h-full flex flex-col z-40 bg-[#1b061a] border-r border-[#32152f] w-64 hidden lg:flex">
       <div className="p-6">
@@ -32,10 +53,16 @@ export function Sidebar() {
         </div>
       </nav>
       <div className="p-4 flex flex-col gap-4">
-        <button className="w-full bg-primary text-on-primary py-3 font-headline text-xs font-bold tracking-widest active:opacity-80 transition-opacity">
+        <button
+          onClick={handleSavePatch}
+          className="w-full bg-primary text-on-primary py-3 font-headline text-xs font-bold tracking-widest active:opacity-80 transition-opacity cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high"
+        >
           SAVE_PATCH
         </button>
-        <button disabled className="w-full bg-secondary text-on-secondary py-3 font-headline text-xs font-bold tracking-widest opacity-50 cursor-not-allowed border border-secondary/20">
+        <button
+          onClick={handleLoadPatch}
+          className="w-full bg-secondary text-on-secondary py-3 font-headline text-xs font-bold tracking-widest active:opacity-80 transition-opacity cursor-pointer border border-secondary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high"
+        >
           LOAD_PATCH
         </button>
         <a href="https://github.com/Chiptune-Anamnesis/ARDUINO-YM2149F" target="_blank" rel="noopener noreferrer" className="text-[#ff9cf4] opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:text-[#8eff71] flex items-center gap-3 px-4 transition-colors">

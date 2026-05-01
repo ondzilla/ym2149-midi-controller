@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
+import { usePatchState } from '../hooks/usePatchState';
 
 export const SynthControls: React.FC = () => {
   const activeChannel = 1;
-  const [attack, setAttack] = useState('20');
-  const [decay, setDecay] = useState('50');
-  const [detune, setDetune] = useState('64');
-  const [pitchBend, setPitchBend] = useState('8192');
+  const [attack, setAttack] = usePatchState('attack', '20', (val) => {
+    try { midiService.sendCC(activeChannel, 73, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
+  const [decay, setDecay] = usePatchState('decay', '50', (val) => {
+    try { midiService.sendCC(activeChannel, 11, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
+  const [detune, setDetune] = usePatchState('detune', '64', (val) => {
+    try { midiService.sendCC(activeChannel, 1, Number(val)); } catch (e) { console.warn('MIDI error', e); }
+  });
+  const [pitchBend, setPitchBend] = usePatchState('pitchBend', '8192', (val) => {
+    try { midiService.sendPitchBend(activeChannel, Number(val)); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleAttack = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAttack(e.target.value);
@@ -96,8 +105,12 @@ export const SynthControls: React.FC = () => {
 
 export const VibratoLFO: React.FC = () => {
   const activeChannel = 1;
-  const [vibratoRate, setVibratoRate] = useState(65);
-  const [vibratoDepth, setVibratoDepth] = useState(40);
+  const [vibratoRate, setVibratoRate] = usePatchState('vibratoRate', 65, (val) => {
+    try { midiService.sendCC(activeChannel, 2, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
+  const [vibratoDepth, setVibratoDepth] = usePatchState('vibratoDepth', 40, (val) => {
+    try { midiService.sendCC(activeChannel, 3, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleVibratoRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVibratoRate(Number(e.target.value));

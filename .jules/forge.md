@@ -1,0 +1,3 @@
+## 2026-05-01 - [usePatchState Hook for UI & MIDI Sync]
+Challenge: Implementing local storage preset management for UI state without breaking existing MIDI dispatch behavior. React components previously relied directly on `useState` and inline `onChange` callbacks to trigger MIDI. Moving to a Preset Manager risked separating the UI state from the hardware sync when patches were loaded passively.
+Solution: Created a reusable `usePatchState` hook that wraps `useState`. It not only reads/writes to the `PresetManager` singleton (backed by `localStorage`) but accepts an optional `onSync` callback. When the Preset Manager loads a new patch, the hook triggers this callback to instantly sync the new value to the hardware via Web MIDI `sendCC`, preserving hardware-UI parity.
