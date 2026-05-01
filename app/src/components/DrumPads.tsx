@@ -3,15 +3,15 @@ import { midiService } from '../services/midiService';
 
 const PAD_COUNT = Array.from({ length: 16 });
 
-export const DrumPads: React.FC = () => {
-  const drumMap = [
-    { label: 'Kick', note: 48 },
-    { label: 'Snare', note: 50 },
-    { label: 'Hi-Hat', note: 52 },
-    { label: 'TRG_04', note: 54 },
-    { label: 'TRG_05', note: 56 },
-  ];
+const drumMap = [
+  { label: 'Kick', note: 48 },
+  { label: 'Snare', note: 50 },
+  { label: 'Hi-Hat', note: 52 },
+  { label: 'TRG_04', note: 54 },
+  { label: 'TRG_05', note: 56 },
+];
 
+export const DrumPads: React.FC = () => {
   const handleTrigger = (note: number) => {
     midiService.sendNoteOn(9, note, 127);
   };
