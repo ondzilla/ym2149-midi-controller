@@ -6,9 +6,11 @@ import { usePatchState } from '../hooks/usePatchState';
 export const SynthControls: React.FC = () => {
   const activeChannel = 1;
   const [attack, setAttack] = usePatchState('attack', '20', (val) => {
-    try { midiService.sendCC(activeChannel, 73, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+    // YM2149 Envelope Attack mapped to CC12 (per firmware specs)
+    try { midiService.sendCC(activeChannel, 12, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
   });
   const [decay, setDecay] = usePatchState('decay', '50', (val) => {
+    // YM2149 Envelope Decay mapped to CC11 (per firmware specs)
     try { midiService.sendCC(activeChannel, 11, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
   });
   const [detune, setDetune] = usePatchState('detune', '64', (val) => {
