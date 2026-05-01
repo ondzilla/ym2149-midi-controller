@@ -31,7 +31,10 @@ export const DrumPads: React.FC = () => {
           return (
             <button
               key={i}
-              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center cursor-pointer active:scale-95 transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${!isMapped ? 'hidden md:flex' : ''}`}
+              disabled={!isMapped}
+              title={isMapped ? drum.label : 'Unmapped Pad'}
+              aria-label={isMapped ? drum.label : 'Unmapped Pad'}
+              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${!isMapped ? 'hidden md:flex opacity-30 cursor-not-allowed' : 'cursor-pointer active:scale-95'}`}
               onMouseDown={() => isMapped && handleTrigger(drum.note)}
               onKeyDown={(e) => {
                 if (isMapped && (e.key === 'Enter' || e.key === ' ')) {
@@ -42,7 +45,7 @@ export const DrumPads: React.FC = () => {
             >
               <div className={`w-1/2 h-1/2 border transition-all ${isMapped 
                 ? 'bg-surface-container-low border-secondary/40 group-hover:bg-secondary group-hover:shadow-[0_0_15px_#f5ce53]' 
-                : 'bg-surface-container-low border-primary/40 group-hover:bg-primary group-hover:shadow-[0_0_15px_#8eff71]'}`}></div>
+                : 'bg-surface-container-low border-primary/20'}`}></div>
               {/* Invisible test handles */}
               {isMapped && <span className="sr-only">{drum.label}</span>}
             </button>
