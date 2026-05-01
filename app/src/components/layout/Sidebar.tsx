@@ -35,6 +35,9 @@ export function Sidebar() {
         <button className="w-full bg-primary text-on-primary py-3 font-headline text-xs font-bold tracking-widest active:opacity-80 transition-opacity">
           SAVE_PATCH
         </button>
+        <button disabled className="w-full bg-secondary text-on-secondary py-3 font-headline text-xs font-bold tracking-widest opacity-50 cursor-not-allowed border border-secondary/20">
+          LOAD_PATCH
+        </button>
         <a href="https://github.com/Chiptune-Anamnesis/ARDUINO-YM2149F" target="_blank" rel="noopener noreferrer" className="text-[#ff9cf4] opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:text-[#8eff71] flex items-center gap-3 px-4 transition-colors">
           <span className="material-symbols-outlined text-lg">menu_book</span>
           <span>Docs</span>
