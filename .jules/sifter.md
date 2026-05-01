@@ -1,0 +1,1 @@
+## 2024-05-01 - [Audit Finding] Observation: `attack` state in `SynthControls.tsx` initialized using hallucinated MIDI CC 73 instead of the hardware-supported CC 12. Correction: Updated `usePatchState` initialization for `attack` to use CC 12.
