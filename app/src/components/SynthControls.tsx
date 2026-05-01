@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
+import { usePatchState } from '../hooks/usePatchState';
 
 const AttackSlider: React.FC = () => {
-  const [attack, setAttack] = useState('20');
+  const [attack, setAttack] = usePatchState('attack', '20', (val) => {
+    try { midiService.sendCC(1, 12, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
   const handleAttack = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAttack(e.target.value);
     midiService.sendCC(1, 12, percentageToMidi(Number(e.target.value)));
   };
   return (
     <div className="space-y-4">
-      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
+      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
         <input type="range" min="0" max="100" aria-label="Attack" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={attack} onChange={handleAttack} />
         <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${attack}%` }}></div>
         <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${attack}%` }}></div>
@@ -24,14 +27,16 @@ const AttackSlider: React.FC = () => {
 };
 
 const DecaySlider: React.FC = () => {
-  const [decay, setDecay] = useState('50');
+  const [decay, setDecay] = usePatchState('decay', '50', (val) => {
+    try { midiService.sendCC(1, 11, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
   const handleDecay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDecay(e.target.value);
     midiService.sendCC(1, 11, percentageToMidi(Number(e.target.value)));
   };
   return (
     <div className="space-y-4">
-      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group">
+      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
         <input type="range" min="0" max="100" aria-label="Decay" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={decay} onChange={handleDecay} />
         <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${decay}%` }}></div>
         <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${decay}%` }}></div>
@@ -45,13 +50,15 @@ const DecaySlider: React.FC = () => {
 };
 
 const DetuneSlider: React.FC = () => {
-  const [detune, setDetune] = useState('64');
+  const [detune, setDetune] = usePatchState('detune', '64', (val) => {
+    try { midiService.sendCC(1, 1, Number(val)); } catch (e) { console.warn('MIDI error', e); }
+  });
   const handleDetune = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetune(e.target.value);
     midiService.sendCC(1, 1, Number(e.target.value));
   };
   return (
-    <div className="flex flex-col items-center gap-4 group">
+    <div className="flex flex-col items-center gap-4 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
       <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-tertiary/20 p-1 cursor-pointer">
         <input type="range" min="0" max="127" aria-label="Detune" value={detune} onChange={handleDetune} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
         <div className="absolute bottom-1 left-1 right-1 bg-tertiary/40 rounded-full transition-all" style={{ height: `${(Number(detune) / 127) * 100}%` }}></div>
@@ -66,13 +73,15 @@ const DetuneSlider: React.FC = () => {
 };
 
 const PitchBendSlider: React.FC = () => {
-  const [pitchBend, setPitchBend] = useState('8192');
+  const [pitchBend, setPitchBend] = usePatchState('pitchBend', '8192', (val) => {
+    try { midiService.sendPitchBend(1, Number(val)); } catch (e) { console.warn('MIDI error', e); }
+  });
   const handlePitchBend = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPitchBend(e.target.value);
     midiService.sendPitchBend(1, Number(e.target.value));
   };
   return (
-    <div className="flex flex-col items-center gap-4 group">
+    <div className="flex flex-col items-center gap-4 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
       <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-secondary/20 p-1 cursor-pointer">
         <input type="range" min="0" max="16383" aria-label="Pitch Bend" value={pitchBend} onChange={handlePitchBend} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
         <div className="absolute bottom-1 left-1 right-1 bg-secondary/40 rounded-full transition-all" style={{ height: `${(Number(pitchBend) / 16383) * 100}%` }}></div>
@@ -107,8 +116,12 @@ export const SynthControls: React.FC = () => {
 
 export const VibratoLFO: React.FC = () => {
   const activeChannel = 1;
-  const [vibratoRate, setVibratoRate] = useState(65);
-  const [vibratoDepth, setVibratoDepth] = useState(40);
+  const [vibratoRate, setVibratoRate] = usePatchState('vibratoRate', 65, (val) => {
+    try { midiService.sendCC(activeChannel, 2, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
+  const [vibratoDepth, setVibratoDepth] = usePatchState('vibratoDepth', 40, (val) => {
+    try { midiService.sendCC(activeChannel, 3, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleVibratoRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVibratoRate(Number(e.target.value));
@@ -126,7 +139,7 @@ export const VibratoLFO: React.FC = () => {
       <h2 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">VIBRATO_LFO_PATH</h2>
       
       <div className="flex flex-col md:flex-row items-center gap-10">
-        <div className="relative w-32 h-32 flex items-center justify-center shrink-0 group">
+        <div className="relative w-32 h-32 flex items-center justify-center shrink-0 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
           <input type="range" min="0" max="100" aria-label="Vibrato Rate" value={vibratoRate} onChange={handleVibratoRate} className="absolute inset-0 opacity-0 z-20 cursor-pointer" />
           <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
             <circle className="text-surface-container-lowest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeWidth="8"></circle>
@@ -148,7 +161,7 @@ export const VibratoLFO: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group">
+          <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
             <div className="font-headline text-[10px] text-tertiary mb-2 flex justify-between">
               <span>DEPTH_MOD</span>
               <span className="text-secondary">{vibratoDepth}%</span>

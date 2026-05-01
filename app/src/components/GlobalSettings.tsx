@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { midiService } from '../services/midiService';
+import { usePatchState } from '../hooks/usePatchState';
 
 
 interface SettingToggleProps {
@@ -27,7 +28,7 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
   activeTextColorClass,
   inactiveTextColorClass = 'text-primary'
 }) => (
-  <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-0">
+  <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-0 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
     <button
       type="button"
       className="absolute inset-0 w-full h-full cursor-pointer z-10 opacity-0"
@@ -51,10 +52,19 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
 const CHANNELS = Array.from({ length: 16 });
 
 export const GlobalSettings: React.FC = () => {
-  const [channel, setChannel] = useState('1');
-  const [polyphony, setPolyphony] = useState(false);
-  const [bank, setBank] = useState('A');
-  const [velocity, setVelocity] = useState(false);
+  const [channel, setChannel] = usePatchState('globalChannel', '1');
+
+  const [polyphony, setPolyphony] = usePatchState('globalPolyphony', false, (val) => {
+    try { midiService.sendCC(Number(channel), 10, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [bank, setBank] = usePatchState('globalBank', 'A', (val) => {
+    try { midiService.sendCC(Number(channel), 9, val === 'B' ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const [velocity, setVelocity] = usePatchState('globalVelocity', false, (val) => {
+    try { midiService.sendCC(Number(channel), 4, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+  });
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -80,7 +90,7 @@ export const GlobalSettings: React.FC = () => {
     <>
       <h2 className="sr-only">Global Settings</h2>
       
-      <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest flex justify-between items-center group relative cursor-pointer hover:bg-black/60 transition-colors">
+      <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest flex justify-between items-center group relative cursor-pointer hover:bg-black/60 transition-colors has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
         <label className="font-headline text-[10px] text-tertiary tracking-widest block opacity-60">MIDI_CHANNEL</label>
         <span className="font-headline text-secondary text-sm font-bold w-12 text-right pointer-events-none">CH_{channel}</span>
         <select 

@@ -1,0 +1,43 @@
+--- app/src/hooks/usePatchState.ts
++++ app/src/hooks/usePatchState.ts
+@@ -1,4 +1,4 @@
+-import { useState, useEffect } from 'react';
++import { useState, useEffect, useCallback, useRef } from 'react';
+ import { presetManager } from '../services/presetManager';
+
+ export function usePatchState<T>(
+@@ -6,6 +6,9 @@
+   initialValue: T,
+   onSync?: (value: T) => void
+ ): [T, (value: T) => void] {
++  const onSyncRef = useRef(onSync);
++  onSyncRef.current = onSync;
++
+   // Initialize from preset manager if it exists, otherwise use initialValue
+   const [value, setValue] = useState<T>(() => {
+     const storedValue = presetManager.getValue(key);
+@@ -21,18 +24,18 @@
+       if (key in state) {
+         const newValue = state[key] as T;
+         setValue(newValue);
+-        if (onSync) {
+-          onSync(newValue);
++        if (onSyncRef.current) {
++          onSyncRef.current(newValue);
+         }
+       }
+     });
+     return unsubscribe;
+-  }, [key, onSync]);
++  }, [key]);
+
+   // Wrapped setter to update both React state and PresetManager state
+-  const setPatchState = (newValue: T) => {
++  const setPatchState = useCallback((newValue: T) => {
+     setValue(newValue);
+     presetManager.setValue(key, newValue);
+-  };
++  }, [key]);
+
+   return [value, setPatchState];
+ }

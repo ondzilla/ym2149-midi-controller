@@ -17,7 +17,7 @@ export const ConnectionPanel: React.FC = () => {
 
       <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest">
         <label className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_INPUT</label>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
           <select 
             aria-label="Input Device" 
             value={activeInId || ''} 
@@ -32,7 +32,7 @@ export const ConnectionPanel: React.FC = () => {
 
       <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest">
         <label className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_OUTPUT</label>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
           <select 
             aria-label="Output Device" 
             value={activeOutId || ''} 
