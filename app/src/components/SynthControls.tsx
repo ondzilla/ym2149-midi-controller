@@ -4,7 +4,8 @@ import { percentageToMidi } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
 
 export const SynthControls: React.FC = () => {
-  const activeChannel = 1;
+  const [globalChannel] = usePatchState('globalChannel', '1');
+  const activeChannel = Number(globalChannel);
   const [attack, setAttack] = usePatchState('attack', '20', (val) => {
     // YM2149 Envelope Attack mapped to CC12 (per firmware specs)
     try { midiService.sendCC(activeChannel, 12, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
@@ -106,7 +107,8 @@ export const SynthControls: React.FC = () => {
 };
 
 export const VibratoLFO: React.FC = () => {
-  const activeChannel = 1;
+  const [globalChannel] = usePatchState('globalChannel', '1');
+  const activeChannel = Number(globalChannel);
   const [vibratoRate, setVibratoRate] = usePatchState('vibratoRate', 65, (val) => {
     try { midiService.sendCC(activeChannel, 2, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
   });
@@ -144,14 +146,6 @@ export const VibratoLFO: React.FC = () => {
         </div>
 
         <div className="flex-1 space-y-6 w-full">
-          <div className="bg-surface-container-lowest p-3 border-l-4 border-primary relative">
-            <div className="font-headline text-[10px] text-tertiary mb-1">WAVEFORM_TYPE</div>
-            <div className="flex gap-4">
-              <span className="material-symbols-outlined text-primary text-xl">water_drop</span>
-              <span className="font-headline text-sm text-on-surface font-bold">TRIANGLE_BI</span>
-            </div>
-          </div>
-          
           <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
             <div className="font-headline text-[10px] text-tertiary mb-2 flex justify-between">
               <span>DEPTH_MOD</span>
