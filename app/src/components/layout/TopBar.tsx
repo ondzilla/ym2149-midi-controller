@@ -2,9 +2,13 @@ import { midiService } from '../../services/midiService';
 
 export function TopBar() {
   const handlePanic = () => {
-    // Send All Notes Off (CC 123) to all 16 MIDI channels
-    for (let i = 1; i <= 16; i++) {
-      midiService.sendCC(i, 123, 0);
+    try {
+      // Send All Notes Off (CC 123) to all 16 MIDI channels
+      for (let i = 1; i <= 16; i++) {
+        midiService.sendCC(i, 123, 0);
+      }
+    } catch (error) {
+      console.error('Failed to send Panic (All Notes Off) message:', error);
     }
   };
 
