@@ -1,3 +1,6 @@
 ## 2026-05-01 - [React Re-render Minimization on Slider Updates]
 **Learning:** Components driving fast, continuous updates (like range sliders controlling Web MIDI CC via `usePatchState`) will trigger rapid re-renders of the entire parent component if not isolated. In components containing multiple `Array.from` mappings or complex layouts (like `Arpeggiator`), this causes noticeable garbage collection pressure and layout thrashing.
 **Action:** Extract continuously updating form controls (e.g., `ArpRateControl`) into isolated child components to scope the state changes to the smallest possible DOM tree. Additionally, move static reference arrays outside of the component functional scope to prevent re-allocation on every render.
+## 2026-05-01 - [SynthControls Re-renders Prevented]
+**Learning:** Extracting individual inputs/controls into their own dedicated components to localize state updates prevents unnecessary parent re-renders. This works exceptionally well for React components handling rapid input from users.
+**Action:** When creating components with lots of active state (e.g., input forms with range sliders that update on drag), isolate them in standalone components where possible.
