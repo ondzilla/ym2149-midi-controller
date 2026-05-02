@@ -44,6 +44,26 @@ export const ConnectionPanel: React.FC = () => {
           </select>
         </div>
       </div>
+
+      <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest opacity-50 pointer-events-none cursor-not-allowed">
+        <label className="font-headline text-[10px] text-tertiary tracking-widest block mb-2">PATCH_MEMORY (WIP)</label>
+        <div className="flex items-center gap-2">
+          <select
+            aria-label="Select Preset"
+            disabled
+            className="flex-1 bg-surface-container-lowest text-tertiary text-xs font-headline border-none ring-0 outline-none p-1 placeholder-opacity-50"
+          >
+            <option value="">Select Preset...</option>
+          </select>
+          <button
+            type="button"
+            disabled
+            className="bg-surface-container-lowest text-tertiary font-headline text-[10px] font-bold tracking-widest px-3 py-1"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
     </>
   );
 };

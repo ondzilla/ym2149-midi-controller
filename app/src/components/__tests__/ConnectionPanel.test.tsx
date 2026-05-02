@@ -17,8 +17,8 @@ describe('ConnectionPanel', () => {
 
   it('should render device selection dropdowns', () => {
     render(<ConnectionPanel />);
-    // Should render two selects (Input and Output)
+    // Should render three selects (Input, Output, and Preset)
     const dropdowns = screen.getAllByRole('combobox');
-    expect(dropdowns).toHaveLength(2);
+    expect(dropdowns).toHaveLength(3);
   });
 });
