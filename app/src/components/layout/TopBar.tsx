@@ -22,6 +22,7 @@ export function TopBar() {
           <button
             type="button"
             aria-label="Settings"
+            title="Settings"
             className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >
             settings
@@ -29,6 +30,7 @@ export function TopBar() {
           <button
             type="button"
             aria-label="All Notes Off (Panic)"
+            title="All Notes Off (Panic)"
             onClick={handlePanic}
             className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >
