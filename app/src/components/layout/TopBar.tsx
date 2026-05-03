@@ -2,9 +2,13 @@ import { midiService } from '../../services/midiService';
 
 export function TopBar() {
   const handlePanic = () => {
-    // Send All Notes Off (CC 123) to all 16 MIDI channels
-    for (let i = 1; i <= 16; i++) {
-      midiService.sendCC(i, 123, 0);
+    try {
+      // Send All Notes Off (CC 123) to all 16 MIDI channels
+      for (let i = 1; i <= 16; i++) {
+        midiService.sendCC(i, 123, 0);
+      }
+    } catch (error) {
+      console.error('Failed to send Panic (All Notes Off) message:', error);
     }
   };
 
@@ -18,6 +22,7 @@ export function TopBar() {
           <button
             type="button"
             aria-label="Settings"
+            title="Settings"
             className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >
             settings
@@ -25,6 +30,7 @@ export function TopBar() {
           <button
             type="button"
             aria-label="All Notes Off (Panic)"
+            title="All Notes Off (Panic)"
             onClick={handlePanic}
             className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >

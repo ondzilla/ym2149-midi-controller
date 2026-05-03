@@ -5,7 +5,6 @@ import { usePatchState } from '../hooks/usePatchState';
 
 const PATTERNS = Array.from({ length: 16 });
 const OCTAVES = ['OFF', '-3', '-2', '-1', '0', '+1', '+2', '+3'];
-const GATE_LIGHTS = Array.from({ length: 8 });
 
 const ArpRateControl: React.FC<{ channel: number }> = ({ channel }) => {
   const [rate, setRate] = usePatchState('arpRate', '50', (val) => {
@@ -19,7 +18,7 @@ const ArpRateControl: React.FC<{ channel: number }> = ({ channel }) => {
 
   return (
     <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <span className="font-headline text-[10px] text-tertiary">GATE_TIME</span>
+      <span className="font-headline text-[10px] text-tertiary">RATE</span>
       <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{rate}%</span>
       <input type="range" min="0" max="100" aria-label="Rate" value={rate} onChange={handleRate} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" />
     </div>
@@ -27,7 +26,8 @@ const ArpRateControl: React.FC<{ channel: number }> = ({ channel }) => {
 };
 
 export const Arpeggiator: React.FC = () => {
-  const channel = 1;
+  const [globalChannel] = usePatchState('globalChannel', '1');
+  const channel = Number(globalChannel);
 
   const [octave, setOctave] = usePatchState('arpOctave', '0', (val) => {
     let ccValue = 0;
@@ -45,7 +45,7 @@ export const Arpeggiator: React.FC = () => {
   });
 
   const [arpMode, setArpMode] = usePatchState('arpMode', false, (val) => {
-    try { midiService.sendCC(channel, 7, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+    try { midiService.sendCC(channel, 7, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const [pattern, setPattern] = usePatchState('arpPattern', 0, (val) => {
@@ -105,12 +105,6 @@ export const Arpeggiator: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-4 justify-center">
-          <div className="flex-1 bg-surface-container-lowest border border-primary/20 p-2 flex flex-wrap gap-2 content-start min-h-[100px]">
-            {GATE_LIGHTS.map((_, i) => (
-              <div key={i} className={`w-4 h-4 ${i % 2 === 0 ? 'bg-primary shadow-[0_0_5px_#8eff71]' : 'bg-primary/20 border border-primary/40'}`}></div>
-            ))}
-          </div>
-          <button className="bg-secondary text-on-secondary py-2 font-headline text-[10px] font-bold tracking-widest active:scale-[0.98] transition-all w-full">RESET_GATE</button>
           <button type="button" onClick={handleArpMode} className="bg-primary text-on-primary py-2 font-headline text-[10px] font-bold tracking-widest active:scale-[0.98] transition-all w-full relative">
             <span className="sr-only">Arp Mode</span>
             MODE: {arpMode ? 'SELF' : 'VOICE A'}

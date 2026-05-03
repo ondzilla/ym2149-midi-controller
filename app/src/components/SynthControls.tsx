@@ -3,6 +3,7 @@ import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
 
+// Extracted into a separate component to prevent parent re-renders on state change
 const AttackControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [attack, setAttack] = usePatchState('attack', '20', (val) => {
     // YM2149 Envelope Attack mapped to CC12 (per firmware specs)
@@ -29,6 +30,7 @@ const AttackControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =
   );
 };
 
+// Extracted into a separate component to prevent parent re-renders on state change
 const DecayControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [decay, setDecay] = usePatchState('decay', '50', (val) => {
     // YM2149 Envelope Decay mapped to CC11 (per firmware specs)
@@ -55,6 +57,7 @@ const DecayControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =>
   );
 };
 
+// Extracted into a separate component to prevent parent re-renders on state change
 const DetuneControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [detune, setDetune] = usePatchState('detune', '64', (val) => {
     try { midiService.sendCC(activeChannel, 1, Number(val)); } catch (e) { console.warn('MIDI error', e); }
@@ -80,6 +83,7 @@ const DetuneControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =
   );
 };
 
+// Extracted into a separate component to prevent parent re-renders on state change
 const PitchBendControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [pitchBend, setPitchBend] = usePatchState('pitchBend', '8192', (val) => {
     try { midiService.sendPitchBend(activeChannel, Number(val)); } catch (e) { console.warn('MIDI error', e); }
@@ -107,7 +111,8 @@ const PitchBendControl: React.FC<{ activeChannel: number }> = ({ activeChannel }
 
 
 export const SynthControls: React.FC = () => {
-  const activeChannel = 1;
+  const [globalChannel] = usePatchState('globalChannel', '1');
+  const activeChannel = Number(globalChannel);
 
   return (
     <>
@@ -117,9 +122,16 @@ export const SynthControls: React.FC = () => {
         <h3 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">ENVELOPE_SHAPER_MOD</h3>
         
         <div className="grid grid-cols-4 gap-6 flex-1">
+          {/* Attack Slider */}
           <AttackControl activeChannel={activeChannel} />
+
+          {/* Decay Slider */}
           <DecayControl activeChannel={activeChannel} />
+
+          {/* Detune Slider */}
           <DetuneControl activeChannel={activeChannel} />
+
+          {/* Pitch Bend Slider */}
           <PitchBendControl activeChannel={activeChannel} />
         </div>
       </section>
@@ -127,7 +139,7 @@ export const SynthControls: React.FC = () => {
   );
 };
 
-
+// Extracted into a separate component to prevent parent re-renders on state change
 const VibratoRateControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [vibratoRate, setVibratoRate] = usePatchState('vibratoRate', 65, (val) => {
     try { midiService.sendCC(activeChannel, 2, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
@@ -154,7 +166,7 @@ const VibratoRateControl: React.FC<{ activeChannel: number }> = ({ activeChannel
   );
 };
 
-
+// Extracted into a separate component to prevent parent re-renders on state change
 const VibratoDepthControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [vibratoDepth, setVibratoDepth] = usePatchState('vibratoDepth', 40, (val) => {
     try { midiService.sendCC(activeChannel, 3, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
@@ -166,22 +178,32 @@ const VibratoDepthControl: React.FC<{ activeChannel: number }> = ({ activeChanne
   };
 
   return (
-    <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <div className="font-headline text-[10px] text-tertiary mb-2 flex justify-between">
-        <span>DEPTH_MOD</span>
-        <span className="text-secondary">{vibratoDepth}%</span>
+    <div className="flex-1 space-y-6 w-full">
+      <div className="bg-surface-container-lowest p-3 border-l-4 border-primary relative">
+        <div className="font-headline text-[10px] text-tertiary mb-1">WAVEFORM_TYPE</div>
+        <div className="flex gap-4">
+          <span className="material-symbols-outlined text-primary text-xl">water_drop</span>
+          <span className="font-headline text-sm text-on-surface font-bold">TRIANGLE_BI</span>
+        </div>
       </div>
-      <input type="range" min="0" max="100" aria-label="Vibrato Depth" value={vibratoDepth} onChange={handleVibratoDepth} className="absolute inset-0 opacity-0 z-10 cursor-pointer" />
-      <div className="h-1 w-full bg-surface-container-highest relative pointer-events-none mt-2">
-         <div className="absolute top-0 left-0 h-full bg-secondary transition-all" style={{ width: `${vibratoDepth}%` }}></div>
+
+      <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
+        <div className="font-headline text-[10px] text-tertiary mb-2 flex justify-between">
+          <span>DEPTH_MOD</span>
+          <span className="text-secondary">{vibratoDepth}%</span>
+        </div>
+        <input type="range" min="0" max="100" aria-label="Vibrato Depth" value={vibratoDepth} onChange={handleVibratoDepth} className="absolute inset-0 opacity-0 z-10 cursor-pointer" />
+        <div className="h-1 w-full bg-surface-container-highest relative pointer-events-none mt-2">
+           <div className="absolute top-0 left-0 h-full bg-secondary transition-all" style={{ width: `${vibratoDepth}%` }}></div>
+        </div>
       </div>
     </div>
   );
 };
 
-
 export const VibratoLFO: React.FC = () => {
-  const activeChannel = 1;
+  const [globalChannel] = usePatchState('globalChannel', '1');
+  const activeChannel = Number(globalChannel);
 
   return (
     <section className="bg-surface-container-high relative p-6 solder-point solder-tl solder-tr solder-bl solder-br border border-[#32152f] h-full flex flex-col">
@@ -190,18 +212,7 @@ export const VibratoLFO: React.FC = () => {
       
       <div className="flex flex-col md:flex-row items-center gap-10">
         <VibratoRateControl activeChannel={activeChannel} />
-
-        <div className="flex-1 space-y-6 w-full">
-          <div className="bg-surface-container-lowest p-3 border-l-4 border-primary relative">
-            <div className="font-headline text-[10px] text-tertiary mb-1">WAVEFORM_TYPE</div>
-            <div className="flex gap-4">
-              <span className="material-symbols-outlined text-primary text-xl">water_drop</span>
-              <span className="font-headline text-sm text-on-surface font-bold">TRIANGLE_BI</span>
-            </div>
-          </div>
-          
-          <VibratoDepthControl activeChannel={activeChannel} />
-        </div>
+        <VibratoDepthControl activeChannel={activeChannel} />
       </div>
     </section>
   );
