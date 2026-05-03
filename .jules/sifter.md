@@ -1,3 +1,5 @@
 ## 2024-05-01 - [Audit Finding] Observation: `attack` state in `SynthControls.tsx` initialized using hallucinated MIDI CC 73 instead of the hardware-supported CC 12. Correction: Updated `usePatchState` initialization for `attack` to use CC 12.
 
 ## 2025-05-02 - [Audit Finding] Observation: `Arpeggiator.tsx` contained hallucinated `RESET_GATE` and `GATE_LIGHTS` UI elements. The `GATE_TIME` label did not match the hardware's CC 5 `RATE` spec. Furthermore, `Arpeggiator`, `SynthControls`, and `VibratoLFO` hardcoded the MIDI channel to 1, ignoring the global selection. `VibratoLFO` also included a hallucinated `WAVEFORM_TYPE` display. Correction: Removed dead UI components, renamed `GATE_TIME` to `RATE`, and bound components to use `globalChannel` from `usePatchState`.
+
+## 2026-05-03 - [Audit Finding] Observation: `DrumPads.tsx` hallucinated drum sample note mappings. Boolean `usePatchState` callbacks inverted CC messages. Correction: Mapped pads to notes 60-64. Fixed boolean logic in callbacks to emit `val ? 127 : 0`.

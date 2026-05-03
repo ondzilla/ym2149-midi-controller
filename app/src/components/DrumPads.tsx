@@ -4,11 +4,11 @@ import { midiService } from '../services/midiService';
 const PAD_COUNT = Array.from({ length: 16 });
 
 const drumMap = [
-  { label: 'Kick', note: 48 },
-  { label: 'Snare', note: 50 },
-  { label: 'Hi-Hat', note: 52 },
-  { label: 'TRG_04', note: 54 },
-  { label: 'TRG_05', note: 56 },
+  { label: 'Dog Yap', note: 60 },
+  { label: 'Bass Thing', note: 61 },
+  { label: 'Hi-Hat', note: 62 },
+  { label: 'Snare', note: 63 },
+  { label: 'Kick Drum', note: 64 },
 ];
 
 export const DrumPads: React.FC = () => {

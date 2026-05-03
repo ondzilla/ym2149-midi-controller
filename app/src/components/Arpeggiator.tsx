@@ -45,7 +45,7 @@ export const Arpeggiator: React.FC = () => {
   });
 
   const [arpMode, setArpMode] = usePatchState('arpMode', false, (val) => {
-    try { midiService.sendCC(channel, 7, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+    try { midiService.sendCC(channel, 7, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const [pattern, setPattern] = usePatchState('arpPattern', 0, (val) => {
