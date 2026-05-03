@@ -61,12 +61,16 @@ export class MidiService {
   public sendCC(channel: number, ccNumber: number, value: number) {
     if (!this.outputDevice) return;
     
-    // MIDI Channel translates to 0-15 internally. (1 & 0x0F) - 1 => 0.
-    const internalChannel = Math.max(0, channel - 1) & 0x0F;
-    const statusByte = 0xB0 | internalChannel;
-    const message = [statusByte, ccNumber, value];
-    
-    this.outputDevice.send(message);
+    try {
+      // MIDI Channel translates to 0-15 internally. (1 & 0x0F) - 1 => 0.
+      const internalChannel = Math.max(0, channel - 1) & 0x0F;
+      const statusByte = 0xB0 | internalChannel;
+      const message = [statusByte, ccNumber, value];
+
+      this.outputDevice.send(message);
+    } catch (err) {
+      console.error('Failed to send MIDI CC message:', err);
+    }
   }
 
   /**
@@ -75,11 +79,15 @@ export class MidiService {
   public sendNoteOn(channel: number, note: number, velocity: number) {
     if (!this.outputDevice) return;
     
-    const internalChannel = Math.max(0, channel - 1) & 0x0F;
-    const statusByte = 0x90 | internalChannel;
-    const message = [statusByte, note, velocity];
-    
-    this.outputDevice.send(message);
+    try {
+      const internalChannel = Math.max(0, channel - 1) & 0x0F;
+      const statusByte = 0x90 | internalChannel;
+      const message = [statusByte, note, velocity];
+
+      this.outputDevice.send(message);
+    } catch (err) {
+      console.error('Failed to send MIDI Note On message:', err);
+    }
   }
 
   /**
@@ -88,14 +96,18 @@ export class MidiService {
   public sendPitchBend(channel: number, value: number) {
     if (!this.outputDevice) return;
     
-    const internalChannel = Math.max(0, channel - 1) & 0x0F;
-    const statusByte = 0xE0 | internalChannel;
-    
-    const lsb = value & 0x7F;
-    const msb = (value >> 7) & 0x7F;
-    const message = [statusByte, lsb, msb];
-    
-    this.outputDevice.send(message);
+    try {
+      const internalChannel = Math.max(0, channel - 1) & 0x0F;
+      const statusByte = 0xE0 | internalChannel;
+
+      const lsb = value & 0x7F;
+      const msb = (value >> 7) & 0x7F;
+      const message = [statusByte, lsb, msb];
+
+      this.outputDevice.send(message);
+    } catch (err) {
+      console.error('Failed to send MIDI Pitch Bend message:', err);
+    }
   }
 }
 
