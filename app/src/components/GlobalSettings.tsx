@@ -55,7 +55,7 @@ export const GlobalSettings: React.FC = () => {
   const [channel, setChannel] = usePatchState('globalChannel', '1');
 
   const [polyphony, setPolyphony] = usePatchState('globalPolyphony', false, (val) => {
-    try { midiService.sendCC(Number(channel), 10, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+    try { midiService.sendCC(Number(channel), 10, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const [bank, setBank] = usePatchState('globalBank', 'A', (val) => {
@@ -63,7 +63,7 @@ export const GlobalSettings: React.FC = () => {
   });
 
   const [velocity, setVelocity] = usePatchState('globalVelocity', false, (val) => {
-    try { midiService.sendCC(Number(channel), 4, !val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
+    try { midiService.sendCC(Number(channel), 4, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
