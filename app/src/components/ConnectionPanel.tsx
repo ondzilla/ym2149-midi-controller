@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { midiService } from '../services/midiService';
+import { usePatchState } from '../hooks/usePatchState';
 
 export const ConnectionPanel: React.FC = () => {
+  const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
   const [activeInId, setActiveInId] = useState<string | null>(null);
   const [activeOutId, setActiveOutId] = useState<string | null>(midiService.outputDevice?.id || null);
   const [inputs, setInputs] = useState<MIDIInput[]>(midiService.inputs);
@@ -32,11 +34,22 @@ export const ConnectionPanel: React.FC = () => {
     <>
       <div className="flex justify-between items-center mb-4">
         <h3 className="sr-only">Connection Panel</h3>
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${activeOutId ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
-          <span data-testid="connection-status" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
-            {activeOutId ? 'CONNECTED' : 'DISCONNECTED'}
-          </span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${activeOutId ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
+            <span data-testid="connection-status" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
+              {activeOutId ? 'CONNECTED' : 'DISCONNECTED'}
+            </span>
+          </div>
+
+          {experimentalGamepad && (
+            <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-4">
+              <div className="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_#ff5449]"></div>
+              <span className="font-headline text-[10px] tracking-widest text-error">
+                GAMEPAD: DISCONNECTED
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
