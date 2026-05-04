@@ -41,9 +41,10 @@ export const ConnectionPanel: React.FC = () => {
       </div>
 
       <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest">
-        <label className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_INPUT</label>
+        <label htmlFor="signal-input" className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_INPUT</label>
         <div className="flex items-center gap-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
           <select 
+            id="signal-input"
             aria-label="Input Device" 
             value={activeInId || ''} 
             onChange={e => setActiveInId(e.target.value)}
@@ -56,9 +57,10 @@ export const ConnectionPanel: React.FC = () => {
       </div>
 
       <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest">
-        <label className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_OUTPUT</label>
+        <label htmlFor="signal-output" className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_OUTPUT</label>
         <div className="flex items-center gap-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
           <select 
+            id="signal-output"
             aria-label="Output Device" 
             value={activeOutId || ''} 
             onChange={handleOutputChange}

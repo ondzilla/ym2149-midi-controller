@@ -105,7 +105,7 @@ export const Arpeggiator: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-4 justify-center">
-          <button type="button" onClick={handleArpMode} className="bg-primary text-on-primary py-2 font-headline text-[10px] font-bold tracking-widest active:scale-[0.98] transition-all w-full relative">
+          <button type="button" aria-pressed={arpMode} onClick={handleArpMode} className="bg-primary text-on-primary py-2 font-headline text-[10px] font-bold tracking-widest active:scale-[0.98] transition-all w-full relative">
             <span className="sr-only">Arp Mode</span>
             MODE: {arpMode ? 'SELF' : 'VOICE A'}
           </button>
