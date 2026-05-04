@@ -9,6 +9,11 @@ Action: Future features should either respect a unified global context for the a
 ## 2026-05-02 - Explicit Hardware Connection Feedback
 Learning: Explicit visual confirmation of a hardware connection is essential for the UX of web-based MIDI controllers. Abstract or hidden status indicators leave users unsure if sound issues are due to physical cables or software routing.
 Action: Implemented a visible "CONNECTED"/"DISCONNECTED" badge in the ConnectionPanel, mapped dynamically to `midiService.outputDevice`, to ensure users are confident in their connection status.
-## 2026-05-15 - Gamepad API for MIDI Control
+
+## 2026-05-04 - Fixed Hardware CC Mapping & UI Focus
+Learning: The ARDUINO-YM2149F firmware uses a very specific, hardcoded set of 12 MIDI CC parameters. Modifying the data structures beyond this requires C++ firmware updates. Therefore, most immediate product value can be achieved by significantly upgrading the web UI tactile experience rather than hallucinating new DSP parameters.
+Action: Shift focus towards UX/UI component improvements (e.g., replacing vertical sliders with realistic rotary knobs or adding visualizers) to make the web app feel more like controlling a physical synthesizer.
+
+## 2026-05-04 - Gamepad API for MIDI Control
 Learning: The modern Gamepad API (`navigator.getGamepads()`) requires a polling loop (`requestAnimationFrame`) rather than event listeners for reading continuous values (like analog sticks) and button presses. It is uniquely well-suited for experimental hardware control because analog stick values (-1.0 to 1.0) can be scaled easily to 7-bit MIDI CC values (0-127).
 Action: I proposed a feature that leverages this polling loop to map physical game controllers to the YM2149 synth parameters, making sure to explicitly map the action buttons to the exact Channel 10 Drum Map.
