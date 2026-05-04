@@ -110,6 +110,22 @@ const PitchBendControl: React.FC<{ activeChannel: number }> = ({ activeChannel }
 };
 
 
+const VintageKnobPrototype = () => (
+  <div className="flex flex-col items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+    <div className="w-16 h-16 rounded-full bg-surface-container-highest border-2 border-outline-variant/30 relative flex items-center justify-center">
+      <div className="w-2 h-2 rounded-full bg-primary/20 absolute top-2"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="material-symbols-outlined text-outline-variant/30 text-[32px]">sync</span>
+      </div>
+      <button disabled className="absolute inset-0 cursor-not-allowed z-10" aria-label="Future Knob Prototype"></button>
+    </div>
+    <div className="font-headline text-[10px] text-tertiary font-bold tracking-widest text-center mt-2">
+      <span className="block text-outline-variant/50">VINTAGE</span>
+      <span className="block text-outline-variant/50">KNOB</span>
+    </div>
+  </div>
+);
+
 export const SynthControls: React.FC = () => {
   const [globalChannel] = usePatchState('globalChannel', '1');
   const activeChannel = Number(globalChannel);
@@ -121,7 +137,7 @@ export const SynthControls: React.FC = () => {
       <section className="bg-surface-container-high relative p-6 solder-point solder-tl solder-tr solder-bl solder-br border border-[#32152f] h-full flex flex-col">
         <h3 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">ENVELOPE_SHAPER_MOD</h3>
         
-        <div className="grid grid-cols-4 gap-6 flex-1">
+        <div className="grid grid-cols-5 gap-6 flex-1">
           {/* Attack Slider */}
           <AttackControl activeChannel={activeChannel} />
 
@@ -133,6 +149,9 @@ export const SynthControls: React.FC = () => {
 
           {/* Pitch Bend Slider */}
           <PitchBendControl activeChannel={activeChannel} />
+
+          {/* Future Knob Prototype */}
+          <VintageKnobPrototype />
         </div>
       </section>
     </>

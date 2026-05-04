@@ -9,3 +9,6 @@ Action: Future features should either respect a unified global context for the a
 ## 2026-05-02 - Explicit Hardware Connection Feedback
 Learning: Explicit visual confirmation of a hardware connection is essential for the UX of web-based MIDI controllers. Abstract or hidden status indicators leave users unsure if sound issues are due to physical cables or software routing.
 Action: Implemented a visible "CONNECTED"/"DISCONNECTED" badge in the ConnectionPanel, mapped dynamically to `midiService.outputDevice`, to ensure users are confident in their connection status.
+## 2026-05-04 - Fixed Hardware CC Mapping & UI Focus
+Learning: The ARDUINO-YM2149F firmware uses a very specific, hardcoded set of 12 MIDI CC parameters. Modifying the data structures beyond this requires C++ firmware updates. Therefore, most immediate product value can be achieved by significantly upgrading the web UI tactile experience rather than hallucinating new DSP parameters.
+Action: Shift focus towards UX/UI component improvements (e.g., replacing vertical sliders with realistic rotary knobs or adding visualizers) to make the web app feel more like controlling a physical synthesizer.
