@@ -15,6 +15,7 @@ describe('GlobalSettings', () => {
   it('should render the global settings section', () => {
     render(<GlobalSettings />);
     expect(screen.getByRole('heading', { name: /global settings/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /toggle gamepad/i })).toBeInTheDocument();
   });
 
   it('should send CC 9 when Bank B is selected', async () => {

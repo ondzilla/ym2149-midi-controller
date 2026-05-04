@@ -67,6 +67,8 @@ export const GlobalSettings: React.FC = () => {
     try { midiService.sendCC(Number(channel), 4, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
+  const [gamepad, setGamepad] = usePatchState('experimentalGamepad', false);
+
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
   };
@@ -85,6 +87,10 @@ export const GlobalSettings: React.FC = () => {
   const handleVelocity = () => {
     setVelocity(!velocity);
     midiService.sendCC(Number(channel), 4, !velocity ? 127 : 0);
+  };
+
+  const handleGamepad = () => {
+    setGamepad(!gamepad);
   };
 
   return (
@@ -109,7 +115,7 @@ export const GlobalSettings: React.FC = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <SettingToggle
           label="Polyphony"
           isActive={polyphony}
@@ -144,6 +150,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-tertiary"
           activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
           activeTextColorClass="text-tertiary"
+        />
+
+        <SettingToggle
+          label="Gamepad API"
+          isActive={gamepad}
+          onClick={handleGamepad}
+          buttonText="Toggle Gamepad"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-secondary"
+          activeShadowClass="shadow-[0_0_10px_#f5ce53]"
+          activeTextColorClass="text-secondary"
         />
       </div>
     </>
