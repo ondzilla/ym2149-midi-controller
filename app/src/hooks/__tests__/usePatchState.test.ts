@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach, afterEach, Mock } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { Mock } from 'vitest';
 import { usePatchState } from '../usePatchState';
 import { presetManager } from '../../services/presetManager';
 
@@ -29,7 +30,7 @@ describe('usePatchState', () => {
   it('should initialize with initialValue if no preset exists', () => {
     (presetManager.getValue as Mock).mockReturnValue(undefined);
 
-    const { result } = renderHook(() => usePatchState(TEST_KEY, INITIAL_VALUE));
+    const { result } = renderHook(() => usePatchState<string>(TEST_KEY, INITIAL_VALUE));
 
     expect(result.current[0]).toBe(INITIAL_VALUE);
     expect(presetManager.getValue).toHaveBeenCalledWith(TEST_KEY);
@@ -40,7 +41,7 @@ describe('usePatchState', () => {
     const storedValue = 'storedValue';
     (presetManager.getValue as Mock).mockReturnValue(storedValue);
 
-    const { result } = renderHook(() => usePatchState(TEST_KEY, INITIAL_VALUE));
+    const { result } = renderHook(() => usePatchState<string>(TEST_KEY, INITIAL_VALUE));
 
     expect(result.current[0]).toBe(storedValue);
     expect(presetManager.getValue).toHaveBeenCalledWith(TEST_KEY);
@@ -52,7 +53,7 @@ describe('usePatchState', () => {
     const onSync = vi.fn();
     const newValue = 'newValue';
 
-    const { result } = renderHook(() => usePatchState(TEST_KEY, INITIAL_VALUE, onSync));
+    const { result } = renderHook(() => usePatchState<string>(TEST_KEY, INITIAL_VALUE, onSync));
 
     act(() => {
       result.current[1](newValue);
@@ -73,7 +74,7 @@ describe('usePatchState', () => {
       return vi.fn();
     });
 
-    const { result } = renderHook(() => usePatchState(TEST_KEY, INITIAL_VALUE, onSync));
+    const { result } = renderHook(() => usePatchState<string>(TEST_KEY, INITIAL_VALUE, onSync));
 
     const updatedState = { [TEST_KEY]: 'updatedFromPreset' };
 
@@ -92,7 +93,7 @@ describe('usePatchState', () => {
     const unsubscribeMock = vi.fn();
     (presetManager.subscribe as Mock).mockReturnValue(unsubscribeMock);
 
-    const { unmount } = renderHook(() => usePatchState(TEST_KEY, INITIAL_VALUE));
+    const { unmount } = renderHook(() => usePatchState<string>(TEST_KEY, INITIAL_VALUE));
 
     unmount();
 
