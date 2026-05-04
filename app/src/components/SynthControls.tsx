@@ -12,7 +12,6 @@ const AttackControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =
 
   const handleAttack = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAttack(e.target.value);
-    midiService.sendCC(activeChannel, 12, percentageToMidi(Number(e.target.value)));
   };
 
   return (
@@ -39,7 +38,6 @@ const DecayControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =>
 
   const handleDecay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDecay(e.target.value);
-    midiService.sendCC(activeChannel, 11, percentageToMidi(Number(e.target.value)));
   };
 
   return (
@@ -65,7 +63,6 @@ const DetuneControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =
 
   const handleDetune = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetune(e.target.value);
-    midiService.sendCC(activeChannel, 1, Number(e.target.value));
   };
 
   return (
@@ -91,7 +88,6 @@ const PitchBendControl: React.FC<{ activeChannel: number }> = ({ activeChannel }
 
   const handlePitchBend = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPitchBend(e.target.value);
-    midiService.sendPitchBend(activeChannel, Number(e.target.value));
   };
 
   return (
@@ -147,7 +143,6 @@ const VibratoRateControl: React.FC<{ activeChannel: number }> = ({ activeChannel
 
   const handleVibratoRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVibratoRate(Number(e.target.value));
-    midiService.sendCC(activeChannel, 2, percentageToMidi(Number(e.target.value)));
   };
 
   return (
@@ -174,7 +169,6 @@ const VibratoDepthControl: React.FC<{ activeChannel: number }> = ({ activeChanne
 
   const handleVibratoDepth = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVibratoDepth(Number(e.target.value));
-    midiService.sendCC(activeChannel, 3, percentageToMidi(Number(e.target.value)));
   };
 
   return (

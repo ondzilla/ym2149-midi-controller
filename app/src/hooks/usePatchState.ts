@@ -40,6 +40,9 @@ export function usePatchState<T>(
   const setPatchState = useCallback((newValue: T) => {
     setValue(newValue);
     presetManager.setValue(key, newValue);
+    if (onSyncRef.current) {
+      onSyncRef.current(newValue);
+    }
   }, [key]);
 
   return [value, setPatchState];
