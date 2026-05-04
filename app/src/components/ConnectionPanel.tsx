@@ -4,12 +4,27 @@ import { usePatchState } from '../hooks/usePatchState';
 
 export const ConnectionPanel: React.FC = () => {
   const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
+  const [gamepadConnected, setGamepadConnected] = useState(() => {
+    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+    for (const gp of gamepads) {
+      if (gp && gp.connected) {
+        return true;
+      }
+    }
+    return false;
+  });
   const [activeInId, setActiveInId] = useState<string | null>(null);
   const [activeOutId, setActiveOutId] = useState<string | null>(midiService.outputDevice?.id || null);
   const [inputs, setInputs] = useState<MIDIInput[]>(midiService.inputs);
   const [outputs, setOutputs] = useState<MIDIOutput[]>(midiService.outputs);
 
   useEffect(() => {
+    const handleGamepadConnected = () => setGamepadConnected(true);
+    const handleGamepadDisconnected = () => setGamepadConnected(false);
+
+    window.addEventListener('gamepadconnected', handleGamepadConnected);
+    window.addEventListener('gamepaddisconnected', handleGamepadDisconnected);
+
     // Subscribe to changes
     const unsubscribe = midiService.subscribe(() => {
       setInputs(midiService.inputs);
@@ -21,7 +36,11 @@ export const ConnectionPanel: React.FC = () => {
       }
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      window.removeEventListener('gamepadconnected', handleGamepadConnected);
+      window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected);
+    };
   }, []);
 
   const handleOutputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -44,9 +63,9 @@ export const ConnectionPanel: React.FC = () => {
 
           {experimentalGamepad && (
             <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-4">
-              <div className="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_#ff5449]"></div>
-              <span className="font-headline text-[10px] tracking-widest text-error">
-                GAMEPAD: DISCONNECTED
+              <div className={`w-2 h-2 rounded-full ${gamepadConnected ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
+              <span data-testid="gamepad-status" className={`font-headline text-[10px] tracking-widest ${gamepadConnected ? 'text-primary' : 'text-error'}`}>
+                GAMEPAD: {gamepadConnected ? 'CONNECTED' : 'DISCONNECTED'}
               </span>
             </div>
           )}
