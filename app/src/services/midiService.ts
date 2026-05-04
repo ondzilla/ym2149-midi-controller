@@ -91,6 +91,42 @@ export class MidiService {
   }
 
   /**
+   * Sends a standard MIDI Note Off message.
+   */
+  public sendNoteOff(channel: number, note: number, velocity: number = 0) {
+    if (!this.outputDevice) return;
+
+    try {
+      const internalChannel = Math.max(0, channel - 1) & 0x0F;
+      const statusByte = 0x80 | internalChannel;
+      const message = [statusByte, note, velocity];
+
+      this.outputDevice.send(message);
+    } catch (err) {
+      console.error('Failed to send MIDI Note Off message:', err);
+    }
+  }
+
+  /**
+   * Sends All Notes Off CC message (CC 123) to all 16 channels.
+   */
+  public sendAllNotesOff() {
+    if (!this.outputDevice) return;
+    try {
+      // Optimize by batching into a single Uint8Array instead of crossing boundary 16 times
+      const message = new Uint8Array(16 * 3);
+      for (let i = 0; i < 16; i++) {
+        message[i * 3] = 0xB0 | i;
+        message[i * 3 + 1] = 123;
+        message[i * 3 + 2] = 0;
+      }
+      this.outputDevice.send(message);
+    } catch (err) {
+      console.error('Failed to send All Notes Off message:', err);
+    }
+  }
+
+  /**
    * Sends a 14-bit MIDI Pitch Bend message.
    */
   public sendPitchBend(channel: number, value: number) {

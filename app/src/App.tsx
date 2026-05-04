@@ -9,10 +9,15 @@ import { TopBar } from './components/layout/TopBar';
 import { Footer } from './components/layout/Footer';
 import { RightOverlay } from './components/layout/RightOverlay';
 import { BackgroundTraces } from './components/layout/BackgroundTraces';
+import { GamepadController } from './components/GamepadController';
+import { usePatchState } from './hooks/usePatchState';
 
 export default function App() {
+  const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
+
   return (
     <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen flex">
+      {experimentalGamepad && <GamepadController />}
       {/* SIDE NAVIGATION */}
       <Sidebar />
 
