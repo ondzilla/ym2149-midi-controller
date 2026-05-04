@@ -13,6 +13,8 @@ const DRUM_MAPPING: Record<number, number> = {
   13: 61, // D-Pad Down: Bass Thing
 };
 
+const DRUM_MAPPING_ENTRIES = Object.entries(DRUM_MAPPING).map(([k, v]) => [Number(k), v] as const);
+
 export const GamepadController: React.FC = () => {
   const requestRef = useRef<number>(0);
   const prevStateRef = useRef<{
@@ -38,8 +40,8 @@ export const GamepadController: React.FC = () => {
         const prevState = prevStateRef.current;
 
         // Process Drum Buttons (Channel 10)
-        Object.entries(DRUM_MAPPING).forEach(([btnIndexStr, note]) => {
-          const btnIndex = Number(btnIndexStr);
+        for (let i = 0; i < DRUM_MAPPING_ENTRIES.length; i++) {
+          const [btnIndex, note] = DRUM_MAPPING_ENTRIES[i];
           const isPressed = buttons[btnIndex]?.pressed || false;
           const wasPressed = prevState.buttons[btnIndex] || false;
 
@@ -48,7 +50,7 @@ export const GamepadController: React.FC = () => {
           } else if (!isPressed && wasPressed) {
             try { midiService.sendNoteOff(DRUM_CHANNEL, note); } catch (e) { console.warn(e); }
           }
-        });
+        }
 
         // Process Continuous Controls (Axes)
         const processAxis = (axisIndex: number, cc: number) => {
@@ -99,7 +101,9 @@ export const GamepadController: React.FC = () => {
         }
 
         // Update previous state
-        prevStateRef.current.buttons = buttons.map(b => b.pressed);
+        for (let i = 0; i < buttons.length; i++) {
+          prevState.buttons[i] = buttons[i].pressed;
+        }
       }
 
       requestRef.current = requestAnimationFrame(loop);
