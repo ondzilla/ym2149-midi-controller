@@ -75,18 +75,15 @@ export const GlobalSettings: React.FC = () => {
 
   const handlePolyphony = () => {
     setPolyphony(!polyphony);
-    midiService.sendCC(Number(channel), 10, !polyphony ? 127 : 0);
   };
 
   const handleBank = () => {
     const newBank = bank === 'A' ? 'B' : 'A';
     setBank(newBank);
-    midiService.sendCC(Number(channel), 9, newBank === 'B' ? 127 : 0);
   };
 
   const handleVelocity = () => {
     setVelocity(!velocity);
-    midiService.sendCC(Number(channel), 4, !velocity ? 127 : 0);
   };
 
   const handleGamepad = () => {

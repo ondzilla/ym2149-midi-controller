@@ -13,7 +13,6 @@ const ArpRateControl: React.FC<{ channel: number }> = ({ channel }) => {
 
   const handleRate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRate(e.target.value);
-    midiService.sendCC(channel, 5, percentageToMidi(Number(e.target.value)));
   };
 
   return (
@@ -54,28 +53,14 @@ export const Arpeggiator: React.FC = () => {
 
   const handleOctave = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOctave(e.target.value);
-    let ccValue = 0;
-    switch (e.target.value) {
-      case 'OFF': ccValue = 0; break;
-      case '-3': ccValue = 10; break;
-      case '-2': ccValue = 32; break;
-      case '-1': ccValue = 53; break;
-      case '0': ccValue = 74; break;
-      case '+1': ccValue = 95; break;
-      case '+2': ccValue = 116; break;
-      case '+3': ccValue = 127; break;
-    }
-    midiService.sendCC(channel, 8, ccValue);
   };
 
   const playPattern = (index: number) => {
     setPattern(index);
-    midiService.sendCC(channel, 6, index);
   };
 
   const handleArpMode = () => {
     setArpMode(!arpMode);
-    midiService.sendCC(channel, 7, !arpMode ? 127 : 0);
   };
 
   return (
