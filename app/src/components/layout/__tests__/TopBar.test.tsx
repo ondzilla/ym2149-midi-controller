@@ -18,12 +18,22 @@ describe('TopBar', () => {
   });
 
   it('should render the TopBar', () => {
-    render(<TopBar />);
+    render(<TopBar onOpenSettings={vi.fn()} />);
     expect(screen.getByText('YM2149_SYNTH_CORE')).toBeInTheDocument();
   });
 
+  it('should call onOpenSettings when settings button is clicked', async () => {
+    const mockOnOpenSettings = vi.fn();
+    render(<TopBar onOpenSettings={mockOnOpenSettings} />);
+    const settingsBtn = screen.getByRole('button', { name: /settings/i });
+
+    await userEvent.click(settingsBtn);
+
+    expect(mockOnOpenSettings).toHaveBeenCalledTimes(1);
+  });
+
   it('should send CC 123 to all 16 channels when panic button is clicked', async () => {
-    render(<TopBar />);
+    render(<TopBar onOpenSettings={vi.fn()} />);
     const panicBtn = screen.getByRole('button', { name: /all notes off \(panic\)/i });
 
     await userEvent.click(panicBtn);
@@ -41,7 +51,7 @@ describe('TopBar', () => {
       throw new Error('MIDI Error');
     });
 
-    render(<TopBar />);
+    render(<TopBar onOpenSettings={vi.fn()} />);
     const panicBtn = screen.getByRole('button', { name: /all notes off \(panic\)/i });
 
     await userEvent.click(panicBtn);
