@@ -1,60 +1,10 @@
+import { VisualEnvelopeEditor } from './VisualEnvelopeEditor';
 import React from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
 
 // Extracted into a separate component to prevent parent re-renders on state change
-const AttackControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
-  const [attack, setAttack] = usePatchState('attack', '20', (val) => {
-    // YM2149 Envelope Attack mapped to CC12 (per firmware specs)
-    try { midiService.sendCC(activeChannel, 12, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
-  });
-
-  const handleAttack = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAttack(e.target.value);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-        <input type="range" min="0" max="100" aria-label="Attack" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={attack} onChange={handleAttack} />
-        <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${attack}%` }}></div>
-        <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${attack}%` }}></div>
-      </div>
-      <div className="text-center">
-        <div className="font-headline text-[10px] text-secondary">{attack}ms</div>
-        <div className="font-headline text-[10px] text-primary font-bold">ATTACK</div>
-      </div>
-    </div>
-  );
-};
-
-// Extracted into a separate component to prevent parent re-renders on state change
-const DecayControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
-  const [decay, setDecay] = usePatchState('decay', '50', (val) => {
-    // YM2149 Envelope Decay mapped to CC11 (per firmware specs)
-    try { midiService.sendCC(activeChannel, 11, percentageToMidi(Number(val))); } catch (e) { console.warn('MIDI error', e); }
-  });
-
-  const handleDecay = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDecay(e.target.value);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="h-48 bg-surface-container-lowest relative flex flex-col justify-end p-1 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-        <input type="range" min="0" max="100" aria-label="Decay" className="absolute w-[184px] h-[184px] left-[-76px] bottom-0 opacity-0 cursor-pointer z-10 -rotate-90 origin-center" value={decay} onChange={handleDecay} />
-        <div className="w-full bg-primary/40 pointer-events-none group-hover:bg-primary/60 transition-colors" style={{ height: `${decay}%` }}></div>
-        <div className="absolute left-0 w-full h-1 bg-primary shadow-[0_0_8px_#8eff71] pointer-events-none" style={{ bottom: `${decay}%` }}></div>
-      </div>
-      <div className="text-center">
-        <div className="font-headline text-[10px] text-secondary">{decay}ms</div>
-        <div className="font-headline text-[10px] text-primary font-bold">DECAY</div>
-      </div>
-    </div>
-  );
-};
-
 // Extracted into a separate component to prevent parent re-renders on state change
 const DetuneControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
   const [detune, setDetune] = usePatchState('detune', '64', (val) => {
@@ -118,11 +68,8 @@ export const SynthControls: React.FC = () => {
         <h3 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">ENVELOPE_SHAPER_MOD</h3>
         
         <div className="grid grid-cols-4 gap-6 flex-1">
-          {/* Attack Slider */}
-          <AttackControl activeChannel={activeChannel} />
-
-          {/* Decay Slider */}
-          <DecayControl activeChannel={activeChannel} />
+          {/* Visual Envelope Editor (Attack & Decay) */}
+          <VisualEnvelopeEditor activeChannel={activeChannel} />
 
           {/* Detune Slider */}
           <DetuneControl activeChannel={activeChannel} />
