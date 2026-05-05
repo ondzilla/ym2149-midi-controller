@@ -17,3 +17,7 @@ Action: Shift focus towards UX/UI component improvements (e.g., replacing vertic
 ## 2026-05-04 - Gamepad API for MIDI Control
 Learning: The modern Gamepad API (`navigator.getGamepads()`) requires a polling loop (`requestAnimationFrame`) rather than event listeners for reading continuous values (like analog sticks) and button presses. It is uniquely well-suited for experimental hardware control because analog stick values (-1.0 to 1.0) can be scaled easily to 7-bit MIDI CC values (0-127).
 Action: I proposed a feature that leverages this polling loop to map physical game controllers to the YM2149 synth parameters, making sure to explicitly map the action buttons to the exact Channel 10 Drum Map.
+
+## 2026-05-05 - Desktop Application Constraints for Experimentalism
+Learning: The user explicitly provided feedback rejecting an experimental feature based on mobile device sensors (like accelerometer/gyroscope). Since the application requires physical connection to the synthesizer hardware via MIDI, it functions primarily as a desktop application.
+Action: Going forward, I will avoid proposing any features that rely on moving the primary device or using on-device mobile sensors. I will focus experimental ideas on desktop-friendly interactions, such as Webcams, external controllers, or advanced UI data mapping.
