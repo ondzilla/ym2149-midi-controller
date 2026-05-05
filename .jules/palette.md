@@ -9,3 +9,6 @@
 ## 2025-05-03 - [Accessible Custom Toggles and Labels]
 **Learning:** Found custom toggle buttons lacking state announcement (e.g., in `SettingToggle` and Arp Mode) and custom labels that weren't programmatically linked to their hidden inputs. Adding `aria-pressed={state}` makes custom toggle buttons accessible to screen readers, and explicitly linking custom `<label>`s to inputs using `htmlFor` and `id` ensures proper accessibility association even when native labels aren't used.
 **Action:** Always use `aria-pressed` for custom toggle button states and ensure all `<label>` elements are programmatically linked to their corresponding form controls using `htmlFor` and `id`.
+## 2024-05-04 - Semantic Linkage for Visually Hidden Inputs
+**Learning:** When using modern CSS to visually hide native interactive inputs (`opacity-0`) while presenting custom UI alongside them, screen readers may lose the semantic connection between the custom visual label and the input if it relies solely on DOM order.
+**Action:** Always wrap custom visual labels in a `<label>` element and programmatically link them to the hidden native `<input>` or `<select>` using matching `htmlFor` and `id` attributes to guarantee robust screen reader support and hit-area expansion.

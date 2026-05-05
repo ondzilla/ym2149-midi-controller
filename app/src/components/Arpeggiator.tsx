@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
@@ -15,11 +15,13 @@ const ArpRateControl: React.FC<{ channel: number }> = ({ channel }) => {
     setRate(e.target.value);
   };
 
+  const rateId = useId();
+
   return (
     <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <span className="font-headline text-[10px] text-tertiary">RATE</span>
+      <label htmlFor={rateId} className="font-headline text-[10px] text-tertiary">RATE</label>
       <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{rate}%</span>
-      <input type="range" min="0" max="100" aria-label="Rate" value={rate} onChange={handleRate} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" />
+      <input id={rateId} type="range" min="0" max="100" aria-label="Rate" value={rate} onChange={handleRate} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" />
     </div>
   );
 };
@@ -63,6 +65,9 @@ export const Arpeggiator: React.FC = () => {
     setArpMode(!arpMode);
   };
 
+  const patternId = useId();
+  const octaveId = useId();
+
   return (
     <section className="bg-surface-container-high relative p-6 solder-point solder-tl solder-tr solder-bl solder-br border border-[#32152f] flex flex-col h-full">
       <h2 className="sr-only">Arpeggiator</h2>
@@ -71,16 +76,16 @@ export const Arpeggiator: React.FC = () => {
         
         <div className="space-y-6 flex flex-col justify-center">
           <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-            <span className="font-headline text-[10px] text-tertiary">PATTERN_SELECT</span>
+            <label htmlFor={patternId} className="font-headline text-[10px] text-tertiary">PATTERN_SELECT</label>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">PTN_{pattern}</span>
-            <select aria-label="Pattern" value={pattern} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" onChange={(e) => playPattern(Number(e.target.value))}>
+            <select id={patternId} aria-label="Pattern" value={pattern} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full" onChange={(e) => playPattern(Number(e.target.value))}>
               {PATTERNS.map((_, i) => <option key={i} value={i}>Pattern {i}</option>)}
             </select>
           </div>
           <div className="flex justify-between items-end border-b border-outline-variant/30 pb-2 relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-            <span className="font-headline text-[10px] text-tertiary">OCTAVE_RANGE</span>
+            <label htmlFor={octaveId} className="font-headline text-[10px] text-tertiary">OCTAVE_RANGE</label>
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{octave}</span>
-            <select aria-label="Octave" value={octave} onChange={handleOctave} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
+            <select id={octaveId} aria-label="Octave" value={octave} onChange={handleOctave} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
               {OCTAVES.map(opt => (
                 <option key={opt} value={opt}>{opt} OCT</option>
               ))}
