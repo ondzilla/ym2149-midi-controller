@@ -18,6 +18,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
 
   const svgRef = useRef<SVGSVGElement>(null);
   const [draggingNode, setDraggingNode] = useState<'attack' | 'decay' | null>(null);
+  const [focusedNode, setFocusedNode] = useState<'attack' | 'decay' | null>(null);
 
   const getPercentageFromMouseEvent = (e: MouseEvent | TouchEvent) => {
     if (!svgRef.current) return 0;
@@ -67,7 +68,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleUp);
     };
-  }, [draggingNode, setAttack, setDecay]);
+  }, [draggingNode, setAttack, setDecay, attack, decay]);
 
   // Points mapped from 0-100 logic onto an SVG with viewBox "0 0 100 100"
   // Start point (0, 100) -> bottom left
@@ -126,7 +127,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
             cy="0"
             r="4"
             fill="#8eff71"
-            className={`cursor-grab ${draggingNode === 'attack' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center`}
+            className={`cursor-grab ${draggingNode === 'attack' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center ${focusedNode === 'attack' ? 'stroke-white stroke-2' : ''}`}
             style={{ transformOrigin: `${attackX}px 0px` }}
             onMouseDown={(e) => { e.stopPropagation(); setDraggingNode('attack'); }}
             onTouchStart={(e) => { e.stopPropagation(); setDraggingNode('attack'); }}
@@ -138,7 +139,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
             cy="100"
             r="4"
             fill="#8eff71"
-            className={`cursor-grab ${draggingNode === 'decay' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center`}
+            className={`cursor-grab ${draggingNode === 'decay' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center ${focusedNode === 'decay' ? 'stroke-white stroke-2' : ''}`}
             style={{ transformOrigin: `${decayX}px 100px` }}
             onMouseDown={(e) => { e.stopPropagation(); setDraggingNode('decay'); }}
             onTouchStart={(e) => { e.stopPropagation(); setDraggingNode('decay'); }}
@@ -153,6 +154,8 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
           aria-label="Attack"
           value={attack}
           onChange={(e) => setAttack(e.target.value)}
+          onFocus={() => setFocusedNode('attack')}
+          onBlur={() => setFocusedNode(null)}
           className="sr-only"
         />
         <input
@@ -162,6 +165,8 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
           aria-label="Decay"
           value={decay}
           onChange={(e) => setDecay(e.target.value)}
+          onFocus={() => setFocusedNode('decay')}
+          onBlur={() => setFocusedNode(null)}
           className="sr-only"
         />
       </div>

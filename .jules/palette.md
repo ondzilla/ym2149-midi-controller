@@ -12,3 +12,6 @@
 ## 2024-05-04 - Semantic Linkage for Visually Hidden Inputs
 **Learning:** When using modern CSS to visually hide native interactive inputs (`opacity-0`) while presenting custom UI alongside them, screen readers may lose the semantic connection between the custom visual label and the input if it relies solely on DOM order.
 **Action:** Always wrap custom visual labels in a `<label>` element and programmatically link them to the hidden native `<input>` or `<select>` using matching `htmlFor` and `id` attributes to guarantee robust screen reader support and hit-area expansion.
+## 2025-05-05 - Visual Envelope Focus Feedback
+**Learning:** For custom UI components that rely on visually hidden inputs (like `opacity-0` or `sr-only` native `<input type="range">`) overlaid on top of a graphical representation (like an SVG), keyboard users lose track of focus. We mapped the `onFocus` and `onBlur` states of these hidden inputs to update a React state (`focusedNode`), which we then used to apply a visible outline (`stroke-white stroke-2`) to the corresponding SVG node representing the data point.
+**Action:** Always ensure that when using visually hidden native inputs to capture interactions for custom graphics, their focus state is programmatically tied to a visible indicator on the graphic itself.
