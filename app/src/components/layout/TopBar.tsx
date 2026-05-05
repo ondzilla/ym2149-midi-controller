@@ -1,6 +1,10 @@
 import { midiService } from '../../services/midiService';
 
-export function TopBar() {
+interface TopBarProps {
+  onOpenSettings: () => void;
+}
+
+export function TopBar({ onOpenSettings }: TopBarProps) {
   const handlePanic = () => {
     try {
       // Send All Notes Off (CC 123) to all 16 MIDI channels
@@ -21,6 +25,7 @@ export function TopBar() {
         <div className="flex gap-4">
           <button
             type="button"
+            onClick={onOpenSettings}
             aria-label="Settings"
             title="Settings"
             className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
