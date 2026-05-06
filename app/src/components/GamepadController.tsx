@@ -15,6 +15,29 @@ const DRUM_MAPPING: Record<number, number> = {
 
 const DRUM_MAPPING_ENTRIES = Object.entries(DRUM_MAPPING).map(([k, v]) => [Number(k), v] as const);
 
+const processAxis = (
+  axisIndex: number,
+  cc: number,
+  axes: readonly number[],
+  prevState: { axes: number[] },
+  globalChannel: number
+) => {
+  const rawValue = axes[axisIndex] || 0;
+  let scaledValue = 0;
+
+  if (Math.abs(rawValue) > DEADZONE) {
+    // Map -1..1 to 0..127
+    scaledValue = Math.floor(((rawValue + 1) / 2) * 127);
+  } else {
+    scaledValue = 64; // Center
+  }
+
+  if (scaledValue !== prevState.axes[axisIndex]) {
+    try { midiService.sendCC(globalChannel, cc, scaledValue); } catch (e) { console.warn(e); }
+    prevState.axes[axisIndex] = scaledValue;
+  }
+};
+
 export const GamepadController: React.FC = () => {
   const requestRef = useRef<number>(0);
   const prevStateRef = useRef<{
@@ -53,27 +76,10 @@ export const GamepadController: React.FC = () => {
         }
 
         // Process Continuous Controls (Axes)
-        const processAxis = (axisIndex: number, cc: number) => {
-          const rawValue = axes[axisIndex] || 0;
-          let scaledValue = 0;
-
-          if (Math.abs(rawValue) > DEADZONE) {
-            // Map -1..1 to 0..127
-            scaledValue = Math.floor(((rawValue + 1) / 2) * 127);
-          } else {
-            scaledValue = 64; // Center
-          }
-
-          if (scaledValue !== prevState.axes[axisIndex]) {
-            try { midiService.sendCC(globalChannel, cc, scaledValue); } catch (e) { console.warn(e); }
-            prevState.axes[axisIndex] = scaledValue;
-          }
-        };
-
-        processAxis(1, 12); // Left Stick Y: Env Attack
-        processAxis(0, 11); // Left Stick X: Env Decay
-        processAxis(3, 2);  // Right Stick Y: Vibrato Rate
-        processAxis(2, 3);  // Right Stick X: Vibrato Depth
+        processAxis(1, 12, axes, prevState, globalChannel); // Left Stick Y: Env Attack
+        processAxis(0, 11, axes, prevState, globalChannel); // Left Stick X: Env Decay
+        processAxis(3, 2, axes, prevState, globalChannel);  // Right Stick Y: Vibrato Rate
+        processAxis(2, 3, axes, prevState, globalChannel);  // Right Stick X: Vibrato Depth
 
         // Process Triggers (CC 5)
         const lt = buttons[6]?.value || 0;
