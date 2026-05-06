@@ -25,3 +25,7 @@ Action: Going forward, I will avoid proposing any features that rely on moving t
 ## 2026-05-06 - Web Speech API
 Learning: The native Web Speech API (`window.SpeechRecognition`) is a powerful tool for hands-free MIDI control. It does not require any external dependencies, processes entirely natively in supported browsers, and is ideal for utility actions like Panic or Preset changes.
 Action: Experimented with Voice-to-PSG as a prototype.
+
+## 2026-05-06 - Discovery Process Improvement
+Learning: When auditing for unique ideas, looking only at `docs/ideas/completed/` and `docs/ideas/rejected/` is insufficient if another agent or PR has already proposed the idea but it hasn't been merged into those directories yet.
+Action: I must expand my history audit process to somehow include open PRs or check a broader state of the repository before proposing a "unique" idea.
