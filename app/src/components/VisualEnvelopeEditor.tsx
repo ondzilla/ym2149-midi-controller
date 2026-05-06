@@ -19,6 +19,19 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
   const svgRef = useRef<SVGSVGElement>(null);
   const [draggingNode, setDraggingNode] = useState<'attack' | 'decay' | null>(null);
 
+  // Store the latest state in refs to avoid capturing stale closures in event listeners
+  // and triggering re-binds on every state update (60fps during dragging).
+  const attackRef = useRef(attack);
+  const decayRef = useRef(decay);
+
+  useEffect(() => {
+    attackRef.current = attack;
+  }, [attack]);
+
+  useEffect(() => {
+    decayRef.current = decay;
+  }, [decay]);
+
   const getPercentageFromMouseEvent = (e: MouseEvent | TouchEvent) => {
     if (!svgRef.current) return 0;
 
@@ -41,11 +54,11 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
       const percentage = getPercentageFromMouseEvent(e);
       if (draggingNode === 'attack') {
         // Prevent attack from passing decay
-        const maxAttack = Math.max(0, Number(decay) - 1);
+        const maxAttack = Math.max(0, Number(decayRef.current) - 1);
         setAttack(Math.min(percentage, maxAttack).toString());
       } else if (draggingNode === 'decay') {
         // Prevent decay from going below attack
-        const minDecay = Math.min(100, Number(attack) + 1);
+        const minDecay = Math.min(100, Number(attackRef.current) + 1);
         setDecay(Math.max(percentage, minDecay).toString());
       }
     };

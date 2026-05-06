@@ -8,3 +8,11 @@
 ## 2023-10-27 - Object.entries in requestAnimationFrame loop
 **Learning:** In highly optimized code like `GamepadController` using `requestAnimationFrame`, `Object.entries(DRUM_MAPPING)` was allocating a new array of arrays every single frame, causing unnecessary garbage collection pressure and potentially slowing down the loop.
 **Action:** Extract static mapping arrays out of the render/animation loop, for example by declaring them once outside the component using `Object.entries(DRUM_MAPPING).map(...)`.
+
+## 2026-05-05 - [React Pointer Events over window event listeners]
+**Learning:** When dealing with continuous drag operations in a component, binding  or  to  inside a  can cause severe garbage collection and re-binding overhead if state variables (like  or ) need to be included in the dependency array to avoid stale closures. This runs 60fps and leads to layout thrashing.
+**Action:** Always prefer native React  delegation (, , ) directly on SVG elements or wrappers. Combine this with  to natively handle dragging outside element bounds without manually managing window event lifecycles.
+
+## 2026-05-05 - [React Pointer Events over window event listeners]
+**Learning:** When dealing with continuous drag operations in a component, binding mousemove or touchmove to window inside a useEffect can cause severe garbage collection and re-binding overhead if state variables (like attack or decay) need to be included in the dependency array to avoid stale closures. This runs 60fps and leads to layout thrashing.
+**Action:** Always prefer native React PointerEvent delegation (onPointerDown, onPointerMove, onPointerUp) directly on SVG elements or wrappers. Combine this with e.currentTarget.setPointerCapture to natively handle dragging outside element bounds without manually managing window event lifecycles.
