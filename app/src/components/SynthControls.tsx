@@ -1,5 +1,5 @@
 import { VisualEnvelopeEditor } from './VisualEnvelopeEditor';
-import React from 'react';
+import React, { useId } from 'react';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
@@ -15,16 +15,18 @@ const DetuneControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) =
     setDetune(e.target.value);
   };
 
+  const id = useId();
+
   return (
     <div className="flex flex-col items-center gap-4 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
       <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-tertiary/20 p-1 cursor-pointer">
-        <input type="range" min="0" max="127" aria-label="Detune" value={detune} onChange={handleDetune} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
+        <input id={id} type="range" min="0" max="127" aria-label="Detune" value={detune} onChange={handleDetune} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
         <div className="absolute bottom-1 left-1 right-1 bg-tertiary/40 rounded-full transition-all" style={{ height: `${(Number(detune) / 127) * 100}%` }}></div>
         <div className="absolute left-1 right-1 h-4 bg-tertiary rounded-full shadow-[0_0_10px_#ff9cf4]" style={{ bottom: `calc(${(Number(detune) / 127) * 100}% - 8px)` }}></div>
       </div>
       <div className="flex flex-col items-center gap-1">
         <div className="font-headline text-[10px] text-tertiary">{Number(detune) - 64}</div>
-        <div className="font-headline text-[10px] text-tertiary font-bold">DETUNE</div>
+        <label htmlFor={id} className="font-headline text-[10px] text-tertiary font-bold cursor-pointer">DETUNE</label>
       </div>
     </div>
   );
@@ -40,16 +42,18 @@ const PitchBendControl: React.FC<{ activeChannel: number }> = ({ activeChannel }
     setPitchBend(e.target.value);
   };
 
+  const id = useId();
+
   return (
     <div className="flex flex-col items-center gap-4 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
       <div className="h-48 w-8 bg-surface-container-lowest relative rounded-full border border-secondary/20 p-1 cursor-pointer">
-        <input type="range" min="0" max="16383" aria-label="Pitch Bend" value={pitchBend} onChange={handlePitchBend} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
+        <input id={id} type="range" min="0" max="16383" aria-label="Pitch Bend" value={pitchBend} onChange={handlePitchBend} className="absolute inset-0 opacity-0 cursor-pointer -rotate-90 origin-center w-48 h-8 -left-20 top-20 z-10" />
         <div className="absolute bottom-1 left-1 right-1 bg-secondary/40 rounded-full transition-all" style={{ height: `${(Number(pitchBend) / 16383) * 100}%` }}></div>
         <div className="absolute left-1 right-1 h-4 bg-secondary rounded-full shadow-[0_0_10px_#f5ce53]" style={{ bottom: `calc(${(Number(pitchBend) / 16383) * 100}% - 8px)` }}></div>
       </div>
       <div className="flex flex-col items-center gap-1">
         <div className="font-headline text-[10px] text-secondary">{Math.round(((Number(pitchBend) - 8192) / 8192) * 100)}%</div>
-        <div className="font-headline text-[10px] text-secondary font-bold">PITCH_BEND</div>
+        <label htmlFor={id} className="font-headline text-[10px] text-secondary font-bold cursor-pointer">PITCH_BEND</label>
       </div>
     </div>
   );
@@ -118,14 +122,16 @@ const VibratoDepthControl: React.FC<{ activeChannel: number }> = ({ activeChanne
     setVibratoDepth(Number(e.target.value));
   };
 
+  const id = useId();
+
   return (
     <div className="flex-1 space-y-6 w-full">
       <div className="bg-surface-container-lowest p-3 border-l-4 border-secondary relative group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
         <div className="font-headline text-[10px] text-tertiary mb-2 flex justify-between">
-          <span>DEPTH_MOD</span>
+          <label htmlFor={id} className="cursor-pointer relative z-20">DEPTH_MOD</label>
           <span className="text-secondary">{vibratoDepth}%</span>
         </div>
-        <input type="range" min="0" max="100" aria-label="Vibrato Depth" value={vibratoDepth} onChange={handleVibratoDepth} className="absolute inset-0 opacity-0 z-10 cursor-pointer" />
+        <input id={id} type="range" min="0" max="100" aria-label="Vibrato Depth" value={vibratoDepth} onChange={handleVibratoDepth} className="absolute inset-0 opacity-0 z-10 cursor-pointer" />
         <div className="h-1 w-full bg-surface-container-highest relative pointer-events-none mt-2">
            <div className="absolute top-0 left-0 h-full bg-secondary transition-all" style={{ width: `${vibratoDepth}%` }}></div>
         </div>
