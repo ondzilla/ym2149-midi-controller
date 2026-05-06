@@ -21,3 +21,7 @@ Action: I proposed a feature that leverages this polling loop to map physical ga
 ## 2026-05-05 - Desktop Application Constraints for Experimentalism
 Learning: The user explicitly provided feedback rejecting an experimental feature based on mobile device sensors (like accelerometer/gyroscope). Since the application requires physical connection to the synthesizer hardware via MIDI, it functions primarily as a desktop application.
 Action: Going forward, I will avoid proposing any features that rely on moving the primary device or using on-device mobile sensors. I will focus experimental ideas on desktop-friendly interactions, such as Webcams, external controllers, or advanced UI data mapping.
+
+## 2026-05-05 - Web Speech API for MIDI Event Generation
+Learning: The native Web Speech API (`SpeechRecognition`) provides a lightweight, dependency-free method to translate spoken keywords into structured MIDI events. It is particularly effective for discrete, non-time-critical commands like 'Panic' (All Notes Off) or triggering preset changes, serving as a powerful accessibility and experimental control surface.
+Action: Documented the "Voice-to-PSG" experimental feature utilizing `SpeechRecognition` to map voice commands to YM2149F firmware features.
