@@ -16,3 +16,7 @@
 ## 2026-05-05 - [React Pointer Events over window event listeners]
 **Learning:** When dealing with continuous drag operations in a component, binding mousemove or touchmove to window inside a useEffect can cause severe garbage collection and re-binding overhead if state variables (like attack or decay) need to be included in the dependency array to avoid stale closures. This runs 60fps and leads to layout thrashing.
 **Action:** Always prefer native React PointerEvent delegation (onPointerDown, onPointerMove, onPointerUp) directly on SVG elements or wrappers. Combine this with e.currentTarget.setPointerCapture to natively handle dragging outside element bounds without manually managing window event lifecycles.
+
+## 2026-05-06 - [Extracting allocations from requestAnimationFrame]
+**Learning:** Functions defined inside a requestAnimationFrame callback loop (like `processAxis` in GamepadController) are allocated up to 60 times a second, putting unnecessary pressure on the garbage collector.
+**Action:** Move function definitions out of the loop and pass any necessary closure variables as arguments.
