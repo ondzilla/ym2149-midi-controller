@@ -68,6 +68,7 @@ export const GlobalSettings: React.FC = () => {
   });
 
   const [gamepad, setGamepad] = usePatchState('experimentalGamepad', false);
+  const [voiceControl, setVoiceControl] = usePatchState('experimentalVoiceControl', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -88,6 +89,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleGamepad = () => {
     setGamepad(!gamepad);
+  };
+
+  const handleVoiceControl = () => {
+    setVoiceControl(!voiceControl);
   };
 
   return (
@@ -159,6 +164,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-secondary"
           activeShadowClass="shadow-[0_0_10px_#f5ce53]"
           activeTextColorClass="text-secondary"
+        />
+
+        <SettingToggle
+          label="Voice Control"
+          isActive={voiceControl}
+          onClick={handleVoiceControl}
+          buttonText="Toggle Voice Control"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-primary"
+          activeShadowClass="shadow-[0_0_10px_#8eff71]"
+          activeTextColorClass="text-primary"
         />
       </div>
     </>

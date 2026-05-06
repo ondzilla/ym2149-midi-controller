@@ -4,3 +4,6 @@ Solution: Created a reusable `usePatchState` hook that wraps `useState`. It not 
 ## 2026-05-05 - Visual Envelope Logic Constraint
 Challenge: When rendering a custom AD (Attack-Decay) visual envelope editor mapped to 0-100 `viewBox` coordinates, directly mapping state to coordinates allows users to drag the Attack node temporally past the Decay node (Attack > Decay). This creates an invalid backward-drawn SVG path and misrepresents the duration concept of decay.
 Solution: Implement explicit boundary constraints inside the mouse/touch move event handlers. Attack X must be constrained to `Math.min(percentage, decay - 1)` and Decay X must be constrained to `Math.max(percentage, attack + 1)`.
+## 2026-05-06 - [Zombie Event Listeners in Web Speech API Cleanup]
+Challenge: Implementing a continuous Web Speech API listener created a severe issue where an unmounted component continued to restart the microphone recording. The `useEffect` cleanup function simply called `recognition.stop()`, which immediately fired the `onend` event, creating a loop since `isListeningRef.current` was still true in the callback closure.
+Solution: Ensure zombie listeners are killed during unmount by explicitly setting the event handler to null (`recognition.onend = null`) and toggling state refs false before calling `.stop()` in the cleanup function.
