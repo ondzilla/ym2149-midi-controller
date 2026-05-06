@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useId } from 'react';
 import { usePatchState } from '../hooks/usePatchState';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
@@ -90,6 +90,9 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
   const attackX = Number(attack);
   const decayX = Number(decay);
 
+  const attackId = useId();
+  const decayId = useId();
+
   return (
     <div className="col-span-2 space-y-4">
       <div
@@ -161,6 +164,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
 
         {/* Visually hidden inputs for accessibility and testing */}
         <input
+          id={attackId}
           type="range"
           min="0"
           max="100"
@@ -172,6 +176,7 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
           className="sr-only"
         />
         <input
+          id={decayId}
           type="range"
           min="0"
           max="100"
@@ -187,11 +192,11 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
       <div className="flex justify-between px-2">
         <div className="text-left">
           <div className="font-headline text-[10px] text-secondary">{attack}ms</div>
-          <div className="font-headline text-[10px] text-primary font-bold">ATTACK</div>
+          <label htmlFor={attackId} className="font-headline text-[10px] text-primary font-bold cursor-pointer inline-block">ATTACK</label>
         </div>
         <div className="text-right">
           <div className="font-headline text-[10px] text-secondary">{decay}ms</div>
-          <div className="font-headline text-[10px] text-primary font-bold">DECAY</div>
+          <label htmlFor={decayId} className="font-headline text-[10px] text-primary font-bold cursor-pointer inline-block">DECAY</label>
         </div>
       </div>
     </div>
