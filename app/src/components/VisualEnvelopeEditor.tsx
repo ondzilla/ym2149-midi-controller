@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useId } from 'react';
+import React, { useRef, useState, useId } from 'react';
 import { usePatchState } from '../hooks/usePatchState';
 import { midiService } from '../services/midiService';
 import { percentageToMidi } from '../utils/mathUtils';
@@ -20,68 +20,39 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
   const [draggingNode, setDraggingNode] = useState<'attack' | 'decay' | null>(null);
   const [focusedNode, setFocusedNode] = useState<'attack' | 'decay' | null>(null);
 
-  // Store the latest state in refs to avoid capturing stale closures in event listeners
-  // and triggering re-binds on every state update (60fps during dragging).
-  const attackRef = useRef(attack);
-  const decayRef = useRef(decay);
-
-  useEffect(() => {
-    attackRef.current = attack;
-  }, [attack]);
-
-  useEffect(() => {
-    decayRef.current = decay;
-  }, [decay]);
-
-  const getPercentageFromMouseEvent = (e: MouseEvent | TouchEvent) => {
+  const getPercentageFromPointerEvent = (e: React.PointerEvent<SVGCircleElement>) => {
     if (!svgRef.current) return 0;
 
-    let clientX;
-    if (window.TouchEvent && e instanceof TouchEvent) {
-      clientX = e.touches[0].clientX;
-    } else {
-      clientX = (e as MouseEvent).clientX;
-    }
-
     const rect = svgRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
     return Math.round((x / rect.width) * 100);
   };
 
-  useEffect(() => {
-    const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (!draggingNode) return;
+  const handlePointerDown = (node: 'attack' | 'decay', e: React.PointerEvent<SVGCircleElement>) => {
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDraggingNode(node);
+  };
 
-      const percentage = getPercentageFromMouseEvent(e);
-      if (draggingNode === 'attack') {
-        // Prevent attack from passing decay
-        const maxAttack = Math.max(0, Number(decayRef.current) - 1);
-        setAttack(Math.min(percentage, maxAttack).toString());
-      } else if (draggingNode === 'decay') {
-        // Prevent decay from going below attack
-        const minDecay = Math.min(100, Number(attackRef.current) + 1);
-        setDecay(Math.max(percentage, minDecay).toString());
-      }
-    };
+  const handlePointerMove = (node: 'attack' | 'decay', e: React.PointerEvent<SVGCircleElement>) => {
+    if (draggingNode !== node) return;
 
-    const handleUp = () => {
-      setDraggingNode(null);
-    };
-
-    if (draggingNode) {
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleUp);
-      window.addEventListener('touchmove', handleMove, { passive: false });
-      window.addEventListener('touchend', handleUp);
+    const percentage = getPercentageFromPointerEvent(e);
+    if (node === 'attack') {
+      // Prevent attack from passing decay
+      const maxAttack = Math.max(0, Number(decay) - 1);
+      setAttack(Math.min(percentage, maxAttack).toString());
+    } else if (node === 'decay') {
+      // Prevent decay from going below attack
+      const minDecay = Math.min(100, Number(attack) + 1);
+      setDecay(Math.max(percentage, minDecay).toString());
     }
+  };
 
-    return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleUp);
-      window.removeEventListener('touchmove', handleMove);
-      window.removeEventListener('touchend', handleUp);
-    };
-  }, [draggingNode, setAttack, setDecay, attack, decay]);
+  const handlePointerUp = (e: React.PointerEvent<SVGCircleElement>) => {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setDraggingNode(null);
+  };
 
   // Points mapped from 0-100 logic onto an SVG with viewBox "0 0 100 100"
   // Start point (0, 100) -> bottom left
@@ -145,8 +116,10 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
             fill="#8eff71"
             className={`cursor-grab ${draggingNode === 'attack' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center ${focusedNode === 'attack' ? 'stroke-white stroke-2' : ''}`}
             style={{ transformOrigin: `${attackX}px 0px` }}
-            onMouseDown={(e) => { e.stopPropagation(); setDraggingNode('attack'); }}
-            onTouchStart={(e) => { e.stopPropagation(); setDraggingNode('attack'); }}
+            onPointerDown={(e) => handlePointerDown('attack', e)}
+            onPointerMove={(e) => handlePointerMove('attack', e)}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
           />
 
           {/* Decay Node */}
@@ -157,8 +130,10 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
             fill="#8eff71"
             className={`cursor-grab ${draggingNode === 'decay' ? 'cursor-grabbing scale-150' : 'hover:scale-125'} transition-transform origin-center ${focusedNode === 'decay' ? 'stroke-white stroke-2' : ''}`}
             style={{ transformOrigin: `${decayX}px 100px` }}
-            onMouseDown={(e) => { e.stopPropagation(); setDraggingNode('decay'); }}
-            onTouchStart={(e) => { e.stopPropagation(); setDraggingNode('decay'); }}
+            onPointerDown={(e) => handlePointerDown('decay', e)}
+            onPointerMove={(e) => handlePointerMove('decay', e)}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
           />
         </svg>
 
