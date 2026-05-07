@@ -10,18 +10,21 @@ import { RightOverlay } from './components/layout/RightOverlay';
 import { BackgroundTraces } from './components/layout/BackgroundTraces';
 import { GamepadController } from './components/GamepadController';
 import { VoiceController } from './components/VoiceController';
+import { ThereminCam } from './components/ThereminCam';
 import { SettingsOverlay } from './components/layout/SettingsOverlay';
 import { usePatchState } from './hooks/usePatchState';
 
 export default function App() {
   const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
   const [experimentalVoiceControl] = usePatchState('experimentalVoiceControl', false);
+  const [experimentalThereminCam] = usePatchState('experimentalThereminCam', false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen flex">
       {experimentalGamepad && <GamepadController />}
       {experimentalVoiceControl && <VoiceController />}
+      {experimentalThereminCam && <ThereminCam />}
 
       <SettingsOverlay
         isOpen={isSettingsOpen}
