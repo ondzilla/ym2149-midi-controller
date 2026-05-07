@@ -25,3 +25,7 @@ Action: Going forward, I will avoid proposing any features that rely on moving t
 ## 2026-05-05 - Web Speech API for MIDI Event Generation
 Learning: The native Web Speech API (`SpeechRecognition`) provides a lightweight, dependency-free method to translate spoken keywords into structured MIDI events. It is particularly effective for discrete, non-time-critical commands like 'Panic' (All Notes Off) or triggering preset changes, serving as a powerful accessibility and experimental control surface.
 Action: Documented the "Voice-to-PSG" experimental feature utilizing `SpeechRecognition` to map voice commands to YM2149F firmware features.
+
+## 2026-05-07 - WebRTC & Canvas API for Optical MIDI
+Learning: The native WebRTC (`getUserMedia`) and `<canvas>` APIs provide a dependency-free, lightweight method to capture video frames and analyze pixel differences. This technique works exceptionally well for generating a continuous stream of MIDI data based on optical motion without the need for heavy machine learning libraries.
+Action: Proposed the "Theremin Cam" feature leveraging this technique to map physical motion to CC 1 (Detune) and CC 3 (Vibrato Amount).
