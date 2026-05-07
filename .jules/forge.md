@@ -7,3 +7,7 @@ Solution: Implement explicit boundary constraints inside the mouse/touch move ev
 ## 2026-05-06 - [Zombie Event Listeners in Web Speech API Cleanup]
 Challenge: Implementing a continuous Web Speech API listener created a severe issue where an unmounted component continued to restart the microphone recording. The `useEffect` cleanup function simply called `recognition.stop()`, which immediately fired the `onend` event, creating a loop since `isListeningRef.current` was still true in the callback closure.
 Solution: Ensure zombie listeners are killed during unmount by explicitly setting the event handler to null (`recognition.onend = null`) and toggling state refs false before calling `.stop()` in the cleanup function.
+
+## 2026-05-07 - [Theremin Cam Optical Motion Tracking]
+Challenge: Implementing optical motion tracking mapping to MIDI without using heavy dependencies like TensorFlow.js or MediaPipe to preserve app performance.
+Solution: Implemented a lightweight solution using native WebRTC (`getUserMedia`) to stream video to a hidden `<video>` element, and a `<canvas>` element continuously drawing frames via `requestAnimationFrame`. We measure simple frame-by-frame pixel differences in an `ImageData` array to establish a 'motion score', which is mapped to CC 1 and CC 3. To optimize we use a very low resolution canvas (64x48).
