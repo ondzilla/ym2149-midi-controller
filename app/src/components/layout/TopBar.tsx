@@ -28,18 +28,18 @@ export function TopBar({ onOpenSettings }: TopBarProps) {
             onClick={onOpenSettings}
             aria-label="Settings"
             title="Settings"
-            className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
+            className="text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >
-            settings
+            <span aria-hidden="true" className="material-symbols-outlined">settings</span>
           </button>
           <button
             type="button"
             aria-label="All Notes Off (Panic)"
             title="All Notes Off (Panic)"
             onClick={handlePanic}
-            className="material-symbols-outlined text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
+            className="text-[#ff9cf4] opacity-70 cursor-pointer hover:text-[#8eff71] focus-visible:text-[#8eff71] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded transition-colors"
           >
-            power_settings_new
+            <span aria-hidden="true" className="material-symbols-outlined">power_settings_new</span>
           </button>
         </div>
         <div className="flex items-center gap-2 border-l border-[#32152f] pl-6">
