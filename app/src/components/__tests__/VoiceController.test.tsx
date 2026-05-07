@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { VoiceController } from '../VoiceController';
 import { midiService } from '../../services/midiService';
 import { presetManager } from '../../services/presetManager';
@@ -90,10 +90,12 @@ describe('VoiceController', () => {
 
     render(<VoiceController />);
 
-    onResultCallback({
-      results: [
-        [{ transcript: 'panic' }]
-      ]
+    act(() => {
+      onResultCallback({
+        results: [
+          [{ transcript: 'panic' }]
+        ]
+      });
     });
 
     expect(midiService.sendAllNotesOff).toHaveBeenCalled();
@@ -112,10 +114,12 @@ describe('VoiceController', () => {
     window.SpeechRecognition = MockSpeechRecognition as any;
 
     render(<VoiceController />);
-    onResultCallback({
-      results: [
-        [{ transcript: 'kick' }]
-      ]
+    act(() => {
+      onResultCallback({
+        results: [
+          [{ transcript: 'kick' }]
+        ]
+      });
     });
 
     expect(midiService.sendNoteOn).toHaveBeenCalledWith(10, 64, 127);
@@ -134,10 +138,12 @@ describe('VoiceController', () => {
     window.SpeechRecognition = MockSpeechRecognition as any;
 
     render(<VoiceController />);
-    onResultCallback({
-      results: [
-        [{ transcript: 'preset one' }]
-      ]
+    act(() => {
+      onResultCallback({
+        results: [
+          [{ transcript: 'preset one' }]
+        ]
+      });
     });
 
     expect(presetManager.loadPreset).toHaveBeenCalledWith('Preset One');

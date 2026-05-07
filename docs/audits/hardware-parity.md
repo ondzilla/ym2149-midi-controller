@@ -27,3 +27,10 @@
 ## Findings (2026-05-03)
 - `DrumPads.tsx` hallucinated drum sample note mappings (used 48, 50, 52 etc. instead of hardware specs 60-64). Corrected to map exactly: Dog Yap (60), Bass Thing (61), Hi-Hat (62), Snare (63), Kick Drum (64).
 - Logic bug found in `usePatchState` callbacks in both `GlobalSettings.tsx` and `Arpeggiator.tsx` where boolean values were inverted (`!val ? 127 : 0`) incorrectly reversing CC messages on external preset loads. Corrected to `val ? 127 : 0`.
+
+## Target: Arpeggiator CC 6 Pattern Scaling
+- Arp Pattern CC: 6 (verified against ARDUINO-YM2149F docs)
+
+## Findings (2026-05-07)
+- `arpPattern` in `Arpeggiator.tsx` was sending the raw index (0-15) instead of scaling it across the 0-127 MIDI range.
+- Fixed by wrapping the callback with `mapRange(val, 0, 15, 0, 127)` to correctly distribute the pattern selection.
