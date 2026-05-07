@@ -69,6 +69,7 @@ export const GlobalSettings: React.FC = () => {
 
   const [gamepad, setGamepad] = usePatchState('experimentalGamepad', false);
   const [voiceControl, setVoiceControl] = usePatchState('experimentalVoiceControl', false);
+  const [thereminCam, setThereminCam] = usePatchState('experimentalThereminCam', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -93,6 +94,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleVoiceControl = () => {
     setVoiceControl(!voiceControl);
+  };
+
+  const handleThereminCam = () => {
+    setThereminCam(!thereminCam);
   };
 
   return (
@@ -176,6 +181,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-primary"
           activeShadowClass="shadow-[0_0_10px_#8eff71]"
           activeTextColorClass="text-primary"
+        />
+
+        <SettingToggle
+          label="Theremin Cam"
+          isActive={thereminCam}
+          onClick={handleThereminCam}
+          buttonText="Toggle Theremin Cam"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-tertiary"
+          activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
+          activeTextColorClass="text-tertiary"
         />
       </div>
     </>
