@@ -18,3 +18,6 @@
 ## 2024-05-06 - [Semantic Linkage for Hidden Inputs via useId]
 **Learning:** For custom slider controls where the visual UI labels (like "ATTACK", "DETUNE") were purely presentational (`<div>` or `<span>`), users could not click the label to focus the hidden input. Using `React.useId()` to generate a unique ID and mapping it via `<label htmlFor={id}>` to the `<input type="range" id={id}>` drastically improves hit-area and proper screen reader context mapping without changing the visual design.
 **Action:** Always link custom labels to their hidden interactive elements using `React.useId()` and `htmlFor` to expand click targets and improve accessibility.
+## 2025-05-07 - [Screen Reader Ligature Icons]
+**Learning:** Ligature-based icon fonts (like Material Symbols, e.g. `<span className="material-symbols-outlined">menu_book</span>`) present a major accessibility issue for screen readers. By default, a screen reader will announce the raw ligature text ("menu book") which can be confusing or redundant, especially if it's already accompanied by a visible label.
+**Action:** Always add `aria-hidden="true"` to ligature-based icon font elements (e.g. `<span className="material-symbols-outlined" aria-hidden="true">...</span>`). If the icon is the *only* content of an interactive element, ensure the parent `<button>` or `<a>` has an appropriate `aria-label`.
