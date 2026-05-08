@@ -10,6 +10,7 @@ class PresetManager {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setValue(key: string, value: any) {
     this.currentState[key] = value;
+    this.notify();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
