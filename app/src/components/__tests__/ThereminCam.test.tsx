@@ -63,7 +63,7 @@ describe('ThereminCam', () => {
     const title = screen.getByText('THEREMIN_CAM');
     expect(title).toBeInTheDocument();
 
-    const toggleButton = screen.getByRole('button', { name: /Start Theremin Cam/i });
+    const toggleButton = screen.getByRole('button', { name: /Stop Theremin Cam/i });
     expect(toggleButton).toBeInTheDocument();
 
     fireEvent.click(toggleButton);

@@ -8,9 +8,15 @@ const PIXEL_THRESHOLD = 30; // Min difference to be considered motion
 const MOTION_THRESHOLD = 50; // Min pixels changed to trigger an update
 
 export const ThereminCam: React.FC = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isSupported] = useState(() => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia));
+
+  useEffect(() => {
+    if (!isSupported) {
+      console.error('Theremin Cam is not supported in this browser environment. Ensure you are using HTTPS or localhost to access the mediaDevices API.');
+    }
+  }, [isSupported]);
   const [cc1Value, setCc1Value] = useState(0);
   const [cc3Value, setCc3Value] = useState(0);
 
