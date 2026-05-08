@@ -181,16 +181,16 @@ export const ThereminCam: React.FC = () => {
 
   if (!isSupported) {
     return (
-      <div className="fixed bottom-4 right-72 bg-surface-container-high border border-outline p-4 shadow-lg z-50 pointer-events-none">
+      <div className="bg-surface-container-high border border-[#32152f] p-4 relative solder-point solder-tl solder-tr solder-bl solder-br flex flex-col justify-center items-center pointer-events-none">
         <p className="font-headline text-[10px] text-error">THEREMIN_CAM: NOT_SUPPORTED</p>
       </div>
     );
   }
 
   return (
-    <div className="fixed bottom-4 right-72 bg-surface-container-high border border-[#32152f] p-4 shadow-lg z-50 w-64">
+    <div className="bg-surface-container-high border border-[#32152f] p-6 relative solder-point solder-tl solder-tr solder-bl solder-br flex flex-col">
       {/* Hidden elements for processing */}
-      <video ref={videoRef} width={RESOLUTION_WIDTH} height={RESOLUTION_HEIGHT} className="hidden" muted playsInline />
+      <video ref={videoRef} width={RESOLUTION_WIDTH} height={RESOLUTION_HEIGHT} className="w-full max-w-[320px] mx-auto border-2 border-surface-container-highest mb-4 object-cover transform -scale-x-100 filter grayscale contrast-125 sepia-[.3] hue-rotate-[-50deg]" muted playsInline />
       <canvas ref={canvasRef} width={RESOLUTION_WIDTH} height={RESOLUTION_HEIGHT} className="hidden" />
 
       <div className="flex justify-between items-center mb-4">
