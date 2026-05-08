@@ -4,6 +4,7 @@ import { usePatchState } from '../hooks/usePatchState';
 
 export const ConnectionPanel: React.FC = () => {
   const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
+  const [experimentalTheremin] = usePatchState('experimentalTheremin', false);
   const [gamepadConnected, setGamepadConnected] = useState(() => {
     const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
     for (const gp of gamepads) {
@@ -66,6 +67,15 @@ export const ConnectionPanel: React.FC = () => {
               <div className={`w-2 h-2 rounded-full ${gamepadConnected ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
               <span data-testid="gamepad-status" className={`font-headline text-[10px] tracking-widest ${gamepadConnected ? 'text-primary' : 'text-error'}`}>
                 GAMEPAD: {gamepadConnected ? 'CONNECTED' : 'DISCONNECTED'}
+              </span>
+            </div>
+          )}
+
+          {experimentalTheremin && (
+            <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-4">
+              <span className="material-symbols-outlined text-[14px] text-tertiary" aria-hidden="true">videocam</span>
+              <span data-testid="theremin-status" className="font-headline text-[10px] tracking-widest text-tertiary">
+                THEREMIN: ACTIVE
               </span>
             </div>
           )}
