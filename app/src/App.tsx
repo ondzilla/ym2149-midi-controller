@@ -24,7 +24,6 @@ export default function App() {
     <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen flex">
       {experimentalGamepad && <GamepadController />}
       {experimentalVoiceControl && <VoiceController />}
-      {experimentalThereminCam && <ThereminCam />}
 
       <SettingsOverlay
         isOpen={isSettingsOpen}
@@ -55,6 +54,12 @@ export default function App() {
           <div className="col-span-12 xl:col-span-6">
             <VibratoLFO />
           </div>
+
+          {experimentalThereminCam && (
+            <div className="col-span-12">
+              <ThereminCam />
+            </div>
+          )}
 
           <div className="col-span-12">
             <DrumPads />
