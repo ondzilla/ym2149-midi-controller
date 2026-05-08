@@ -29,25 +29,25 @@ export function Sidebar() {
       <nav className="flex-1 mt-4">
         <div className="text-[#8eff71] border-l-4 border-[#8eff71] pl-4 py-3 bg-[#32152f] font-headline text-xs uppercase tracking-widest cursor-pointer mb-1 transition-transform active:scale-[0.97]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">settings_input_component</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">settings_input_component</span>
             <span>Oscillators</span>
           </div>
         </div>
         <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">waves</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">waves</span>
             <span>Envelopes</span>
           </div>
         </div>
         <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">tune</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">tune</span>
             <span>Mixer</span>
           </div>
         </div>
         <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">grid_view</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">grid_view</span>
             <span>Matrix</span>
           </div>
         </div>
@@ -66,7 +66,7 @@ export function Sidebar() {
           LOAD_PATCH
         </button>
         <a href="https://github.com/Chiptune-Anamnesis/ARDUINO-YM2149F" target="_blank" rel="noopener noreferrer" className="text-[#ff9cf4] opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:text-[#8eff71] flex items-center gap-3 px-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded">
-          <span className="material-symbols-outlined text-lg">menu_book</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">menu_book</span>
           <span>Docs</span>
         </a>
       </div>

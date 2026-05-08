@@ -190,13 +190,13 @@ export const VoiceController: React.FC = () => {
         <h3 className="font-headline text-xs tracking-widest text-tertiary">VOICE_CTRL</h3>
         <button
           onClick={toggleListening}
-          className={`material-symbols-outlined rounded p-1 transition-colors ${
+          className={`rounded p-1 transition-colors flex items-center justify-center ${
             isListening ? 'text-error animate-pulse shadow-[0_0_8px_var(--error)]' : 'text-primary opacity-60 hover:opacity-100'
           }`}
           aria-label={isListening ? 'Stop listening' : 'Start listening'}
           title={isListening ? 'Stop listening' : 'Start listening'}
         >
-          {isListening ? 'mic' : 'mic_off'}
+          <span className="material-symbols-outlined" aria-hidden="true">{isListening ? 'mic' : 'mic_off'}</span>
         </button>
       </div>
 

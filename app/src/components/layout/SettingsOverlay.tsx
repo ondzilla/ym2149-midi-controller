@@ -40,9 +40,9 @@ export const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ isOpen, onClos
             onClick={onClose}
             aria-label="Close settings"
             title="Close settings"
-            className="material-symbols-outlined text-tertiary opacity-70 hover:opacity-100 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+            className="text-tertiary opacity-70 hover:opacity-100 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded flex items-center justify-center"
           >
-            close
+            <span className="material-symbols-outlined" aria-hidden="true">close</span>
           </button>
         </div>
         <div className="space-y-6">

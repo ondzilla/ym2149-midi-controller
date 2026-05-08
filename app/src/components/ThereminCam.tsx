@@ -197,13 +197,13 @@ export const ThereminCam: React.FC = () => {
         <h3 className="font-headline text-xs tracking-widest text-tertiary">THEREMIN_CAM</h3>
         <button
           onClick={toggleListening}
-          className={`material-symbols-outlined rounded p-1 transition-colors ${
+          className={`rounded p-1 transition-colors flex items-center justify-center ${
             isActive ? 'text-primary animate-pulse shadow-[0_0_8px_var(--primary)]' : 'text-primary opacity-60 hover:opacity-100'
           }`}
           aria-label={isActive ? 'Stop Theremin Cam' : 'Start Theremin Cam'}
           title={isActive ? 'Stop Theremin Cam' : 'Start Theremin Cam'}
         >
-          {isActive ? 'videocam' : 'videocam_off'}
+          <span className="material-symbols-outlined" aria-hidden="true">{isActive ? 'videocam' : 'videocam_off'}</span>
         </button>
       </div>
 
