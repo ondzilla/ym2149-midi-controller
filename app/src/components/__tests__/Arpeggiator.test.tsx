@@ -43,7 +43,8 @@ describe('Arpeggiator', () => {
     const patternSelect = screen.getByRole('combobox', { name: /pattern/i });
     fireEvent.change(patternSelect, { target: { value: '3' } });
 
-    expect(midiService.sendCC).toHaveBeenCalledWith(1, 6, 3); // Emitting index 3
+    // Value 3 scaled from 0-15 to 0-127 is 25
+    expect(midiService.sendCC).toHaveBeenCalledWith(1, 6, 25);
 
     // Check that display updates
     expect(screen.getByText('PTN_3')).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import React, { useId } from 'react';
 import { midiService } from '../services/midiService';
-import { percentageToMidi } from '../utils/mathUtils';
+import { percentageToMidi, mapRange } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
 
 const PATTERNS = Array.from({ length: 16 });
@@ -50,7 +50,7 @@ export const Arpeggiator: React.FC = () => {
   });
 
   const [pattern, setPattern] = usePatchState('arpPattern', 0, (val) => {
-    try { midiService.sendCC(channel, 6, val); } catch (e) { console.warn('MIDI error', e); }
+    try { midiService.sendCC(channel, 6, mapRange(Number(val), 0, 15, 0, 127)); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const handleOctave = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -3,3 +3,5 @@
 ## 2025-05-02 - [Audit Finding] Observation: `Arpeggiator.tsx` contained hallucinated `RESET_GATE` and `GATE_LIGHTS` UI elements. The `GATE_TIME` label did not match the hardware's CC 5 `RATE` spec. Furthermore, `Arpeggiator`, `SynthControls`, and `VibratoLFO` hardcoded the MIDI channel to 1, ignoring the global selection. `VibratoLFO` also included a hallucinated `WAVEFORM_TYPE` display. Correction: Removed dead UI components, renamed `GATE_TIME` to `RATE`, and bound components to use `globalChannel` from `usePatchState`.
 
 ## 2026-05-03 - [Audit Finding] Observation: `DrumPads.tsx` hallucinated drum sample note mappings. Boolean `usePatchState` callbacks inverted CC messages. Correction: Mapped pads to notes 60-64. Fixed boolean logic in callbacks to emit `val ? 127 : 0`.
+
+## 2026-05-08 - [Audit Finding] Observation: `arpPattern` in `Arpeggiator.tsx` sent raw index (0-15) directly to CC 6, missing hardware spec required 0-127 scaling. Correction: Distributed patterns using `mapRange(val, 0, 15, 0, 127)`.

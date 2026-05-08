@@ -27,3 +27,10 @@
 ## Findings (2026-05-03)
 - `DrumPads.tsx` hallucinated drum sample note mappings (used 48, 50, 52 etc. instead of hardware specs 60-64). Corrected to map exactly: Dog Yap (60), Bass Thing (61), Hi-Hat (62), Snare (63), Kick Drum (64).
 - Logic bug found in `usePatchState` callbacks in both `GlobalSettings.tsx` and `Arpeggiator.tsx` where boolean values were inverted (`!val ? 127 : 0`) incorrectly reversing CC messages on external preset loads. Corrected to `val ? 127 : 0`.
+
+## Target: Arpeggiator Patterns (2026-05-08)
+- Arpeggiator Patterns CC: 6
+
+## Findings (2026-05-08)
+- `Arpeggiator.tsx` sent raw pattern indexes (0-15) directly to CC 6, instead of distributing them across the 0-127 range as required by the YM2149F firmware.
+- Correction: Applied `mapRange` utility to correctly scale the 16 patterns across 0-127.
