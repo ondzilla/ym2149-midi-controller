@@ -20,3 +20,7 @@
 ## 2026-05-06 - [Extracting allocations from requestAnimationFrame]
 **Learning:** Functions defined inside a requestAnimationFrame callback loop (like `processAxis` in GamepadController) are allocated up to 60 times a second, putting unnecessary pressure on the garbage collector.
 **Action:** Move function definitions out of the loop and pass any necessary closure variables as arguments.
+
+## 2026-05-15 - [Avoid micro-optimizing small constant loops]
+**Learning:** Attempting to optimize small constant-time loops (like a 16-channel iteration) is generally rejected in code reviews as a micro-optimization with no measurable impact. Always look for optimizations in high-frequency paths like audio loops or requestAnimationFrame, such as hoisting operations out of buffer iteration loops.
+**Action:** Focus performance improvements on large arrays or high-frequency loops. For example, pulling division out of the audio buffer RMS calculation loop in `AudioModulationControl`.
