@@ -29,3 +29,7 @@ Action: Documented the "Voice-to-PSG" experimental feature utilizing `SpeechReco
 ## 2026-05-07 - WebRTC & Canvas API for Optical MIDI
 Learning: The native WebRTC (`getUserMedia`) and `<canvas>` APIs provide a dependency-free, lightweight method to capture video frames and analyze pixel differences. This technique works exceptionally well for generating a continuous stream of MIDI data based on optical motion without the need for heavy machine learning libraries.
 Action: Proposed the "Theremin Cam" feature leveraging this technique to map physical motion to CC 1 (Detune) and CC 3 (Vibrato Amount).
+
+## 2026-05-08 - Web Audio API & getUserMedia for Audio-Reactive MIDI
+**Learning:** The native Web Audio API (`AnalyserNode`) combined with `getUserMedia` provides a dependency-free method to create audio-reactive MIDI modulations (e.g., mapping amplitude to CC values). It works exceptionally well for generating a continuous stream of MIDI data to control vintage sound parameters without requiring heavy external libraries.
+**Action:** Proposed the "Audio-Reactive Modulator" feature utilizing this technique to map microphone input amplitude to CC 1 (Detune) or CC 3 (Vibrato Amount).
