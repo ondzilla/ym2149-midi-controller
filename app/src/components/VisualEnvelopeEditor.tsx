@@ -166,11 +166,11 @@ export const VisualEnvelopeEditor: React.FC<VisualEnvelopeEditorProps> = ({ acti
 
       <div className="flex justify-between px-2">
         <div className="text-left">
-          <div className="font-headline text-[10px] text-secondary">{attack}ms</div>
+          <div className="font-headline text-[10px] text-secondary">{attack}%</div>
           <label htmlFor={attackId} className="font-headline text-[10px] text-primary font-bold cursor-pointer inline-block">ATTACK</label>
         </div>
         <div className="text-right">
-          <div className="font-headline text-[10px] text-secondary">{decay}ms</div>
+          <div className="font-headline text-[10px] text-secondary">{decay}%</div>
           <label htmlFor={decayId} className="font-headline text-[10px] text-primary font-bold cursor-pointer inline-block">DECAY</label>
         </div>
       </div>

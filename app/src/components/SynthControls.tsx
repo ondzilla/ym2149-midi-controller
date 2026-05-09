@@ -104,8 +104,8 @@ const VibratoRateControl: React.FC<{ activeChannel: number }> = ({ activeChannel
         <circle className="text-primary transition-all duration-75" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeDasharray="364.4" strokeDashoffset={364.4 - (vibratoRate / 100) * 364.4} strokeWidth="8"></circle>
       </svg>
       <div className="text-center z-10 pointer-events-none">
-        <div className="font-headline text-lg font-bold text-primary leading-none group-hover:drop-shadow-[0_0_8px_#8eff71] transition-all">{((vibratoRate / 100) * 20).toFixed(1)}</div>
-        <div className="font-headline text-[10px] text-secondary tracking-widest">Hz</div>
+        <div className="font-headline text-lg font-bold text-primary leading-none group-hover:drop-shadow-[0_0_8px_#8eff71] transition-all">{vibratoRate}</div>
+        <div className="font-headline text-[10px] text-secondary tracking-widest">RATE %</div>
       </div>
       <div className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></div>
     </div>
