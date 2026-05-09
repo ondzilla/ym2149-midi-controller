@@ -30,25 +30,7 @@ export function Sidebar() {
         <div className="text-[#8eff71] border-l-4 border-[#8eff71] pl-4 py-3 bg-[#32152f] font-headline text-xs uppercase tracking-widest cursor-pointer mb-1 transition-transform active:scale-[0.97]">
           <div className="flex items-center gap-3">
             <span className="material-symbols-outlined text-lg">settings_input_component</span>
-            <span>Oscillators</span>
-          </div>
-        </div>
-        <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">waves</span>
-            <span>Envelopes</span>
-          </div>
-        </div>
-        <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">tune</span>
-            <span>Mixer</span>
-          </div>
-        </div>
-        <div className="text-[#ff9cf4] border-l-4 border-transparent pl-4 py-3 opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:bg-[#32152f] hover:text-[#8eff71] transition-all mb-1">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">grid_view</span>
-            <span>Matrix</span>
+            <span>Synth Panel</span>
           </div>
         </div>
       </nav>

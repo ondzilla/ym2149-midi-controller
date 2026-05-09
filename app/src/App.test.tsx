@@ -10,8 +10,6 @@ describe('App Component', () => {
 
   it('renders the side navigation elements', () => {
     render(<App />);
-    expect(screen.getByText(/Oscillators/i)).toBeInTheDocument();
-    expect(screen.getByText(/Envelopes/i)).toBeInTheDocument();
-    expect(screen.getByText(/Mixer/i)).toBeInTheDocument();
+    expect(screen.getByText(/Synth Panel/i)).toBeInTheDocument();
   });
 });

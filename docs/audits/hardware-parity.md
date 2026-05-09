@@ -34,3 +34,12 @@
 ## Findings (2026-05-07)
 - `arpPattern` in `Arpeggiator.tsx` was sending the raw index (0-15) instead of scaling it across the 0-127 MIDI range.
 - Fixed by wrapping the callback with `mapRange(val, 0, 15, 0, 127)` to correctly distribute the pattern selection.
+
+## Target: Sidebar Dead Controls & Hallucinated UI Units (2026-05-10)
+- Verified active CC output logic in Sidebar, VisualEnvelopeEditor, and VibratoLFO.
+
+## Findings (2026-05-10)
+- `Sidebar.tsx` contained fully disconnected, hallucinated navigation items ("Envelopes", "Mixer", "Matrix") that falsely advertised functionality not present.
+- `SynthControls.tsx` displayed the `VibratoRate` using a hallucinated `Hz` calculation, falsely implying exact physical frequency mapping rather than the raw CC 0-100 logic.
+- `VisualEnvelopeEditor.tsx` displayed Attack and Decay values with a hallucinated `ms` suffix, falsely implying exact physical timescales rather than the generic CC percentage scale.
+- Fixed by removing dead UI links and replacing hallucinated units (`ms` and `Hz`) with raw percentage values.
