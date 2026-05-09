@@ -1,8 +1,160 @@
 import { VisualEnvelopeEditor } from './VisualEnvelopeEditor';
-import React, { useId } from 'react';
+import React, { useId, useEffect, useRef } from 'react';
 import { midiService } from '../services/midiService';
-import { percentageToMidi } from '../utils/mathUtils';
+import { percentageToMidi, mapRange } from '../utils/mathUtils';
 import { usePatchState } from '../hooks/usePatchState';
+
+// Extracted into a separate component to prevent parent re-renders on state change
+const AudioModulationControl: React.FC<{ activeChannel: number }> = ({ activeChannel }) => {
+  const [audioMod, setAudioMod] = usePatchState('audioMod', false);
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const smoothedRmsRef = useRef<number>(0);
+  const id = useId();
+
+  const handleAudioModToggle = () => {
+    setAudioMod(!audioMod);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    let localStream: MediaStream | null = null;
+    let localCtx: AudioContext | null = null;
+
+    if (audioMod) {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          if (!isMounted) {
+            stream.getTracks().forEach(track => track.stop());
+            return;
+          }
+          localStream = stream;
+          streamRef.current = stream;
+
+          const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
+          if (!AudioContextClass) return;
+
+          localCtx = new AudioContextClass();
+          audioCtxRef.current = localCtx;
+
+          const source = localCtx.createMediaStreamSource(stream);
+          const analyser = localCtx.createAnalyser();
+          analyser.fftSize = 256;
+          source.connect(analyser);
+
+          const bufferLength = analyser.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+
+          const loop = () => {
+            analyser.getByteTimeDomainData(dataArray);
+
+            // Calculate RMS (average distance from 128)
+            let sum = 0;
+            for (let i = 0; i < bufferLength; i++) {
+              const diff = (dataArray[i] - 128) / 128; // Normalize to -1 to 1
+              sum += diff * diff;
+            }
+            const rms = Math.sqrt(sum / bufferLength);
+
+            // Smooth the RMS value
+            smoothedRmsRef.current = smoothedRmsRef.current * 0.8 + rms * 0.2;
+            const currentRms = smoothedRmsRef.current;
+
+            // Map RMS to MIDI CC values
+            // Let's assume max RMS is around 0.5 for normal speech/music
+            const normalizedRms = Math.min(1, currentRms * 2);
+
+            const detuneValue = mapRange(normalizedRms, 0, 1, 64, 127);
+            const vibratoValue = mapRange(normalizedRms, 0, 1, 0, 127);
+
+            // Send MIDI CC messages
+            try {
+              midiService.sendCC(activeChannel, 1, detuneValue);
+            } catch (e) {
+              console.warn('Failed to send Detune CC', e);
+            }
+
+            try {
+              midiService.sendCC(activeChannel, 3, vibratoValue);
+            } catch (e) {
+              console.warn('Failed to send Vibrato CC', e);
+            }
+
+            // Update visualizer if element exists
+            if (visualizerRef.current) {
+              visualizerRef.current.style.width = `${Math.min(100, currentRms * 200)}%`;
+            }
+
+            animationRef.current = requestAnimationFrame(loop);
+          };
+
+          loop();
+        })
+        .catch(err => {
+          console.warn('AudioModulation error:', err);
+          if (isMounted) {
+            setAudioMod(false);
+          }
+        });
+    } else {
+      if (visualizerRef.current) {
+         visualizerRef.current.style.width = '0%';
+      }
+    }
+
+    return () => {
+      isMounted = false;
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+      if (localCtx && localCtx.state !== 'closed') {
+        localCtx.close().catch(() => {});
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current = null;
+      }
+      smoothedRmsRef.current = 0;
+    };
+  }, [audioMod, activeChannel, setAudioMod]);
+
+  const visualizerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <button
+        id={id}
+        aria-pressed={audioMod}
+        onClick={handleAudioModToggle}
+        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high ${audioMod ? 'bg-primary border-primary text-background shadow-[0_0_10px_#8eff71]' : 'bg-surface-container-lowest border-outline text-tertiary opacity-60'}`}
+        title="Toggle Audio Modulation"
+      >
+        <span className="material-symbols-outlined" aria-hidden="true">
+          {audioMod ? 'mic' : 'mic_off'}
+        </span>
+      </button>
+      <label htmlFor={id} className="font-headline text-[10px] text-tertiary cursor-pointer font-bold">AUDIO_MOD</label>
+
+      {/* Visualizer Bar */}
+      <div className="w-full h-2 bg-surface-container-lowest relative mt-2 border border-outline/20">
+        <div
+          ref={visualizerRef}
+          className="absolute left-0 top-0 h-full bg-primary transition-all duration-75"
+          style={{ width: '0%' }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 
 // Extracted into a separate component to prevent parent re-renders on state change
 // Extracted into a separate component to prevent parent re-renders on state change
@@ -152,6 +304,7 @@ export const VibratoLFO: React.FC = () => {
       <div className="flex flex-col md:flex-row items-center gap-10">
         <VibratoRateControl activeChannel={activeChannel} />
         <VibratoDepthControl activeChannel={activeChannel} />
+        <AudioModulationControl activeChannel={activeChannel} />
       </div>
     </section>
   );
