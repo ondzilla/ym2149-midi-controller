@@ -21,3 +21,6 @@
 ## 2025-05-07 - [Screen Reader Ligature Icons]
 **Learning:** Ligature-based icon fonts (like Material Symbols, e.g. `<span className="material-symbols-outlined">menu_book</span>`) present a major accessibility issue for screen readers. By default, a screen reader will announce the raw ligature text ("menu book") which can be confusing or redundant, especially if it's already accompanied by a visible label.
 **Action:** Always add `aria-hidden="true"` to ligature-based icon font elements (e.g. `<span className="material-symbols-outlined" aria-hidden="true">...</span>`). If the icon is the *only* content of an interactive element, ensure the parent `<button>` or `<a>` has an appropriate `aria-label`.
+## 2026-05-09 - [Accessible Custom Toggles and Ligature Icons]
+**Learning:** Ligature-based icon fonts (like `material-symbols-outlined`) when combined with custom toggle buttons (`aria-pressed`) can result in redundant screen reader announcements or a failure to announce the custom toggle state if the ligature text is interpreted as the button content.
+**Action:** Always wrap ligature text in a child `<span aria-hidden="true">`, and explicitly place `aria-pressed` on custom `<button>` toggles to ensure their active/inactive state is parsed independently of visual icons.
