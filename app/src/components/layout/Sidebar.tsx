@@ -29,7 +29,7 @@ export function Sidebar() {
       <nav className="flex-1 mt-4">
         <div className="text-[#8eff71] border-l-4 border-[#8eff71] pl-4 py-3 bg-[#32152f] font-headline text-xs uppercase tracking-widest cursor-pointer mb-1 transition-transform active:scale-[0.97]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-lg">settings_input_component</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-lg">settings_input_component</span>
             <span>Synth Panel</span>
           </div>
         </div>
@@ -48,8 +48,9 @@ export function Sidebar() {
           LOAD_PATCH
         </button>
         <a href="https://github.com/Chiptune-Anamnesis/ARDUINO-YM2149F" target="_blank" rel="noopener noreferrer" className="text-[#ff9cf4] opacity-60 font-headline text-xs uppercase tracking-widest cursor-pointer hover:text-[#8eff71] flex items-center gap-3 px-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded">
-          <span className="material-symbols-outlined text-lg">menu_book</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-lg">menu_book</span>
           <span>Docs</span>
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
     </aside>
