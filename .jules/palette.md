@@ -24,3 +24,6 @@
 ## 2026-05-09 - [Accessible Custom Toggles and Ligature Icons]
 **Learning:** Ligature-based icon fonts (like `material-symbols-outlined`) when combined with custom toggle buttons (`aria-pressed`) can result in redundant screen reader announcements or a failure to announce the custom toggle state if the ligature text is interpreted as the button content.
 **Action:** Always wrap ligature text in a child `<span aria-hidden="true">`, and explicitly place `aria-pressed` on custom `<button>` toggles to ensure their active/inactive state is parsed independently of visual icons.
+## 2025-05-10 - [Icon Button aria-label]
+**Learning:** Found an icon-only toggle button (`AudioModulationControl`) that used `aria-hidden="true"` on its internal ligature icon but relied purely on a `title` attribute for its accessible name. While `title` works as a tooltip for sighted users, `aria-label` provides a direct and explicit accessible name for screen readers that is uniformly supported across assistive tech.
+**Action:** Always provide an `aria-label` attribute on icon-only interactive elements in addition to, or instead of, a native `title` tooltip.

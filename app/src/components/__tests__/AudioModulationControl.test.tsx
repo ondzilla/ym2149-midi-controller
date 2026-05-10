@@ -80,9 +80,7 @@ describe('AudioModulationControl inside VibratoLFO', () => {
     const user = userEvent.setup();
     render(<VibratoLFO />);
 
-    // The button has title="Toggle Audio Modulation" but no aria-label, wait, let's use getByTitle or add aria-label.
-    // In our component: title="Toggle Audio Modulation"
-    const toggleButton = screen.getByTitle('Toggle Audio Modulation');
+    const toggleButton = screen.getByRole('button', { name: 'Toggle Audio Modulation' });
     expect(toggleButton).toHaveAttribute('aria-pressed', 'false');
 
     await act(async () => {
