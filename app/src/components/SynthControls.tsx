@@ -52,10 +52,11 @@ const AudioModulationControl: React.FC<{ activeChannel: number }> = ({ activeCha
             // Calculate RMS (average distance from 128)
             let sum = 0;
             for (let i = 0; i < bufferLength; i++) {
-              const diff = (dataArray[i] - 128) / 128; // Normalize to -1 to 1
+              const diff = dataArray[i] - 128; // Normalize calculation pulled out of loop for performance
               sum += diff * diff;
             }
-            const rms = Math.sqrt(sum / bufferLength);
+            // Divide by 128 outside the loop to avoid expensive division per sample
+            const rms = Math.sqrt(sum / bufferLength) / 128;
 
             // Smooth the RMS value
             smoothedRmsRef.current = smoothedRmsRef.current * 0.8 + rms * 0.2;
