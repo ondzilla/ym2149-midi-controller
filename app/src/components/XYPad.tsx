@@ -18,8 +18,8 @@ export const XYPad: React.FC = () => {
   const padRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.buttons !== 1) return; // Only track while primary button is pressed
     if (!padRef.current) return;
+    if (!padRef.current.hasPointerCapture(e.pointerId)) return;
 
     const rect = padRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));

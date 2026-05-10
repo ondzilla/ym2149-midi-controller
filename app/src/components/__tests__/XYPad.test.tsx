@@ -52,9 +52,10 @@ describe('XYPad Component', () => {
     render(<XYPad />);
     const pad = screen.getByRole('slider');
 
-    // Simulate setPointerCapture existing on Element
+    // Simulate setPointerCapture and hasPointerCapture existing on Element
     pad.setPointerCapture = vi.fn();
     pad.releasePointerCapture = vi.fn();
+    pad.hasPointerCapture = vi.fn().mockReturnValue(true);
 
     // Pointer down at center
     fireEvent.pointerDown(pad, { pointerId: 1, clientX: 50, clientY: 50, buttons: 1 });
