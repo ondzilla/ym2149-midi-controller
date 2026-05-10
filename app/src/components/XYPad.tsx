@@ -74,7 +74,17 @@ export const XYPad: React.FC = () => {
 
   return (
     <section className="bg-surface-container-high relative p-6 solder-point solder-tl solder-tr solder-bl solder-br border border-[#32152f] h-full flex flex-col">
-      <h2 className="font-headline text-xs tracking-[0.3em] text-tertiary mb-8 uppercase">EXPRESSION_PAD</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="font-headline text-xs tracking-[0.3em] text-tertiary uppercase">EXPRESSION_PAD</h2>
+        <button
+          onClick={() => { setDetune('64'); setVibratoDepth(40); }}
+          className="text-tertiary hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1"
+          aria-label="Reset Expression Pad"
+          title="Reset"
+        >
+          <span className="material-symbols-outlined text-sm" aria-hidden="true">refresh</span>
+        </button>
+      </div>
 
       <div
         ref={padRef}
@@ -115,8 +125,8 @@ export const XYPad: React.FC = () => {
         </div>
 
         {/* Labels */}
-        <div className="absolute bottom-2 left-2 font-headline text-[10px] text-tertiary opacity-50 pointer-events-none">DETUNE</div>
-        <div className="absolute top-2 right-2 font-headline text-[10px] text-secondary opacity-50 pointer-events-none origin-top-right -rotate-90 translate-x-full">DEPTH</div>
+        <div className="absolute bottom-2 left-2 font-headline text-[10px] text-tertiary opacity-75 pointer-events-none">DETUNE {detune}</div>
+        <div className="absolute top-2 right-2 font-headline text-[10px] text-secondary opacity-75 pointer-events-none origin-top-right -rotate-90 translate-x-full">DEPTH {vibratoDepth}%</div>
       </div>
     </section>
   );
