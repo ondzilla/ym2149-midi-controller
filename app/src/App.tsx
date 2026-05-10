@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './index.css';
 import { SynthControls, VibratoLFO } from './components/SynthControls';
 import { Arpeggiator } from './components/Arpeggiator';
+import { XYPad } from './components/XYPad';
 import { DrumPads } from './components/DrumPads';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
@@ -53,6 +54,10 @@ export default function App() {
 
           <div className="col-span-12 xl:col-span-6">
             <VibratoLFO />
+          </div>
+
+          <div className="col-span-12 xl:col-span-6">
+            <XYPad />
           </div>
 
           {experimentalThereminCam && (
