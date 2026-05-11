@@ -24,3 +24,6 @@
 ## 2026-05-09 - [Accessible Custom Toggles and Ligature Icons]
 **Learning:** Ligature-based icon fonts (like `material-symbols-outlined`) when combined with custom toggle buttons (`aria-pressed`) can result in redundant screen reader announcements or a failure to announce the custom toggle state if the ligature text is interpreted as the button content.
 **Action:** Always wrap ligature text in a child `<span aria-hidden="true">`, and explicitly place `aria-pressed` on custom `<button>` toggles to ensure their active/inactive state is parsed independently of visual icons.
+## 2025-05-12 - [Accessible Live Status Indicators]
+**Learning:** Found dynamic status text (e.g. "CONNECTED" vs "DISCONNECTED" in `ConnectionPanel.tsx`) that was updating visually using text colors (`text-primary` vs `text-error`), but screen readers were completely unaware of these changes since they weren't wrapped in a live region.
+**Action:** When displaying dynamic hardware connection states (or any critical status updates), use `role="status"` and `aria-live="polite"` to ensure screen readers announce changes dynamically without interrupting the user's current task.
