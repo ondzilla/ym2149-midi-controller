@@ -98,11 +98,13 @@ export const ThereminCam: React.FC = () => {
 
       const prevData = prevFrameRef.current;
 
+      // Track 1D array indices sequentially instead of mathematically recalculating
+      // ((y * width + x) * 4) on every iteration to save math operations in the high-frequency loop.
+      let i = 0;
+
       // Check pixel differences
       for (let y = 0; y < RESOLUTION_HEIGHT; y++) {
         for (let x = 0; x < RESOLUTION_WIDTH; x++) {
-          const i = (y * RESOLUTION_WIDTH + x) * 4;
-
           const rDiff = Math.abs(data[i] - prevData[i]);
           const gDiff = Math.abs(data[i+1] - prevData[i+1]);
           const bDiff = Math.abs(data[i+2] - prevData[i+2]);
@@ -112,6 +114,7 @@ export const ThereminCam: React.FC = () => {
             sumX += x;
             sumY += y;
           }
+          i += 4;
         }
       }
 
