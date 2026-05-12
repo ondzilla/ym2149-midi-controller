@@ -29,3 +29,7 @@ Action: Documented the "Voice-to-PSG" experimental feature utilizing `SpeechReco
 ## 2026-05-07 - WebRTC & Canvas API for Optical MIDI
 Learning: The native WebRTC (`getUserMedia`) and `<canvas>` APIs provide a dependency-free, lightweight method to capture video frames and analyze pixel differences. This technique works exceptionally well for generating a continuous stream of MIDI data based on optical motion without the need for heavy machine learning libraries.
 Action: Proposed the "Theremin Cam" feature leveraging this technique to map physical motion to CC 1 (Detune) and CC 3 (Vibrato Amount).
+
+## 2026-05-12 - Canvas API for Spatial MIDI Control Mapping
+Learning: The standard HTML5 `<canvas>` API, typically used for drawing, can serve as an exceptionally smooth and expressive 2D sensor for continuous MIDI control. By scanning pixel data with a playhead to trigger Note On/Off sequences based on spatial position and brightness, we can create a "MIDI Paint" experience that gives users freeform, gestural control over the hardware synthesizer without requiring heavy external libraries.
+Action: Documented the "MIDI Paint" experimental feature in `docs/ideas/2026-05-12-midi-paint.md`, showcasing how to bridge a vintage sound chip with modern browser drawing APIs.
