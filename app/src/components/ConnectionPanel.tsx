@@ -56,7 +56,7 @@ export const ConnectionPanel: React.FC = () => {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${activeOutId ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
-            <span data-testid="connection-status" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
+            <span role="status" aria-live="polite" data-testid="connection-status" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
               {activeOutId ? 'CONNECTED' : 'DISCONNECTED'}
             </span>
           </div>
@@ -64,7 +64,7 @@ export const ConnectionPanel: React.FC = () => {
           {experimentalGamepad && (
             <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-4">
               <div className={`w-2 h-2 rounded-full ${gamepadConnected ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
-              <span data-testid="gamepad-status" className={`font-headline text-[10px] tracking-widest ${gamepadConnected ? 'text-primary' : 'text-error'}`}>
+              <span role="status" aria-live="polite" data-testid="gamepad-status" className={`font-headline text-[10px] tracking-widest ${gamepadConnected ? 'text-primary' : 'text-error'}`}>
                 GAMEPAD: {gamepadConnected ? 'CONNECTED' : 'DISCONNECTED'}
               </span>
             </div>
