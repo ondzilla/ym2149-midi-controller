@@ -31,5 +31,5 @@ Learning: The native WebRTC (`getUserMedia`) and `<canvas>` APIs provide a depen
 Action: Proposed the "Theremin Cam" feature leveraging this technique to map physical motion to CC 1 (Detune) and CC 3 (Vibrato Amount).
 
 ## 2026-05-12 - Canvas API for Spatial MIDI Control Mapping
-Learning: The standard HTML5 `<canvas>` API, typically used for drawing, can serve as an exceptionally smooth and expressive 2D sensor for continuous MIDI control. By mapping pointer event coordinates (X,Y) within a canvas directly to 7-bit MIDI parameters (like CC 1 and CC 3), we can create a "MIDI Paint" experience that gives users freeform, gestural control over the hardware synthesizer without requiring heavy external libraries.
+Learning: The standard HTML5 `<canvas>` API, typically used for drawing, can serve as an exceptionally smooth and expressive 2D sensor for continuous MIDI control. By scanning pixel data with a playhead to trigger Note On/Off sequences based on spatial position and brightness, we can create a "MIDI Paint" experience that gives users freeform, gestural control over the hardware synthesizer without requiring heavy external libraries.
 Action: Documented the "MIDI Paint" experimental feature in `docs/ideas/2026-05-12-midi-paint.md`, showcasing how to bridge a vintage sound chip with modern browser drawing APIs.
