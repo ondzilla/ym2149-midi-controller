@@ -99,10 +99,12 @@ export const ThereminCam: React.FC = () => {
       const prevData = prevFrameRef.current;
 
       // Check pixel differences
+      // ⚡ Bolt Optimization: Track 1D array index `i` sequentially to avoid
+      // (y * RESOLUTION_WIDTH + x) * 4 recalculation for 3072 pixels per frame,
+      // saving ~552,960 math operations per second at 60fps.
+      let i = 0;
       for (let y = 0; y < RESOLUTION_HEIGHT; y++) {
         for (let x = 0; x < RESOLUTION_WIDTH; x++) {
-          const i = (y * RESOLUTION_WIDTH + x) * 4;
-
           const rDiff = Math.abs(data[i] - prevData[i]);
           const gDiff = Math.abs(data[i+1] - prevData[i+1]);
           const bDiff = Math.abs(data[i+2] - prevData[i+2]);
@@ -112,6 +114,7 @@ export const ThereminCam: React.FC = () => {
             sumX += x;
             sumY += y;
           }
+          i += 4;
         }
       }
 

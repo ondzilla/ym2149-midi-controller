@@ -24,3 +24,7 @@
 ## 2026-05-15 - [Avoid micro-optimizing small constant loops]
 **Learning:** Attempting to optimize small constant-time loops (like a 16-channel iteration) is generally rejected in code reviews as a micro-optimization with no measurable impact. Always look for optimizations in high-frequency paths like audio loops or requestAnimationFrame, such as hoisting operations out of buffer iteration loops.
 **Action:** Focus performance improvements on large arrays or high-frequency loops. For example, pulling division out of the audio buffer RMS calculation loop in `AudioModulationControl`.
+
+## 2026-05-10 - [Extract mathematical recalculations from nested processing loops]
+**Learning:** In high-frequency, pixel-level processing loops (like analyzing 3072 pixels per frame at 60fps in ThereminCam), recalculating 1D array indexes mathematically `const i = (y * RESOLUTION_WIDTH + x) * 4` creates severe performance bottlenecks. It resulted in roughly ~552,960 unnecessary math operations per second.
+**Action:** Instead of complex recalculations inside nested loops, hoist variables to the outer scope when possible and rely on sequential accumulation `i += 4`. This principle applies universally to heavy nested iteration contexts.
