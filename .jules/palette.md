@@ -24,3 +24,6 @@
 ## 2026-05-09 - [Accessible Custom Toggles and Ligature Icons]
 **Learning:** Ligature-based icon fonts (like `material-symbols-outlined`) when combined with custom toggle buttons (`aria-pressed`) can result in redundant screen reader announcements or a failure to announce the custom toggle state if the ligature text is interpreted as the button content.
 **Action:** Always wrap ligature text in a child `<span aria-hidden="true">`, and explicitly place `aria-pressed` on custom `<button>` toggles to ensure their active/inactive state is parsed independently of visual icons.
+## 2026-05-13 - [Screen Reader Announcement for Dynamic Connection Status]
+**Learning:** For dynamic hardware statuses (like MIDI Connection or Gamepad Connection) that change asynchronously outside user interaction, sighted users can immediately see the color change but screen reader users are left unaware until they manually re-navigate to the element.
+**Action:** Always add `role="status"` and `aria-live="polite"` to text elements displaying dynamic connection or hardware states so screen readers announce these changes dynamically without interrupting the user.
