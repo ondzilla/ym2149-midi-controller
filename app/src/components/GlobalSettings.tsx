@@ -66,7 +66,7 @@ const VelocityControl: React.FC<{ channel: number }> = ({ channel }) => {
 
   return (
     <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <span className="font-headline text-[10px] text-tertiary opacity-60 uppercase text-center w-full truncate mb-1">Velocity Sens</span>
+      <label htmlFor={id} className="font-headline text-[10px] text-tertiary opacity-60 uppercase text-center w-full truncate mb-1 cursor-pointer">Velocity Sens</label>
 
       <div className="w-full relative h-4 bg-surface-container-lowest border border-tertiary/20 flex items-center">
         <input
