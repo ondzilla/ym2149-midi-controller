@@ -5,3 +5,5 @@
 ## 2026-05-03 - [Audit Finding] Observation: `DrumPads.tsx` hallucinated drum sample note mappings. Boolean `usePatchState` callbacks inverted CC messages. Correction: Mapped pads to notes 60-64. Fixed boolean logic in callbacks to emit `val ? 127 : 0`.
 
 ## 2026-05-07 - [Audit Finding] Observation: `Arpeggiator.tsx` mapped Arp Pattern (CC 6) index 0-15 directly to the MIDI value without scaling. Correction: Updated `arpPattern` `usePatchState` callback to use `mapRange` to distribute the 16 patterns across the full 0-127 MIDI CC range as required by the firmware.
+
+## 2026-05-10 - [Audit Finding] Observation: `GlobalSettings.tsx` implemented `globalVelocity` (CC 4) as a boolean toggle (`127` or `0`), which hallucinated a binary restriction on a continuous hardware parameter (0-127). Correction: Replaced the toggle with a `VelocityControl` slider to accurately reflect the 0-127 range supported by the firmware.

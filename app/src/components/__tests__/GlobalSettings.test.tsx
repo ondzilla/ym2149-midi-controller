@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { GlobalSettings } from '../GlobalSettings';
@@ -38,12 +38,13 @@ describe('GlobalSettings', () => {
     expect(midiService.sendCC).toHaveBeenCalledWith(1, 10, 127);
   });
 
-  it('should send CC 4 when Velocity Sensitivity is toggled', async () => {
+  it('should send CC 4 when Velocity Sensitivity slider is adjusted', async () => {
     render(<GlobalSettings />);
-    const velocityToggle = screen.getByRole('button', { name: /velocity/i });
+    const velocitySlider = screen.getByRole('slider', { name: /velocity sensitivity/i });
 
-    await userEvent.click(velocityToggle);
+    // Simulate changing the range input's value
+    fireEvent.change(velocitySlider, { target: { value: '64' } });
 
-    expect(midiService.sendCC).toHaveBeenCalledWith(1, 4, 127);
+    expect(midiService.sendCC).toHaveBeenCalledWith(1, 4, 64);
   });
 });

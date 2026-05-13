@@ -43,3 +43,10 @@
 - `SynthControls.tsx` displayed the `VibratoRate` using a hallucinated `Hz` calculation, falsely implying exact physical frequency mapping rather than the raw CC 0-100 logic.
 - `VisualEnvelopeEditor.tsx` displayed Attack and Decay values with a hallucinated `ms` suffix, falsely implying exact physical timescales rather than the generic CC percentage scale.
 - Fixed by removing dead UI links and replacing hallucinated units (`ms` and `Hz`) with raw percentage values.
+
+## Target: Velocity Sensitivity (CC 4) in GlobalSettings.tsx
+- Velocity Sensitivity CC: 4 (verified against ARDUINO-YM2149F docs: 0 = off, 1-127 Adjust Range where 1 is least sensitive)
+
+## Findings (2026-05-10)
+- `GlobalSettings.tsx` implemented Velocity Sensitivity as a boolean toggle, sending either `127` or `0`, which hides the hardware capability to adjust sensitivity across a 1-127 range.
+- Refactored `GlobalSettings.tsx` to replace the toggle with a `VelocityControl` slider, correctly sending the continuous 0-127 value for CC 4.

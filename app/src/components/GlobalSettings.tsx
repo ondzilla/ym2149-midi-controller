@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { midiService } from '../services/midiService';
 import { usePatchState } from '../hooks/usePatchState';
 
@@ -50,6 +50,49 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
   </div>
 );
 
+// Extracted into a separate component to prevent parent re-renders on state change
+// YM2149 velocity sensitivity (CC 4) is a continuous range from 1-127 (0 = off, 1 = least sensitive)
+const VelocityControl: React.FC<{ channel: number }> = ({ channel }) => {
+  const [velocity, setVelocity] = usePatchState('globalVelocity', '0', (val) => {
+    try { midiService.sendCC(channel, 4, Number(val)); } catch (e) { console.warn('MIDI error', e); }
+  });
+
+  const handleVelocity = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVelocity(e.target.value);
+  };
+
+  const id = useId();
+  const isActive = Number(velocity) > 0;
+
+  return (
+    <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
+      <span className="font-headline text-[10px] text-tertiary opacity-60 uppercase text-center w-full truncate mb-1">Velocity Sens</span>
+
+      <div className="w-full relative h-4 bg-surface-container-lowest border border-tertiary/20 flex items-center">
+        <input
+          id={id}
+          type="range"
+          min="0"
+          max="127"
+          aria-label="Velocity Sensitivity"
+          value={velocity}
+          onChange={handleVelocity}
+          className="absolute inset-0 opacity-0 cursor-pointer z-20 w-full h-full"
+        />
+        <div className="absolute left-0 top-0 h-full bg-tertiary/40 transition-all pointer-events-none" style={{ width: `${(Number(velocity) / 127) * 100}%` }}></div>
+        <div className="absolute top-0 h-full w-1 bg-tertiary shadow-[0_0_10px_#ff9cf4] pointer-events-none" style={{ left: `calc(${(Number(velocity) / 127) * 100}% - 2px)` }}></div>
+      </div>
+
+      <div className="flex justify-between w-full mt-1">
+        <label htmlFor={id} className={`font-headline text-[9px] font-bold ${isActive ? 'text-tertiary' : 'text-primary'}`}>
+          {isActive ? 'DYNAMIC' : 'STATIC'}
+        </label>
+        <span className="font-headline text-[9px] text-tertiary font-bold">{velocity}</span>
+      </div>
+    </div>
+  );
+};
+
 const CHANNELS = Array.from({ length: 16 });
 
 export const GlobalSettings: React.FC = () => {
@@ -61,10 +104,6 @@ export const GlobalSettings: React.FC = () => {
 
   const [bank, setBank] = usePatchState('globalBank', 'A', (val) => {
     try { midiService.sendCC(Number(channel), 9, val === 'B' ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
-  });
-
-  const [velocity, setVelocity] = usePatchState('globalVelocity', false, (val) => {
-    try { midiService.sendCC(Number(channel), 4, val ? 127 : 0); } catch (e) { console.warn('MIDI error', e); }
   });
 
   const [gamepad, setGamepad] = usePatchState('experimentalGamepad', false);
@@ -82,10 +121,6 @@ export const GlobalSettings: React.FC = () => {
   const handleBank = () => {
     const newBank = bank === 'A' ? 'B' : 'A';
     setBank(newBank);
-  };
-
-  const handleVelocity = () => {
-    setVelocity(!velocity);
   };
 
   const handleGamepad = () => {
@@ -147,17 +182,7 @@ export const GlobalSettings: React.FC = () => {
           activeTextColorClass="text-primary"
         />
 
-        <SettingToggle
-          label="Velocity Sens"
-          isActive={velocity}
-          onClick={handleVelocity}
-          buttonText="Toggle Velocity"
-          activeText="DYNAMIC"
-          inactiveText="STATIC"
-          activeColorClass="bg-tertiary"
-          activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
-          activeTextColorClass="text-tertiary"
-        />
+        <VelocityControl channel={Number(channel)} />
 
         <SettingToggle
           label="Gamepad API"
