@@ -109,6 +109,7 @@ export const GlobalSettings: React.FC = () => {
   const [gamepad, setGamepad] = usePatchState('experimentalGamepad', false);
   const [voiceControl, setVoiceControl] = usePatchState('experimentalVoiceControl', false);
   const [thereminCam, setThereminCam] = usePatchState('experimentalThereminCam', false);
+  const [qwertyPiano, setQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -133,6 +134,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleThereminCam = () => {
     setThereminCam(!thereminCam);
+  };
+
+  const handleQwertyPiano = () => {
+    setQwertyPiano(!qwertyPiano);
   };
 
   return (
@@ -218,6 +223,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-tertiary"
           activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
           activeTextColorClass="text-tertiary"
+        />
+
+        <SettingToggle
+          label="QWERTY Piano"
+          isActive={qwertyPiano}
+          onClick={handleQwertyPiano}
+          buttonText="Toggle QWERTY Piano"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-secondary"
+          activeShadowClass="shadow-[0_0_10px_#f5ce53]"
+          activeTextColorClass="text-secondary"
         />
       </div>
     </>
