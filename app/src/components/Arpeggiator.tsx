@@ -30,7 +30,7 @@ export const Arpeggiator: React.FC = () => {
   const [globalChannel] = usePatchState('globalChannel', '1');
   const channel = Number(globalChannel);
 
-  const [octave, setOctave] = usePatchState('arpOctave', '0', (val) => {
+  const [octave, setOctave] = usePatchState('arpOctave', 'OFF', (val) => {
     let ccValue = 0;
     switch (val) {
       case 'OFF': ccValue = 0; break;
@@ -91,7 +91,7 @@ export const Arpeggiator: React.FC = () => {
             <span className="font-headline text-secondary text-xs font-bold pointer-events-none">{octave}</span>
             <select id={octaveId} aria-label="Octave" value={octave} onChange={handleOctave} className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
               {OCTAVES.map(opt => (
-                <option key={opt} value={opt}>{opt} OCT</option>
+                <option key={opt} value={opt}>{opt === 'OFF' ? 'OFF' : `${opt} OCT`}</option>
               ))}
             </select>
           </div>

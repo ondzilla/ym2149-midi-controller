@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PresetState = Record<string, any>;
-type Listener = (state: PresetState) => void;
+type Listener = (state: PresetState, changedKey?: string) => void;
 
 class PresetManager {
   private currentState: PresetState = {};
@@ -10,7 +10,7 @@ class PresetManager {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setValue(key: string, value: any) {
     this.currentState[key] = value;
-    this.notify();
+    this.notify(key);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,8 +25,8 @@ class PresetManager {
     };
   }
 
-  private notify() {
-    this.listeners.forEach(l => l(this.currentState));
+  private notify(changedKey?: string) {
+    this.listeners.forEach(l => l(this.currentState, changedKey));
   }
 
   public savePreset(name: string) {
