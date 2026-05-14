@@ -33,3 +33,7 @@ Action: Proposed the "Theremin Cam" feature leveraging this technique to map phy
 ## 2026-05-12 - Canvas API for Spatial MIDI Control Mapping
 Learning: The standard HTML5 `<canvas>` API, typically used for drawing, can serve as an exceptionally smooth and expressive 2D sensor for continuous MIDI control. By scanning pixel data with a playhead to trigger Note On/Off sequences based on spatial position and brightness, we can create a "MIDI Paint" experience that gives users freeform, gestural control over the hardware synthesizer without requiring heavy external libraries.
 Action: Documented the "MIDI Paint" experimental feature in `docs/ideas/2026-05-12-midi-paint.md`, showcasing how to bridge a vintage sound chip with modern browser drawing APIs.
+
+## 2026-05-14 - Canvas API for Generative Patch Creation
+Learning: The HTML5 `<canvas>` API, combined with standard HTML Drag & Drop and `FileReader`, provides a dependency-free way to analyze image data (like average RGB color). This technique works exceptionally well for generating MIDI patches by extracting color data from user-provided images and mapping it to synthesis parameters (e.g., RGB to CC1/CC2/CC3).
+Action: Proposed the "Image-to-Patch" feature to leverage this technique, demonstrating how web multimedia APIs can serve as experimental sensors for vintage sound control.
