@@ -110,6 +110,7 @@ export const GlobalSettings: React.FC = () => {
   const [voiceControl, setVoiceControl] = usePatchState('experimentalVoiceControl', false);
   const [thereminCam, setThereminCam] = usePatchState('experimentalThereminCam', false);
   const [qwertyPiano, setQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
+  const [midiPaint, setMidiPaint] = usePatchState('experimentalMidiPaint', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -138,6 +139,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleQwertyPiano = () => {
     setQwertyPiano(!qwertyPiano);
+  };
+
+  const handleMidiPaint = () => {
+    setMidiPaint(!midiPaint);
   };
 
   return (
@@ -235,6 +240,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-secondary"
           activeShadowClass="shadow-[0_0_10px_#f5ce53]"
           activeTextColorClass="text-secondary"
+        />
+
+        <SettingToggle
+          label="MIDI Paint"
+          isActive={midiPaint}
+          onClick={handleMidiPaint}
+          buttonText="Toggle MIDI Paint"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-tertiary"
+          activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
+          activeTextColorClass="text-tertiary"
         />
       </div>
     </>
