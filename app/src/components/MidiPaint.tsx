@@ -213,14 +213,14 @@ export const MidiPaint: React.FC = () => {
         <div className="flex gap-4">
             <button
                 onClick={clearCanvas}
-                className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase"
+                className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1"
             >
                 Clear
             </button>
             <button
             onClick={togglePlayback}
             aria-pressed={isActive}
-            className={`rounded p-1 transition-colors ${
+            className={`rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${
                 isActive ? 'text-primary animate-pulse shadow-[0_0_8px_var(--primary)]' : 'text-primary opacity-60 hover:opacity-100'
             }`}
             aria-label={isActive ? 'Stop Playback' : 'Start Playback'}
