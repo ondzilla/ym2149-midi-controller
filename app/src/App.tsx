@@ -14,6 +14,7 @@ import { VoiceController } from './components/VoiceController';
 import { ThereminCam } from './components/ThereminCam';
 import { SettingsOverlay } from './components/layout/SettingsOverlay';
 import { QwertyKeyboard } from './components/QwertyKeyboard';
+import { MidiPaint } from './components/MidiPaint';
 import { usePatchState } from './hooks/usePatchState';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
   const [experimentalVoiceControl] = usePatchState('experimentalVoiceControl', false);
   const [experimentalThereminCam] = usePatchState('experimentalThereminCam', false);
   const [experimentalQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
+  const [experimentalMidiPaint] = usePatchState('experimentalMidiPaint', false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
@@ -66,6 +68,12 @@ export default function App() {
           {experimentalThereminCam && (
             <div className="col-span-12">
               <ThereminCam />
+            </div>
+          )}
+
+          {experimentalMidiPaint && (
+            <div className="col-span-12">
+              <MidiPaint />
             </div>
           )}
 
