@@ -28,3 +28,7 @@
 ## 2026-05-10 - [Extract mathematical recalculations from nested processing loops]
 **Learning:** In high-frequency, pixel-level processing loops (like analyzing 3072 pixels per frame at 60fps in ThereminCam), recalculating 1D array indexes mathematically `const i = (y * RESOLUTION_WIDTH + x) * 4` creates severe performance bottlenecks. It resulted in roughly ~552,960 unnecessary math operations per second.
 **Action:** Instead of complex recalculations inside nested loops, hoist variables to the outer scope when possible and rely on sequential accumulation `i += 4`. This principle applies universally to heavy nested iteration contexts.
+
+## 2026-05-18 - [Cache Canvas Context in requestAnimationFrame]
+**Learning:** Calling `canvas.getContext('2d')` inside a high-frequency loop like `requestAnimationFrame` forces the browser to look up and return the rendering context up to 60 times a second, which adds unnecessary overhead.
+**Action:** Always cache the `CanvasRenderingContext2D` instance using a `useRef` and reuse it across frames to save execution time and avoid redundant API calls.
