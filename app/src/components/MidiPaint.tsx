@@ -6,17 +6,56 @@ const CANVAS_WIDTH = 512;
 const CANVAS_HEIGHT = 128;
 const PLAYHEAD_SPEED = 2; // Pixels per frame
 
+const CHANNEL_COLORS = [
+  [255, 84, 73],   // 1
+  [255, 165, 0],   // 2
+  [245, 206, 83],  // 3
+  [142, 255, 113], // 4
+  [0, 255, 0],     // 5
+  [0, 255, 165],   // 6
+  [0, 255, 255],   // 7
+  [0, 165, 255],   // 8
+  [0, 0, 255],     // 9
+  [165, 0, 255],   // 10
+  [255, 0, 255],   // 11
+  [255, 156, 244], // 12
+  [255, 0, 165],   // 13
+  [255, 255, 255], // 14
+  [170, 170, 170], // 15
+  [85, 85, 85],    // 16
+];
+
+const getClosestChannel = (r: number, g: number, b: number): number => {
+  let minDistance = Infinity;
+  let closestChannel = 1;
+  for (let i = 0; i < CHANNEL_COLORS.length; i++) {
+    const [cr, cg, cb] = CHANNEL_COLORS[i];
+    const distance = Math.pow(r - cr, 2) + Math.pow(g - cg, 2) + Math.pow(b - cb, 2);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestChannel = i + 1;
+    }
+  }
+  return closestChannel;
+};
+
+const getChannelHex = (channel: number): string => {
+    const [r, g, b] = CHANNEL_COLORS[channel - 1];
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
 export const MidiPaint: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [isActive, setIsActive] = useState(true);
+  const [selectedChannel, setSelectedChannel] = useState(1);
   const isDrawingRef = useRef(false);
   const lastDrawPosRef = useRef<{ x: number, y: number } | null>(null);
 
   const playheadXRef = useRef(0);
   const requestRef = useRef<number>(0);
-  const activeNotesRef = useRef<Map<number, number>>(new Map()); // Note -> Velocity
+  const activeNotesRef = useRef<Map<string, number>>(new Map()); // "channel_note" -> Velocity
 
   // Handle Playback Loop
   useEffect(() => {
@@ -24,9 +63,9 @@ export const MidiPaint: React.FC = () => {
 
     if (!isActive) {
       // Send note off for all currently playing notes
-      const globalChannel = Number(presetManager.getValue('globalChannel') || 1);
-      currentNotesRef.forEach((_, note) => {
-        try { midiService.sendNoteOff(globalChannel, note, 0); } catch (e) { console.warn(e); }
+      currentNotesRef.forEach((_, key) => {
+        const [chanStr, noteStr] = key.split('_');
+        try { midiService.sendNoteOff(Number(chanStr), Number(noteStr), 0); } catch (e) { console.warn(e); }
       });
       currentNotesRef.clear();
       return;
@@ -52,7 +91,7 @@ export const MidiPaint: React.FC = () => {
       const imageData = ctx.getImageData(x, 0, 1, CANVAS_HEIGHT);
       const data = imageData.data;
 
-      const currentNotes = new Map<number, number>();
+      const currentNotes = new Map<string, { channel: number, note: number, velocity: number }>();
 
       for (let y = 0; y < CANVAS_HEIGHT; y++) {
         // data is [R, G, B, A]
@@ -62,7 +101,7 @@ export const MidiPaint: React.FC = () => {
         const b = data[i + 2];
         const a = data[i + 3];
 
-        if (a > 0) {
+        if (a > 50) {
           // Calculate brightness (simple average) as velocity
           const brightness = Math.floor((r + g + b) / 3);
           const velocity = Math.max(1, Math.floor((brightness / 255) * 127));
@@ -70,18 +109,17 @@ export const MidiPaint: React.FC = () => {
           // Map Y to MIDI Note (0-127). Y=0 is top (higher pitch), Y=127 is bottom (lower pitch)
           // To ensure it stays within valid bounds:
           const note = Math.max(0, Math.min(127, 127 - y));
-
-          currentNotes.set(note, velocity);
+          
+          const channel = getClosestChannel(r, g, b);
+          currentNotes.set(`${channel}_${note}`, { channel, note, velocity });
         }
       }
 
-      const globalChannel = Number(presetManager.getValue('globalChannel') || 1);
-
       // Notes to turn on
-      currentNotes.forEach((velocity, note) => {
-        if (!activeNotesRef.current.has(note)) {
-          try { midiService.sendNoteOn(globalChannel, note, velocity); } catch (e) { console.warn(e); }
-          activeNotesRef.current.set(note, velocity);
+      currentNotes.forEach(({ channel, note, velocity }, key) => {
+        if (!activeNotesRef.current.has(key)) {
+          try { midiService.sendNoteOn(channel, note, velocity); } catch (e) { console.warn(e); }
+          activeNotesRef.current.set(key, velocity);
         } else {
             // Note already playing, maybe velocity changed, but typically we don't send continuous NoteOn
             // Could send Polyphonic Aftertouch, but keeping it simple for now.
@@ -89,12 +127,15 @@ export const MidiPaint: React.FC = () => {
       });
 
       // Notes to turn off
-      activeNotesRef.current.forEach((velocity, note) => {
-        if (!currentNotes.has(note)) {
-          try { midiService.sendNoteOff(globalChannel, note, 0); } catch (e) { console.warn(e); }
-          activeNotesRef.current.delete(note);
+      const keysToDelete: string[] = [];
+      activeNotesRef.current.forEach((velocity, key) => {
+        if (!currentNotes.has(key)) {
+          const [chanStr, noteStr] = key.split('_');
+          try { midiService.sendNoteOff(Number(chanStr), Number(noteStr), 0); } catch (e) { console.warn(e); }
+          keysToDelete.push(key);
         }
       });
+      keysToDelete.forEach(k => activeNotesRef.current.delete(k));
 
       // Advance playhead
       playheadXRef.current = (playheadXRef.current + PLAYHEAD_SPEED) % CANVAS_WIDTH;
@@ -104,7 +145,7 @@ export const MidiPaint: React.FC = () => {
       if (containerRef.current) {
          const playheadElement = containerRef.current.querySelector('.playhead-line') as HTMLElement;
          if (playheadElement) {
-             playheadElement.style.transform = `translateX(${playheadXRef.current}px)`;
+             playheadElement.style.left = `${(playheadXRef.current / CANVAS_WIDTH) * 100}%`;
          }
       }
 
@@ -119,9 +160,9 @@ export const MidiPaint: React.FC = () => {
       }
 
       // Cleanup notes
-      const globalChannel = Number(presetManager.getValue('globalChannel') || 1);
-      currentNotesRef.forEach((_, note) => {
-        try { midiService.sendNoteOff(globalChannel, note, 0); } catch (e) { console.warn(e); }
+      currentNotesRef.forEach((_, key) => {
+        const [chanStr, noteStr] = key.split('_');
+        try { midiService.sendNoteOff(Number(chanStr), Number(noteStr), 0); } catch (e) { console.warn(e); }
       });
       currentNotesRef.clear();
     };
@@ -170,8 +211,9 @@ export const MidiPaint: React.FC = () => {
       const ctx = canvas?.getContext('2d', { willReadFrequently: true });
       if (!ctx) return;
 
-      ctx.fillStyle = '#ff9cf4'; // Using tertiary color for neon aesthetic
-      ctx.shadowColor = '#ff9cf4';
+      const hex = getChannelHex(selectedChannel);
+      ctx.fillStyle = hex; 
+      ctx.shadowColor = hex;
       ctx.shadowBlur = 10;
       ctx.beginPath();
       ctx.arc(x, y, 3, 0, Math.PI * 2);
@@ -183,8 +225,9 @@ export const MidiPaint: React.FC = () => {
       const ctx = canvas?.getContext('2d', { willReadFrequently: true });
       if (!ctx) return;
 
-      ctx.strokeStyle = '#ff9cf4';
-      ctx.shadowColor = '#ff9cf4';
+      const hex = getChannelHex(selectedChannel);
+      ctx.strokeStyle = hex;
+      ctx.shadowColor = hex;
       ctx.shadowBlur = 10;
       ctx.lineWidth = 6;
       ctx.lineCap = 'round';
@@ -210,7 +253,21 @@ export const MidiPaint: React.FC = () => {
     <div className="bg-surface-container-high border border-[#32152f] p-6 relative solder-point solder-tl solder-tr solder-bl solder-br flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-headline text-xs tracking-widest text-tertiary">MIDI_PAINT [EXPERIMENTAL]</h3>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2 border border-outline-variant/20 bg-surface-container-highest px-2 py-1 rounded">
+              <div className="w-3 h-3 rounded-full shadow-[0_0_8px_currentColor]" style={{ color: getChannelHex(selectedChannel), backgroundColor: getChannelHex(selectedChannel) }}></div>
+              <label htmlFor="midi-paint-channel" className="sr-only">Channel</label>
+              <select 
+                id="midi-paint-channel"
+                value={selectedChannel}
+                onChange={(e) => setSelectedChannel(Number(e.target.value))}
+                className="bg-transparent text-[10px] font-headline text-secondary cursor-pointer outline-none ring-0 border-none appearance-none pr-1"
+              >
+                {Array.from({ length: 16 }).map((_, i) => (
+                  <option key={i + 1} value={i + 1} className="bg-surface-container-highest">CH {i + 1}</option>
+                ))}
+              </select>
+            </div>
             <button
                 onClick={clearCanvas}
                 className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1"
@@ -254,7 +311,7 @@ export const MidiPaint: React.FC = () => {
           <div
             className="playhead-line absolute top-0 bottom-0 left-0 w-0.5 bg-primary shadow-[0_0_8px_var(--primary)] pointer-events-none z-10"
             style={{
-                transform: 'translateX(0px)',
+                left: '0%',
                 width: `${(1 / CANVAS_WIDTH) * 100}%`,
                 // Make visual width slightly larger but accurate
                 borderLeft: '1px solid rgba(142, 255, 113, 0.8)'
