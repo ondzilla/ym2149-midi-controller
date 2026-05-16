@@ -28,7 +28,7 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
   activeTextColorClass,
   inactiveTextColorClass = 'text-primary'
 }) => (
-  <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-0 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
+  <div className="bg-surface-container-highest flex items-center justify-between border border-outline-variant/20 relative w-full p-0 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
     <button
       type="button"
       aria-pressed={isActive}
@@ -36,16 +36,18 @@ const SettingToggle: React.FC<SettingToggleProps> = ({
       onClick={onClick}
     >{buttonText}</button>
 
-    <div className="p-4 flex flex-col items-center gap-2 pointer-events-none w-full h-full transition-colors">
-      <span className="font-headline text-[10px] text-tertiary opacity-60 uppercase text-center w-full truncate">{label}</span>
-      {isActive ? (
-         <div className={`w-4 h-4 ${activeColorClass} ${activeShadowClass}`}></div>
-      ) : (
-         <div className="w-4 h-4 bg-primary/20 border border-primary"></div>
-      )}
-      <span className={`font-headline text-[9px] font-bold ${isActive ? activeTextColorClass : inactiveTextColorClass}`}>
-        {isActive ? activeText : inactiveText}
-      </span>
+    <div className="px-4 py-3 flex items-center justify-between pointer-events-none w-full transition-colors">
+      <span className="font-headline text-[10px] text-tertiary opacity-60 uppercase truncate">{label}</span>
+      <div className="flex items-center gap-3">
+        <span className={`font-headline text-[9px] font-bold ${isActive ? activeTextColorClass : inactiveTextColorClass}`}>
+          {isActive ? activeText : inactiveText}
+        </span>
+        {isActive ? (
+           <div className={`w-3 h-3 rounded-full ${activeColorClass} ${activeShadowClass}`}></div>
+        ) : (
+           <div className="w-3 h-3 rounded-full bg-primary/20 border border-primary"></div>
+        )}
+      </div>
     </div>
   </div>
 );
@@ -65,10 +67,10 @@ const VelocityControl: React.FC<{ channel: number }> = ({ channel }) => {
   const isActive = Number(velocity) > 0;
 
   return (
-    <div className="bg-surface-container-highest flex flex-col items-center justify-center gap-2 border border-outline-variant/20 relative w-full p-4 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <label htmlFor={id} className="font-headline text-[10px] text-tertiary opacity-60 uppercase text-center w-full truncate mb-1 cursor-pointer">Velocity Sens</label>
+    <div className="bg-surface-container-highest flex items-center justify-between gap-4 border border-outline-variant/20 relative w-full px-4 py-3 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
+      <label htmlFor={id} className="font-headline text-[10px] text-tertiary opacity-60 uppercase truncate cursor-pointer shrink-0">Velocity Sens</label>
 
-      <div className="w-full relative h-4 bg-surface-container-lowest border border-tertiary/20 flex items-center">
+      <div className="flex-1 max-w-[200px] relative h-2 bg-surface-container-lowest border border-tertiary/20 flex items-center">
         <input
           id={id}
           type="range"
@@ -83,11 +85,11 @@ const VelocityControl: React.FC<{ channel: number }> = ({ channel }) => {
         <div className="absolute top-0 h-full w-1 bg-tertiary shadow-[0_0_10px_#ff9cf4] pointer-events-none" style={{ left: `calc(${(Number(velocity) / 127) * 100}% - 2px)` }}></div>
       </div>
 
-      <div className="flex justify-between w-full mt-1">
-        <label htmlFor={id} className={`font-headline text-[9px] font-bold ${isActive ? 'text-tertiary' : 'text-primary'}`}>
+      <div className="flex items-center gap-3 shrink-0">
+        <span className={`font-headline text-[9px] font-bold ${isActive ? 'text-tertiary' : 'text-primary'}`}>
           {isActive ? 'DYNAMIC' : 'STATIC'}
-        </label>
-        <span className="font-headline text-[9px] text-tertiary font-bold">{velocity}</span>
+        </span>
+        <span className="font-headline text-[9px] text-tertiary font-bold w-6 text-right">{velocity}</span>
       </div>
     </div>
   );
@@ -172,7 +174,7 @@ export const GlobalSettings: React.FC = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col gap-2">
         <SettingToggle
           label="Polyphony"
           isActive={polyphony}

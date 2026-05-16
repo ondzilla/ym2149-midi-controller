@@ -3,28 +3,12 @@ import { midiService } from '../services/midiService';
 import { usePatchState } from '../hooks/usePatchState';
 
 export const ConnectionPanel: React.FC = () => {
-  const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
-  const [gamepadConnected, setGamepadConnected] = useState(() => {
-    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-    for (const gp of gamepads) {
-      if (gp && gp.connected) {
-        return true;
-      }
-    }
-    return false;
-  });
   const [activeInId, setActiveInId] = useState<string | null>(null);
   const [activeOutId, setActiveOutId] = useState<string | null>(midiService.outputDevice?.id || null);
   const [inputs, setInputs] = useState<MIDIInput[]>(midiService.inputs);
   const [outputs, setOutputs] = useState<MIDIOutput[]>(midiService.outputs);
 
   useEffect(() => {
-    const handleGamepadConnected = () => setGamepadConnected(true);
-    const handleGamepadDisconnected = () => setGamepadConnected(false);
-
-    window.addEventListener('gamepadconnected', handleGamepadConnected);
-    window.addEventListener('gamepaddisconnected', handleGamepadDisconnected);
-
     // Subscribe to changes
     const unsubscribe = midiService.subscribe(() => {
       setInputs(midiService.inputs);
@@ -38,8 +22,6 @@ export const ConnectionPanel: React.FC = () => {
 
     return () => {
       unsubscribe();
-      window.removeEventListener('gamepadconnected', handleGamepadConnected);
-      window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected);
     };
   }, []);
 
@@ -51,26 +33,7 @@ export const ConnectionPanel: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="sr-only">Connection Panel</h3>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${activeOutId ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
-            <span role="status" aria-live="polite" data-testid="connection-status" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
-              {activeOutId ? 'CONNECTED' : 'DISCONNECTED'}
-            </span>
-          </div>
-
-          {experimentalGamepad && (
-            <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-4">
-              <div className={`w-2 h-2 rounded-full ${gamepadConnected ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
-              <span role="status" aria-live="polite" data-testid="gamepad-status" className={`font-headline text-[10px] tracking-widest ${gamepadConnected ? 'text-primary' : 'text-error'}`}>
-                GAMEPAD: {gamepadConnected ? 'CONNECTED' : 'DISCONNECTED'}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
+      <h3 className="sr-only">Connection Panel</h3>
 
       <div className="bg-black/40 p-4 border-b-2 border-surface-container-highest">
         <label htmlFor="signal-input" className="font-headline text-[10px] text-primary tracking-widest block mb-2">SIGNAL_INPUT</label>

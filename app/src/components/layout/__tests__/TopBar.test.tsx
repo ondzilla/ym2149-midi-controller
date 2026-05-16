@@ -3,11 +3,18 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TopBar } from '../TopBar';
 import { midiService } from '../../../services/midiService';
+import * as usePatchStateModule from '../../../hooks/usePatchState';
 
 vi.mock('../../../services/midiService', () => ({
   midiService: {
     sendCC: vi.fn(),
+    subscribe: vi.fn(() => () => {}),
+    outputDevice: null,
   }
+}));
+
+vi.mock('../../../hooks/usePatchState', () => ({
+  usePatchState: vi.fn(),
 }));
 
 describe('TopBar', () => {
@@ -17,9 +24,24 @@ describe('TopBar', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should render the TopBar', () => {
+  it('should render the TopBar with default disconnected status', () => {
+    (usePatchStateModule.usePatchState as any).mockReturnValue([false]);
     render(<TopBar onOpenSettings={vi.fn()} />);
     expect(screen.getByText('YM2149_SYNTH_CORE')).toBeInTheDocument();
+    expect(screen.getByText('MIDI: DISCONNECTED')).toBeInTheDocument();
+  });
+
+  it('should display MIDI CONNECTED when outputDevice is present', () => {
+    (usePatchStateModule.usePatchState as any).mockReturnValue([false]);
+    midiService.outputDevice = { id: 'test', send: vi.fn() } as any;
+    render(<TopBar onOpenSettings={vi.fn()} />);
+    expect(screen.getByText('MIDI: CONNECTED')).toBeInTheDocument();
+  });
+
+  it('should display Gamepad status if experimentalGamepad is enabled', () => {
+    (usePatchStateModule.usePatchState as any).mockReturnValue([true]);
+    render(<TopBar onOpenSettings={vi.fn()} />);
+    expect(screen.getByText('GAMEPAD: DISCONNECTED')).toBeInTheDocument();
   });
 
   it('should call onOpenSettings when settings button is clicked', async () => {
