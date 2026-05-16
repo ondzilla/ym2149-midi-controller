@@ -27,6 +27,9 @@
 ## 2026-05-13 - [Screen Reader Announcement for Dynamic Connection Status]
 **Learning:** For dynamic hardware statuses (like MIDI Connection or Gamepad Connection) that change asynchronously outside user interaction, sighted users can immediately see the color change but screen reader users are left unaware until they manually re-navigate to the element.
 **Action:** Always add `role="status"` and `aria-live="polite"` to text elements displaying dynamic connection or hardware states so screen readers announce these changes dynamically without interrupting the user.
+## 2025-05-15 - [Experimental Components Focus Visibility]
+**Learning:** Buttons inside floating or experimental components (like ThereminCam, VoiceController, MidiPaint) often lack visible focus states. Because these components are typically added later or sit outside the main document flow visually, they are easily missed during keyboard accessibility testing. Without `focus-visible` styles, keyboard users cannot navigate these toggles and controls.
+**Action:** Always ensure that every button within experimental or overlay components receives `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high` explicitly, to guarantee keyboard accessibility is maintained across the entire application interface.
 ## 2026-05-15 - [Component Layout Hierarchy]
 **Learning:** In a modular dashboard, placing high-interaction UI components (like the Expression Pad) higher up in the grid ensures that any state changes affecting other components remain visible to the user.
 **Action:** Prioritize the spatial placement of primary modulation controls above the modules they influence.

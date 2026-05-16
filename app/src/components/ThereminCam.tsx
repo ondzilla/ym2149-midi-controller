@@ -207,7 +207,7 @@ export const ThereminCam: React.FC = () => {
         <button
           onClick={toggleListening}
           aria-pressed={isActive}
-          className={`rounded p-1 transition-colors ${
+          className={`rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${
             isActive ? 'text-primary animate-pulse shadow-[0_0_8px_var(--primary)]' : 'text-primary opacity-60 hover:opacity-100'
           }`}
           aria-label={isActive ? 'Stop Theremin Cam' : 'Start Theremin Cam'}

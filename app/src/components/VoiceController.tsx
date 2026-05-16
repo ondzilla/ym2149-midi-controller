@@ -191,7 +191,7 @@ export const VoiceController: React.FC = () => {
         <button
           onClick={toggleListening}
           aria-pressed={isListening}
-          className={`rounded p-1 transition-colors ${
+          className={`rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${
             isListening ? 'text-error animate-pulse shadow-[0_0_8px_var(--error)]' : 'text-primary opacity-60 hover:opacity-100'
           }`}
           aria-label={isListening ? 'Stop listening' : 'Start listening'}
