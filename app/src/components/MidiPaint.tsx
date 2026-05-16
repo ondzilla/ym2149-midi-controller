@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { midiService } from '../services/midiService';
-import { presetManager } from '../services/presetManager';
 
 const CANVAS_WIDTH = 512;
 const CANVAS_HEIGHT = 128;
@@ -57,6 +56,7 @@ export const MidiPaint: React.FC = () => {
   const playheadXRef = useRef(0);
   const requestRef = useRef<number>(0);
   const activeNotesRef = useRef<Map<string, number>>(new Map()); // "channel_note" -> Velocity
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   // Handle Playback Loop
   useEffect(() => {
@@ -79,7 +79,11 @@ export const MidiPaint: React.FC = () => {
         return;
       }
 
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      // ⚡ Bolt Optimization: Cache the CanvasRenderingContext2D to avoid calling getContext on every frame.
+      if (!ctxRef.current) {
+        ctxRef.current = canvas.getContext('2d', { willReadFrequently: true });
+      }
+      const ctx = ctxRef.current;
       if (!ctx) return;
 
       // Draw the playhead visually
@@ -209,7 +213,10 @@ export const MidiPaint: React.FC = () => {
 
   const drawDot = (x: number, y: number) => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext('2d', { willReadFrequently: true });
+      if (!ctxRef.current && canvas) {
+        ctxRef.current = canvas.getContext('2d', { willReadFrequently: true });
+      }
+      const ctx = ctxRef.current;
       if (!ctx) return;
 
       const hex = getChannelHex(selectedChannel);
@@ -226,7 +233,10 @@ export const MidiPaint: React.FC = () => {
 
   const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext('2d', { willReadFrequently: true });
+      if (!ctxRef.current && canvas) {
+        ctxRef.current = canvas.getContext('2d', { willReadFrequently: true });
+      }
+      const ctx = ctxRef.current;
       if (!ctx) return;
 
       const hex = getChannelHex(selectedChannel);
@@ -247,7 +257,10 @@ export const MidiPaint: React.FC = () => {
 
   const clearCanvas = () => {
       const canvas = canvasRef.current;
-      const ctx = canvas?.getContext('2d', { willReadFrequently: true });
+      if (!ctxRef.current && canvas) {
+        ctxRef.current = canvas.getContext('2d', { willReadFrequently: true });
+      }
+      const ctx = ctxRef.current;
       if (!ctx) return;
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   };
