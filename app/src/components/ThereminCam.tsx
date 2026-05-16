@@ -25,7 +25,6 @@ export const ThereminCam: React.FC = () => {
   const prevFrameRef = useRef<Uint8ClampedArray | null>(null);
   const requestRef = useRef<number>(0);
   const lastSentRef = useRef<{ cc1: number, cc3: number }>({ cc1: -1, cc3: -1 });
-  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -80,13 +79,7 @@ export const ThereminCam: React.FC = () => {
         return;
       }
 
-      // ⚡ Bolt Optimization: Cache the CanvasRenderingContext2D to avoid
-      // calling getContext('2d') every frame in the requestAnimationFrame loop
-      // which incurs unnecessary garbage collection pressure and CPU overhead.
-      if (!ctxRef.current) {
-        ctxRef.current = canvas.getContext('2d', { willReadFrequently: true });
-      }
-      const ctx = ctxRef.current;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
       if (!ctx) return;
 
       ctx.drawImage(video, 0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
