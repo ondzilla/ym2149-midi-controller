@@ -113,6 +113,7 @@ export const GlobalSettings: React.FC = () => {
   const [thereminCam, setThereminCam] = usePatchState('experimentalThereminCam', false);
   const [qwertyPiano, setQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
   const [midiPaint, setMidiPaint] = usePatchState('experimentalMidiPaint', false);
+  const [drumSequencer, setDrumSequencer] = usePatchState('experimentalDrumSequencer', false);
   const [showMidiLog, setShowMidiLog] = usePatchState('showMidiLog', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -146,6 +147,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleMidiPaint = () => {
     setMidiPaint(!midiPaint);
+  };
+
+  const handleDrumSequencer = () => {
+    setDrumSequencer(!drumSequencer);
   };
 
   const handleMidiLog = () => {
@@ -259,6 +264,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-tertiary"
           activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
           activeTextColorClass="text-tertiary"
+        />
+
+        <SettingToggle
+          label="Drum Sequencer"
+          isActive={drumSequencer}
+          onClick={handleDrumSequencer}
+          buttonText="Toggle Drum Sequencer"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-primary"
+          activeShadowClass="shadow-[0_0_10px_#8eff71]"
+          activeTextColorClass="text-primary"
         />
 
         <SettingToggle

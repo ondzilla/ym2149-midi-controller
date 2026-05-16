@@ -19,6 +19,7 @@ export class MidiService {
   public inputs: MIDIInput[] = [];
   public outputs: MIDIOutput[] = [];
   public logs: MidiLogEntry[] = [];
+  public error: string | null = null;
   private readonly MAX_LOGS = 100;
   private listeners: (() => void)[] = [];
 
@@ -36,6 +37,8 @@ export class MidiService {
         this.refreshDevices();
       };
     } catch (err) {
+      this.error = (err as Error).message || 'Access denied';
+      this.notify();
       console.warn('Failed to get MIDI access. Ensure HTTPS or localhost.', err);
     }
   }
@@ -44,6 +47,12 @@ export class MidiService {
     if (!this.midiAccess) return;
     this.inputs = Array.from(this.midiAccess.inputs.values());
     this.outputs = Array.from(this.midiAccess.outputs.values());
+
+    // Auto-connect to the first available output if none is selected
+    if (!this.outputDevice && this.outputs.length > 0) {
+      this.outputDevice = this.outputs[0];
+    }
+
     this.notify();
   }
 
