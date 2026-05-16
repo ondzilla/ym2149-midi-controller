@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { midiService } from '../services/midiService';
 
 const PAD_COUNT = Array.from({ length: 16 });
@@ -12,8 +12,16 @@ const drumMap = [
 ];
 
 export const DrumPads: React.FC = () => {
+  const [activeNote, setActiveNote] = useState<number | null>(null);
+
   const handleTrigger = (note: number) => {
     midiService.sendNoteOn(9, note, 127);
+    setActiveNote(note);
+  };
+
+  const handleRelease = (note: number) => {
+    midiService.sendNoteOff(9, note, 0);
+    setActiveNote(null);
   };
 
   return (
@@ -34,20 +42,41 @@ export const DrumPads: React.FC = () => {
               disabled={!isMapped}
               title={isMapped ? drum.label : 'Unmapped Pad'}
               aria-label={isMapped ? drum.label : 'Unmapped Pad'}
-              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${!isMapped ? 'hidden md:flex opacity-30 cursor-not-allowed' : 'cursor-pointer active:scale-95'}`}
+              className={`aspect-square bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${!isMapped ? 'hidden md:flex opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-95'} ${activeNote === drum?.note ? 'scale-95' : ''}`}
               onMouseDown={() => isMapped && handleTrigger(drum.note)}
+              onMouseUp={() => isMapped && handleRelease(drum.note)}
+              onMouseLeave={() => {
+                if (isMapped && activeNote === drum.note) {
+                  handleRelease(drum.note);
+                }
+              }}
               onKeyDown={(e) => {
                 if (isMapped && (e.key === 'Enter' || e.key === ' ')) {
                   e.preventDefault();
+                  if (e.repeat) return;
                   handleTrigger(drum.note);
                 }
               }}
+              onKeyUp={(e) => {
+                if (isMapped && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  handleRelease(drum.note);
+                }
+              }}
             >
-              <div className={`w-1/2 h-1/2 border transition-all ${isMapped 
-                ? 'bg-surface-container-low border-secondary/40 group-hover:bg-secondary group-hover:shadow-[0_0_15px_#f5ce53]' 
-                : 'bg-surface-container-low border-primary/20'}`}></div>
-              {/* Invisible test handles */}
-              {isMapped && <span className="sr-only">{drum.label}</span>}
+              {isMapped ? (
+                <div className={`w-3/4 h-3/4 border flex items-center justify-center text-center p-1 transition-all ${
+                  activeNote === drum.note
+                    ? 'bg-secondary border-secondary shadow-[0_0_15px_#f5ce53] text-[#1b061a]'
+                    : 'bg-surface-container-low border-secondary/40 text-secondary group-hover:bg-secondary/20 group-hover:shadow-[0_0_15px_#f5ce53]'
+                }`}>
+                  <span className="font-headline text-[9px] sm:text-[10px] md:text-xs font-bold leading-tight">{drum.label}</span>
+                </div>
+              ) : (
+                <div className="w-1/2 h-1/2 border bg-surface-container-low border-primary/20 flex items-center justify-center">
+                  <span className="font-headline text-[8px] text-primary/40">UNMAPPED</span>
+                </div>
+              )}
             </button>
           );
         })}
