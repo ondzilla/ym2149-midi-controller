@@ -5,12 +5,21 @@
  * Tracks inputs/outputs and notifies UI on device plug/unplug.
  */
 
+export interface MidiLogEntry {
+  timestamp: number;
+  type: 'CC' | 'NoteOn' | 'NoteOff' | 'AllNotesOff' | 'PitchBend';
+  channel?: number;
+  data: any;
+}
+
 export class MidiService {
   private midiAccess: MIDIAccess | null = null;
   public outputDevice: MIDIOutput | null = null;
   
   public inputs: MIDIInput[] = [];
   public outputs: MIDIOutput[] = [];
+  public logs: MidiLogEntry[] = [];
+  private readonly MAX_LOGS = 100;
   private listeners: (() => void)[] = [];
 
   constructor() {
@@ -54,11 +63,25 @@ export class MidiService {
     this.listeners.forEach(l => l());
   }
 
+  private addLog(entry: Omit<MidiLogEntry, 'timestamp'>) {
+    this.logs.push({ ...entry, timestamp: Date.now() });
+    if (this.logs.length > this.MAX_LOGS) {
+      this.logs.shift();
+    }
+    this.notify();
+  }
+
+  public clearLogs() {
+    this.logs = [];
+    this.notify();
+  }
+
   /**
    * Sends a standard MIDI control change (CC) message.
    * @param channel MIDI Channel (1-16)
    */
   public sendCC(channel: number, ccNumber: number, value: number) {
+    this.addLog({ type: 'CC', channel, data: [ccNumber, value] });
     if (!this.outputDevice) return;
     
     try {
@@ -77,6 +100,7 @@ export class MidiService {
    * Sends a standard MIDI Note On message.
    */
   public sendNoteOn(channel: number, note: number, velocity: number) {
+    this.addLog({ type: 'NoteOn', channel, data: [note, velocity] });
     if (!this.outputDevice) return;
     
     try {
@@ -94,6 +118,7 @@ export class MidiService {
    * Sends a standard MIDI Note Off message.
    */
   public sendNoteOff(channel: number, note: number, velocity: number = 0) {
+    this.addLog({ type: 'NoteOff', channel, data: [note, velocity] });
     if (!this.outputDevice) return;
 
     try {
@@ -111,6 +136,7 @@ export class MidiService {
    * Sends All Notes Off CC message (CC 123) to all 16 channels.
    */
   public sendAllNotesOff() {
+    this.addLog({ type: 'AllNotesOff', data: null });
     if (!this.outputDevice) return;
     try {
       // Optimize by batching into a single Uint8Array instead of crossing boundary 16 times
@@ -130,6 +156,7 @@ export class MidiService {
    * Sends a 14-bit MIDI Pitch Bend message.
    */
   public sendPitchBend(channel: number, value: number) {
+    this.addLog({ type: 'PitchBend', channel, data: value });
     if (!this.outputDevice) return;
     
     try {

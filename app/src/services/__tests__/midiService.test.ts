@@ -82,4 +82,43 @@ describe('MidiService', () => {
     expect(mockOutputDevice.send).toHaveBeenCalledWith([0x99, 60, 64]);
   });
 
+  it('should log sent messages even if outputDevice is not set', async () => {
+    await new Promise(process.nextTick);
+    
+    // Ensure no output device is set
+    midiService.outputDevice = null;
+
+    // Send a CC message
+    midiService.sendCC(1, 10, 127);
+
+    expect(midiService.logs.length).toBe(1);
+    expect(midiService.logs[0].type).toBe('CC');
+    expect(midiService.logs[0].channel).toBe(1);
+    expect(midiService.logs[0].data).toEqual([10, 127]);
+    expect(typeof midiService.logs[0].timestamp).toBe('number');
+  });
+
+  it('should cap the log size to 100 entries', async () => {
+    await new Promise(process.nextTick);
+    midiService.outputDevice = null;
+
+    for (let i = 0; i < 110; i++) {
+      midiService.sendCC(1, 10, i);
+    }
+
+    expect(midiService.logs.length).toBe(100);
+    // The oldest 10 should have been removed
+    expect(midiService.logs[0].data[1]).toBe(10); // First remaining log should be the 11th one (index 10)
+  });
+
+  it('should clear the log when clearLogs() is called', async () => {
+    await new Promise(process.nextTick);
+    midiService.outputDevice = null;
+
+    midiService.sendCC(1, 10, 127);
+    expect(midiService.logs.length).toBe(1);
+
+    midiService.clearLogs();
+    expect(midiService.logs.length).toBe(0);
+  });
 });
