@@ -47,4 +47,8 @@ describe('GlobalSettings', () => {
 
     expect(midiService.sendCC).toHaveBeenCalledWith(1, 4, 64);
   });
+  it('should render a toggle for Show MIDI Log', () => {
+    render(<GlobalSettings />);
+    expect(screen.getByRole('button', { name: /toggle midi log/i })).toBeInTheDocument();
+  });
 });

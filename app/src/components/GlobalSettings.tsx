@@ -111,6 +111,7 @@ export const GlobalSettings: React.FC = () => {
   const [thereminCam, setThereminCam] = usePatchState('experimentalThereminCam', false);
   const [qwertyPiano, setQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
   const [midiPaint, setMidiPaint] = usePatchState('experimentalMidiPaint', false);
+  const [showMidiLog, setShowMidiLog] = usePatchState('showMidiLog', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChannel(e.target.value);
@@ -143,6 +144,10 @@ export const GlobalSettings: React.FC = () => {
 
   const handleMidiPaint = () => {
     setMidiPaint(!midiPaint);
+  };
+
+  const handleMidiLog = () => {
+    setShowMidiLog(!showMidiLog);
   };
 
   return (
@@ -252,6 +257,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-tertiary"
           activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
           activeTextColorClass="text-tertiary"
+        />
+
+        <SettingToggle
+          label="MIDI Log Viewer"
+          isActive={showMidiLog}
+          onClick={handleMidiLog}
+          buttonText="Toggle MIDI Log"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-primary"
+          activeShadowClass="shadow-[0_0_10px_#8eff71]"
+          activeTextColorClass="text-primary"
         />
       </div>
     </>
