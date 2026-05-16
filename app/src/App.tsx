@@ -54,7 +54,7 @@ export default function App() {
           </div>
 
           <div className="col-span-12 xl:col-span-6">
-            <Arpeggiator />
+            <XYPad />
           </div>
 
           <div className="col-span-12 xl:col-span-6">
@@ -62,7 +62,7 @@ export default function App() {
           </div>
 
           <div className="col-span-12 xl:col-span-6">
-            <XYPad />
+            <Arpeggiator />
           </div>
 
           {experimentalThereminCam && (
