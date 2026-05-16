@@ -37,3 +37,7 @@ Action: Documented the "MIDI Paint" experimental feature in `docs/ideas/2026-05-
 ## 2026-05-14 - Canvas API for Generative Patch Creation
 Learning: The HTML5 `<canvas>` API, combined with standard HTML Drag & Drop and `FileReader`, provides a dependency-free way to analyze image data (like average RGB color). This technique works exceptionally well for generating MIDI patches by extracting color data from user-provided images and mapping it to synthesis parameters (e.g., RGB to CC1/CC2/CC3).
 Action: Proposed the "Image-to-Patch" feature to leverage this technique, demonstrating how web multimedia APIs can serve as experimental sensors for vintage sound control.
+
+## 2026-05-14 - Workflow Feasibility for Experimental Concepts
+Learning: The user provided feedback rejecting the "Image-to-Patch" idea, noting that while technically feasible (via Drag & Drop / Canvas API), the workflow is uninteresting compared to a continuous stream (like video).
+Action: Going forward, I will avoid "drag and drop" or single-point-in-time extraction methods for generative MIDI, and instead focus experimental ideas on continuous interaction streams (e.g., video, motion, continuous audio).
