@@ -50,6 +50,7 @@ export const MidiPaint: React.FC = () => {
 
   const [isActive, setIsActive] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState(1);
+  const [isEraser, setIsEraser] = useState(false);
   const isDrawingRef = useRef(false);
   const lastDrawPosRef = useRef<{ x: number, y: number } | null>(null);
 
@@ -212,12 +213,15 @@ export const MidiPaint: React.FC = () => {
       if (!ctx) return;
 
       const hex = getChannelHex(selectedChannel);
-      ctx.fillStyle = hex; 
-      ctx.shadowColor = hex;
-      ctx.shadowBlur = 10;
+      ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
+      ctx.fillStyle = isEraser ? '#000' : hex; 
+      ctx.shadowColor = isEraser ? 'transparent' : hex;
+      ctx.shadowBlur = isEraser ? 0 : 10;
       ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.arc(x, y, isEraser ? 6 : 3, 0, Math.PI * 2);
       ctx.fill();
+      // Reset
+      ctx.globalCompositeOperation = 'source-over';
   };
 
   const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
@@ -226,16 +230,19 @@ export const MidiPaint: React.FC = () => {
       if (!ctx) return;
 
       const hex = getChannelHex(selectedChannel);
-      ctx.strokeStyle = hex;
-      ctx.shadowColor = hex;
-      ctx.shadowBlur = 10;
-      ctx.lineWidth = 6;
+      ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
+      ctx.strokeStyle = isEraser ? '#000' : hex;
+      ctx.shadowColor = isEraser ? 'transparent' : hex;
+      ctx.shadowBlur = isEraser ? 0 : 10;
+      ctx.lineWidth = isEraser ? 12 : 6;
       ctx.lineCap = 'round';
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
+      // Reset
+      ctx.globalCompositeOperation = 'source-over';
   };
 
   const clearCanvas = () => {
@@ -268,6 +275,16 @@ export const MidiPaint: React.FC = () => {
                 ))}
               </select>
             </div>
+            <button
+                onClick={() => setIsEraser(!isEraser)}
+                className={`font-headline text-[10px] transition-colors uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1 flex items-center gap-1 ${
+                    isEraser ? 'text-primary' : 'text-tertiary opacity-60 hover:opacity-100'
+                }`}
+                title={isEraser ? 'Eraser Active' : 'Eraser Inactive'}
+            >
+                <span className="material-symbols-outlined text-[14px]" aria-hidden="true">ink_eraser</span>
+                <span className="sr-only">Toggle Eraser</span>
+            </button>
             <button
                 onClick={clearCanvas}
                 className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1"
