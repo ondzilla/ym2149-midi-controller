@@ -60,7 +60,7 @@ describe('Sidebar', () => {
 
     render(<Sidebar />);
     expect(screen.getByText('MIDI LOG')).toBeInTheDocument();
-    expect(screen.getByText(/CC/)).toBeInTheDocument();
+    expect(screen.getAllByText(/CC/)[0]).toBeInTheDocument();
   });
 
   it('clears MIDI logs when Clear button is clicked', async () => {

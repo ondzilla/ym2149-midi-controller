@@ -7,3 +7,5 @@
 ## 2026-05-07 - [Audit Finding] Observation: `Arpeggiator.tsx` mapped Arp Pattern (CC 6) index 0-15 directly to the MIDI value without scaling. Correction: Updated `arpPattern` `usePatchState` callback to use `mapRange` to distribute the 16 patterns across the full 0-127 MIDI CC range as required by the firmware.
 
 ## 2026-05-10 - [Audit Finding] Observation: `GlobalSettings.tsx` implemented `globalVelocity` (CC 4) as a boolean toggle (`127` or `0`), which hallucinated a binary restriction on a continuous hardware parameter (0-127). Correction: Replaced the toggle with a `VelocityControl` slider to accurately reflect the 0-127 range supported by the firmware.
+
+## 2026-05-16 - [Audit Finding] Observation: `GlobalSettings.tsx` allowed users to select up to 16 MIDI Channels, which does not accurately reflect the YM2149F hardware capabilities. The YM2149F is a 3-channel sound chip. The UI hallucinated available features that do not map down to the hardware channels appropriately. Correction: Reduced the `CHANNELS` array length to exactly 3, ensuring the interface matches the physical voices of the synth and eliminating the hallucinated dropdown options.

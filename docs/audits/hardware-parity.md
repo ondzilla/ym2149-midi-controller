@@ -50,3 +50,10 @@
 ## Findings (2026-05-10)
 - `GlobalSettings.tsx` implemented Velocity Sensitivity as a boolean toggle, sending either `127` or `0`, which hides the hardware capability to adjust sensitivity across a 1-127 range.
 - Refactored `GlobalSettings.tsx` to replace the toggle with a `VelocityControl` slider, correctly sending the continuous 0-127 value for CC 4.
+
+## Target: Global Settings - Channel Constraints
+- Supported Channels: 3 (Matching the YM2149F 3-Voice Polyphonic capability)
+
+## Findings (2026-05-16)
+- `GlobalSettings.tsx` permitted selection of 16 channels, which hallucinates capabilities far beyond the 3 actual voice channels present on the YM2149F hardware.
+- Refactored `GlobalSettings.tsx` to strictly bound the global channel selection to exactly 3 channels, correctly matching the hardware reality and removing the hallucinated options.
