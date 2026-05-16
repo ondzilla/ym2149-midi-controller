@@ -249,16 +249,18 @@ const VibratoRateControl: React.FC<{ activeChannel: number }> = ({ activeChannel
     setVibratoRate(Number(e.target.value));
   };
 
+  const id = useId();
+
   return (
     <div className="relative w-32 h-32 flex items-center justify-center shrink-0 group has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high">
-      <input type="range" min="0" max="100" aria-label="Vibrato Rate" value={vibratoRate} onChange={handleVibratoRate} className="absolute inset-0 opacity-0 z-20 cursor-pointer" />
+      <input id={id} type="range" min="0" max="100" aria-label="Vibrato Rate" value={vibratoRate} onChange={handleVibratoRate} className="absolute inset-0 opacity-0 z-20 cursor-pointer" />
       <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
         <circle className="text-surface-container-lowest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeWidth="8"></circle>
         <circle className="text-primary transition-all duration-75" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeDasharray="364.4" strokeDashoffset={364.4 - (vibratoRate / 100) * 364.4} strokeWidth="8"></circle>
       </svg>
       <div className="text-center z-10 pointer-events-none">
         <div className="font-headline text-lg font-bold text-primary leading-none group-hover:drop-shadow-[0_0_8px_#8eff71] transition-all">{vibratoRate}</div>
-        <div className="font-headline text-[10px] text-secondary tracking-widest">RATE %</div>
+        <label htmlFor={id} className="font-headline text-[10px] text-secondary tracking-widest cursor-pointer pointer-events-auto">RATE %</label>
       </div>
       <div className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></div>
     </div>
