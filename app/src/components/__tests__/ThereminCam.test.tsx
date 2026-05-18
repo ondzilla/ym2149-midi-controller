@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { ThereminCam } from '../ThereminCam';
 
 // Mock dependencies
@@ -66,7 +66,7 @@ describe('ThereminCam', () => {
     const toggleButton = screen.getByRole('button', { name: /Stop Theremin Cam/i });
     expect(toggleButton).toBeInTheDocument();
 
-    fireEvent.click(toggleButton);
+    await act(async () => { fireEvent.click(toggleButton); });
 
     expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith({
       video: { width: 64, height: 48 },

@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { midiService } from '../services/midiService';
-import { presetManager } from '../services/presetManager';
+
 import { transportService } from '../services/transportService';
 
 const CANVAS_WIDTH = 512;
 const CANVAS_HEIGHT = 128;
-const PLAYHEAD_SPEED = 2; // Pixels per frame
+
 
 const CHANNEL_COLORS = [
   [255, 84, 73],   // 1
