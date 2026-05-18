@@ -5,13 +5,11 @@ import { usePatchState } from '../../hooks/usePatchState';
 
 export function Sidebar() {
   const [showMidiLog] = usePatchState('showMidiLog', false);
-  const [logs, setLogs] = useState<MidiLogEntry[]>([]);
+  const [logs, setLogs] = useState<MidiLogEntry[]>(() => [...midiService.logs]);
   const logContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!showMidiLog) return;
-    
-    setLogs([...midiService.logs]);
 
     const unsubscribe = midiService.subscribe(() => {
       setLogs([...midiService.logs]);

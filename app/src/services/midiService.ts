@@ -9,7 +9,7 @@ export interface MidiLogEntry {
   timestamp: number;
   type: 'CC' | 'NoteOn' | 'NoteOff' | 'AllNotesOff' | 'PitchBend';
   channel?: number;
-  data: any;
+  data: number | number[];
 }
 
 export class MidiService {

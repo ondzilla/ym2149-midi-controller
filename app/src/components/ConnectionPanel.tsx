@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { midiService } from '../services/midiService';
-import { usePatchState } from '../hooks/usePatchState';
+
 
 export const ConnectionPanel: React.FC = () => {
   const [activeInId, setActiveInId] = useState<string | null>(null);

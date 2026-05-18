@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Sidebar } from '../Sidebar';
@@ -9,7 +9,7 @@ import * as usePatchStateModule from '../../../hooks/usePatchState';
 vi.mock('../../../services/midiService', () => ({
   midiService: {
     logs: [],
-    subscribe: vi.fn((cb) => {
+    subscribe: vi.fn(() => {
       // return unsubscribe
       return () => {};
     }),
@@ -34,7 +34,7 @@ vi.mock('../../../services/presetManager', () => ({
 describe('Sidebar', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (usePatchStateModule.usePatchState as any).mockReturnValue([false, vi.fn()]);
+    (usePatchStateModule.usePatchState as unknown as ReturnType<typeof vi.fn>).mockReturnValue([false, vi.fn()]);
     midiService.logs = [];
   });
 
@@ -49,7 +49,7 @@ describe('Sidebar', () => {
   });
 
   it('renders MIDI Log Viewer when setting is true', () => {
-    (usePatchStateModule.usePatchState as any).mockImplementation((key: string) => {
+    (usePatchStateModule.usePatchState as unknown as ReturnType<typeof vi.fn>).mockImplementation((key: string) => {
       if (key === 'showMidiLog') return [true, vi.fn()];
       return [false, vi.fn()];
     });
@@ -60,11 +60,11 @@ describe('Sidebar', () => {
 
     render(<Sidebar />);
     expect(screen.getByText('MIDI LOG')).toBeInTheDocument();
-    expect(screen.getByText(/CC/)).toBeInTheDocument();
+    expect(screen.getAllByText(/CC/)[0]).toBeInTheDocument();
   });
 
   it('clears MIDI logs when Clear button is clicked', async () => {
-    (usePatchStateModule.usePatchState as any).mockImplementation((key: string) => {
+    (usePatchStateModule.usePatchState as unknown as ReturnType<typeof vi.fn>).mockImplementation((key: string) => {
       if (key === 'showMidiLog') return [true, vi.fn()];
       return [false, vi.fn()];
     });
