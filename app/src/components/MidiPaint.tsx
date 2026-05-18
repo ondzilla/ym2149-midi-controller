@@ -173,7 +173,7 @@ export const MidiPaint: React.FC = () => {
 
       // Notes to turn off
       const keysToDelete: string[] = [];
-      activeNotesRef.current.forEach((velocity, key) => {
+      activeNotesRef.current.forEach((_, key) => {
         if (!currentNotes.has(key)) {
           const [chanStr, noteStr] = key.split('_');
           try { midiService.sendNoteOff(Number(chanStr), Number(noteStr), 0); } catch (e) { console.warn(e); }

@@ -33,7 +33,7 @@ describe('TopBar', () => {
 
   it('should display MIDI CONNECTED when outputDevice is present', () => {
     (usePatchStateModule.usePatchState as unknown as ReturnType<typeof vi.fn>).mockReturnValue([false]);
-    midiService.outputDevice = { id: 'test', send: vi.fn() } as unknown as WebMidi.MIDIOutput;
+    midiService.outputDevice = { id: 'test', send: vi.fn() } as unknown as MIDIOutput;
     render(<TopBar onOpenSettings={vi.fn()} />);
     expect(screen.getByText('MIDI: CONNECTED')).toBeInTheDocument();
   });

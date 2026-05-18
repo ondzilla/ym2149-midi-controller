@@ -1,7 +1,6 @@
 import React, { useId } from 'react';
 import { midiService } from '../services/midiService';
 import { usePatchState } from '../hooks/usePatchState';
-import { localAudioService } from '../services/localAudioService';
 
 
 interface SettingToggleProps {

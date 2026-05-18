@@ -154,7 +154,7 @@ export class MidiService {
    * Sends All Notes Off CC message (CC 123) to all 16 channels.
    */
   public sendAllNotesOff() {
-    this.addLog({ type: 'AllNotesOff', data: null });
+    this.addLog({ type: 'AllNotesOff', data: [] });
     if (!this.outputDevice) return;
     try {
       // Optimize by batching into a single Uint8Array instead of crossing boundary 16 times

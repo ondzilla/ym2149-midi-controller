@@ -108,7 +108,7 @@ describe('MidiService', () => {
 
     expect(midiService.logs.length).toBe(100);
     // The oldest 10 should have been removed
-    expect(midiService.logs[0].data[1]).toBe(10); // First remaining log should be the 11th one (index 10)
+    expect((midiService.logs[0].data as number[])[1]).toBe(10); // First remaining log should be the 11th one (index 10)
   });
 
   it('should clear the log when clearLogs() is called', async () => {

@@ -55,7 +55,9 @@ class LocalAudioService {
       }
 
       if (msg.type === 'NoteOn') {
-          const [note, velocity] = msg.data;
+          const data = Array.isArray(msg.data) ? msg.data : [msg.data];
+          const note = data[0];
+          const velocity = data[1] ?? 127;
           // Velocity 0 is NoteOff
           if (velocity === 0) {
               this.stopNote(msg.channel!, note);
@@ -63,7 +65,8 @@ class LocalAudioService {
               this.playNote(msg.channel!, note, velocity);
           }
       } else if (msg.type === 'NoteOff') {
-          const [note] = msg.data;
+          const data = Array.isArray(msg.data) ? msg.data : [msg.data];
+          const note = data[0];
           this.stopNote(msg.channel!, note);
       }
   }

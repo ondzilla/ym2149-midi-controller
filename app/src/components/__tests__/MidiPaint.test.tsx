@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MidiPaint } from '../MidiPaint';
@@ -31,7 +30,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   transform: vi.fn(),
   rect: vi.fn(),
   clip: vi.fn(),
-} as unknown as CanvasRenderingContext2D));
+})) as any;
 
 // Add missing pointer capture methods to jsdom
 HTMLElement.prototype.setPointerCapture = vi.fn();

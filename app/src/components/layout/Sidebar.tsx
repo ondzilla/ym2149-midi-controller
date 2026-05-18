@@ -26,10 +26,12 @@ export function Sidebar() {
 
   const formatLogData = (log: MidiLogEntry) => {
     if (log.type === 'CC') {
-      return `CC ${log.data[0]} = ${log.data[1]}`;
+      const data = Array.isArray(log.data) ? log.data : [log.data];
+      return `CC ${data[0]} = ${data[1]}`;
     }
     if (log.type === 'NoteOn' || log.type === 'NoteOff') {
-      return `Note ${log.data[0]} Vel ${log.data[1]}`;
+      const data = Array.isArray(log.data) ? log.data : [log.data];
+      return `Note ${data[0]} Vel ${data[1]}`;
     }
     if (log.type === 'PitchBend') {
       return `Val ${log.data}`;
