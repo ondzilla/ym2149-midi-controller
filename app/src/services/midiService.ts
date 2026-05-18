@@ -22,6 +22,7 @@ export class MidiService {
   public error: string | null = null;
   private readonly MAX_LOGS = 100;
   private listeners: (() => void)[] = [];
+  private messageListeners: ((msg: Omit<MidiLogEntry, 'timestamp'>) => void)[] = [];
 
   constructor() {
     this.init();
@@ -64,7 +65,14 @@ export class MidiService {
   public subscribe(listener: () => void) {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+    this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
+
+  public subscribeMessage(listener: (msg: Omit<MidiLogEntry, 'timestamp'>) => void) {
+    this.messageListeners.push(listener);
+    return () => {
+      this.messageListeners = this.messageListeners.filter(l => l !== listener);
     };
   }
 
@@ -78,6 +86,7 @@ export class MidiService {
       this.logs.shift();
     }
     this.notify();
+    this.messageListeners.forEach(l => l(entry));
   }
 
   public clearLogs() {
