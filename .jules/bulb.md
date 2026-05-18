@@ -41,3 +41,7 @@ Action: Proposed the "Image-to-Patch" feature to leverage this technique, demons
 ## 2026-05-14 - Workflow Feasibility for Experimental Concepts
 Learning: The user provided feedback rejecting the "Image-to-Patch" idea, noting that while technically feasible (via Drag & Drop / Canvas API), the workflow is uninteresting compared to a continuous stream (like video).
 Action: Going forward, I will avoid "drag and drop" or single-point-in-time extraction methods for generative MIDI, and instead focus experimental ideas on continuous interaction streams (e.g., video, motion, continuous audio).
+
+## 2026-05-15 - Pointer Lock API for Unbounded MIDI Streams
+Learning: The HTML5 Pointer Lock API (`Element.requestPointerLock()`) provides a lightweight, dependency-free method to capture unbounded relative mouse movement (`movementX`, `movementY`). This works exceptionally well for generating continuous MIDI streams on desktop environments because it circumvents the physical limits of the screen edges, allowing for "infinite" rotary or ribbon-like gestures that traditional XY pads cannot support.
+Action: Proposed the "Infinite Ribbon Controller" experimental feature to map unbounded mouse motion to YM2149F CC parameters like Detune (CC 1) and Vibrato Depth (CC 3).
