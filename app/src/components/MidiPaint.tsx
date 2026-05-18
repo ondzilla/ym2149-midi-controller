@@ -341,6 +341,8 @@ export const MidiPaint: React.FC = () => {
             <button
                 onClick={clearCanvas}
                 className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1"
+                aria-label="Clear Canvas"
+                title="Clear Canvas"
             >
                 Clear
             </button>

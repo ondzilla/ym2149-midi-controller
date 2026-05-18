@@ -89,6 +89,7 @@ export const DrumSequencer: React.FC = () => {
                 onClick={handleStop}
                 className="text-tertiary opacity-60 hover:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1"
                 aria-label="Stop"
+                title="Stop"
             >
                 <span className="material-symbols-outlined" aria-hidden="true">stop</span>
             </button>
@@ -98,6 +99,7 @@ export const DrumSequencer: React.FC = () => {
                     isPlaying ? 'text-primary animate-pulse shadow-[0_0_8px_var(--primary)]' : 'text-primary opacity-60 hover:opacity-100'
                 }`}
                 aria-label={isPlaying ? 'Pause' : 'Play'}
+                title={isPlaying ? 'Pause' : 'Play'}
             >
                 <span className="material-symbols-outlined" aria-hidden="true">
                     {isPlaying ? 'pause' : 'play_arrow'}
@@ -127,6 +129,7 @@ export const DrumSequencer: React.FC = () => {
                         : ''
                   }`}
                   aria-label={`Toggle ${track.label} step ${colIndex + 1}`}
+                  title={`Toggle ${track.label} step ${colIndex + 1}`}
                 />
               ))}
             </div>
