@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { midiService } from '../services/midiService';
+import { presetManager } from '../services/presetManager';
+import { transportService } from '../services/transportService';
 
 const CANVAS_WIDTH = 512;
 const CANVAS_HEIGHT = 128;
@@ -47,7 +49,8 @@ export const MidiPaint: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(transportService.isPlaying);
+  const [bpm, setBpm] = useState(transportService.bpm);
   const [selectedChannel, setSelectedChannel] = useState(1);
   const [isEraser, setIsEraser] = useState(false);
   const isDrawingRef = useRef(false);
@@ -55,11 +58,28 @@ export const MidiPaint: React.FC = () => {
 
   const playheadXRef = useRef(0);
   const requestRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number>(0);
   const activeNotesRef = useRef<Map<string, number>>(new Map()); // "channel_note" -> Velocity
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   // Handle Playback Loop
   useEffect(() => {
+    const unsubscribe = transportService.subscribe((state) => {
+        setIsActive(state.isPlaying);
+        setBpm(state.bpm);
+        
+        // If we just stopped playing, reset playhead
+        if (!state.isPlaying) {
+            playheadXRef.current = 0;
+            if (containerRef.current) {
+                const playheadElement = containerRef.current.querySelector('.playhead-line') as HTMLElement;
+                if (playheadElement) {
+                    playheadElement.style.left = '0%';
+                }
+            }
+        }
+    });
+
     const currentNotesRef = activeNotesRef.current;
 
     if (!isActive) {
@@ -69,10 +89,15 @@ export const MidiPaint: React.FC = () => {
         try { midiService.sendNoteOff(Number(chanStr), Number(noteStr), 0); } catch (e) { console.warn(e); }
       });
       currentNotesRef.clear();
-      return;
+      lastFrameTimeRef.current = 0;
+      return () => unsubscribe();
     }
 
-    const processFrame = () => {
+    const processFrame = (time: number) => {
+      if (!lastFrameTimeRef.current) lastFrameTimeRef.current = time;
+      const dt = time - lastFrameTimeRef.current; // ms since last frame
+      lastFrameTimeRef.current = time;
+
       const canvas = canvasRef.current;
       if (!canvas) {
         requestRef.current = requestAnimationFrame(processFrame);
@@ -96,7 +121,7 @@ export const MidiPaint: React.FC = () => {
       const imageData = ctx.getImageData(x, 0, 1, CANVAS_HEIGHT);
       const data = imageData.data;
 
-      const currentNotes = new Map<string, { channel: number, note: number, velocity: number }>();
+      const channelData = new Map<number, { notes: number[], maxVelocity: number }>();
 
       for (let y = 0; y < CANVAS_HEIGHT; y++) {
         // data is [R, G, B, A]
@@ -112,13 +137,28 @@ export const MidiPaint: React.FC = () => {
           const velocity = Math.max(1, Math.floor((brightness / 255) * 127));
 
           // Map Y to MIDI Note (0-127). Y=0 is top (higher pitch), Y=127 is bottom (lower pitch)
-          // To ensure it stays within valid bounds:
           const note = Math.max(0, Math.min(127, 127 - y));
           
           const channel = getClosestChannel(r, g, b);
-          currentNotes.set(`${channel}_${note}`, { channel, note, velocity });
+          
+          if (!channelData.has(channel)) {
+            channelData.set(channel, { notes: [], maxVelocity: 0 });
+          }
+          
+          const cd = channelData.get(channel)!;
+          cd.notes.push(note);
+          if (velocity > cd.maxVelocity) cd.maxVelocity = velocity;
         }
       }
+
+      const currentNotes = new Map<string, { channel: number, note: number, velocity: number }>();
+
+      channelData.forEach((data, channel) => {
+          // Average the pitches to find the "center of mass" of the stroke
+          const sum = data.notes.reduce((a, b) => a + b, 0);
+          const averageNote = Math.round(sum / data.notes.length);
+          currentNotes.set(`${channel}_${averageNote}`, { channel, note: averageNote, velocity: data.maxVelocity });
+      });
 
       // Notes to turn on
       currentNotes.forEach(({ channel, note, velocity }, key) => {
@@ -142,11 +182,14 @@ export const MidiPaint: React.FC = () => {
       });
       keysToDelete.forEach(k => activeNotesRef.current.delete(k));
 
-      // Advance playhead
-      playheadXRef.current = (playheadXRef.current + PLAYHEAD_SPEED) % CANVAS_WIDTH;
+      // Advance playhead based on BPM
+      // 512px = 1 bar = 4 beats.
+      // Pixels per beat = 512 / 4 = 128
+      // Pixels per ms = (128 * (bpm / 60)) / 1000
+      const pixelsPerMs = (128 * (bpm / 60)) / 1000;
+      playheadXRef.current = (playheadXRef.current + (dt * pixelsPerMs)) % CANVAS_WIDTH;
 
-      // Force React update for playhead overlay position if needed,
-      // but modifying DOM directly might be smoother
+      // Force React update for playhead overlay position
       if (containerRef.current) {
          const playheadElement = containerRef.current.querySelector('.playhead-line') as HTMLElement;
          if (playheadElement) {
@@ -160,6 +203,7 @@ export const MidiPaint: React.FC = () => {
     requestRef.current = requestAnimationFrame(processFrame);
 
     return () => {
+      unsubscribe();
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
@@ -171,7 +215,7 @@ export const MidiPaint: React.FC = () => {
       });
       currentNotesRef.clear();
     };
-  }, [isActive]);
+  }, [isActive, bpm]);
 
 
   const getPointerPos = (e: React.PointerEvent) => {
@@ -265,14 +309,10 @@ export const MidiPaint: React.FC = () => {
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   };
 
-  const togglePlayback = () => {
-      setIsActive(prev => !prev);
-  };
-
   return (
     <div className="bg-surface-container-high border border-[#32152f] p-6 relative solder-point solder-tl solder-tr solder-bl solder-br flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-headline text-xs tracking-widest text-tertiary">MIDI_PAINT [EXPERIMENTAL]</h3>
+        <h3 className="font-headline text-xs tracking-widest text-tertiary">MIDI_PAINT [SYNCED]</h3>
         <div className="flex gap-4 items-center">
             <div className="flex items-center gap-2 border border-outline-variant/20 bg-surface-container-highest px-2 py-1 rounded">
               <div className="w-3 h-3 rounded-full shadow-[0_0_8px_currentColor]" style={{ color: getChannelHex(selectedChannel), backgroundColor: getChannelHex(selectedChannel) }}></div>
@@ -303,19 +343,6 @@ export const MidiPaint: React.FC = () => {
                 className="font-headline text-[10px] text-tertiary opacity-60 hover:opacity-100 transition-opacity uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high rounded px-1"
             >
                 Clear
-            </button>
-            <button
-            onClick={togglePlayback}
-            aria-pressed={isActive}
-            className={`rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container-high ${
-                isActive ? 'text-primary animate-pulse shadow-[0_0_8px_var(--primary)]' : 'text-primary opacity-60 hover:opacity-100'
-            }`}
-            aria-label={isActive ? 'Stop Playback' : 'Start Playback'}
-            title={isActive ? 'Stop Playback' : 'Start Playback'}
-            >
-            <span className="material-symbols-outlined" aria-hidden="true">
-                {isActive ? 'stop' : 'play_arrow'}
-            </span>
             </button>
         </div>
       </div>

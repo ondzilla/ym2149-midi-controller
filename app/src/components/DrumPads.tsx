@@ -15,12 +15,12 @@ export const DrumPads: React.FC = () => {
   const [activeNote, setActiveNote] = useState<number | null>(null);
 
   const handleTrigger = (note: number) => {
-    midiService.sendNoteOn(9, note, 127);
+    midiService.sendNoteOn(10, note, 127);
     setActiveNote(note);
   };
 
   const handleRelease = (note: number) => {
-    midiService.sendNoteOff(9, note, 0);
+    midiService.sendNoteOff(10, note, 0);
     setActiveNote(null);
   };
 

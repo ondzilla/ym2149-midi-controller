@@ -19,8 +19,10 @@ export class MidiService {
   public inputs: MIDIInput[] = [];
   public outputs: MIDIOutput[] = [];
   public logs: MidiLogEntry[] = [];
+  public error: string | null = null;
   private readonly MAX_LOGS = 100;
   private listeners: (() => void)[] = [];
+  private messageListeners: ((msg: Omit<MidiLogEntry, 'timestamp'>) => void)[] = [];
 
   constructor() {
     this.init();
@@ -36,6 +38,8 @@ export class MidiService {
         this.refreshDevices();
       };
     } catch (err) {
+      this.error = (err as Error).message || 'Access denied';
+      this.notify();
       console.warn('Failed to get MIDI access. Ensure HTTPS or localhost.', err);
     }
   }
@@ -44,6 +48,12 @@ export class MidiService {
     if (!this.midiAccess) return;
     this.inputs = Array.from(this.midiAccess.inputs.values());
     this.outputs = Array.from(this.midiAccess.outputs.values());
+
+    // Auto-connect to the first available output if none is selected
+    if (!this.outputDevice && this.outputs.length > 0) {
+      this.outputDevice = this.outputs[0];
+    }
+
     this.notify();
   }
 
@@ -55,7 +65,14 @@ export class MidiService {
   public subscribe(listener: () => void) {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
+    this.listeners = this.listeners.filter(l => l !== listener);
+    };
+  }
+
+  public subscribeMessage(listener: (msg: Omit<MidiLogEntry, 'timestamp'>) => void) {
+    this.messageListeners.push(listener);
+    return () => {
+      this.messageListeners = this.messageListeners.filter(l => l !== listener);
     };
   }
 
@@ -69,6 +86,7 @@ export class MidiService {
       this.logs.shift();
     }
     this.notify();
+    this.messageListeners.forEach(l => l(entry));
   }
 
   public clearLogs() {

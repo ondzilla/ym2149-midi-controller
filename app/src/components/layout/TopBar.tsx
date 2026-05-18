@@ -18,6 +18,8 @@ export function TopBar({ onOpenSettings }: TopBarProps) {
     return false;
   });
   const [activeOutId, setActiveOutId] = useState<string | null>(midiService.outputDevice?.id || null);
+  const [midiError, setMidiError] = useState<string | null>(midiService.error);
+  const [outputCount, setOutputCount] = useState<number>(midiService.outputs.length);
 
   useEffect(() => {
     const handleGamepadConnected = () => setGamepadConnected(true);
@@ -28,6 +30,8 @@ export function TopBar({ onOpenSettings }: TopBarProps) {
 
     const unsubscribe = midiService.subscribe(() => {
       setActiveOutId(midiService.outputDevice?.id || null);
+      setMidiError(midiService.error);
+      setOutputCount(midiService.outputs.length);
     });
 
     return () => {
@@ -58,7 +62,7 @@ export function TopBar({ onOpenSettings }: TopBarProps) {
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${activeOutId ? 'bg-primary shadow-[0_0_8px_#8eff71]' : 'bg-error shadow-[0_0_8px_#ff5449]'}`}></div>
             <span role="status" aria-live="polite" className={`font-headline text-[10px] tracking-widest ${activeOutId ? 'text-primary' : 'text-error'}`}>
-              MIDI: {activeOutId ? 'CONNECTED' : 'DISCONNECTED'}
+              MIDI: {midiError ? `ERROR (${midiError})` : activeOutId ? 'CONNECTED' : `DISCONNECTED (${outputCount} found)`}
             </span>
           </div>
 

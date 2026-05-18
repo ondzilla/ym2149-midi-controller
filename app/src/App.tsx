@@ -15,7 +15,10 @@ import { ThereminCam } from './components/ThereminCam';
 import { SettingsOverlay } from './components/layout/SettingsOverlay';
 import { QwertyKeyboard } from './components/QwertyKeyboard';
 import { MidiPaint } from './components/MidiPaint';
+import { DrumSequencer } from './components/DrumSequencer';
 import { usePatchState } from './hooks/usePatchState';
+import { localAudioService } from './services/localAudioService';
+import { useEffect } from 'react';
 
 export default function App() {
   const [experimentalGamepad] = usePatchState('experimentalGamepad', false);
@@ -23,7 +26,34 @@ export default function App() {
   const [experimentalThereminCam] = usePatchState('experimentalThereminCam', false);
   const [experimentalQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
   const [experimentalMidiPaint] = usePatchState('experimentalMidiPaint', false);
+  const [experimentalDrumSequencer] = usePatchState('experimentalDrumSequencer', false);
+  const [experimentalLocalAudio] = usePatchState('experimentalLocalAudio', false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    if (experimentalLocalAudio) {
+        localAudioService.initialize();
+        
+        // Auto-resume audio context if suspended, which requires a user gesture
+        const resumeCtx = () => {
+            // @ts-ignore - reaching into service internals for convenience
+            if (localAudioService.ctx?.state === 'suspended') {
+                // @ts-ignore
+                localAudioService.ctx.resume();
+            }
+        };
+        
+        window.addEventListener('click', resumeCtx);
+        window.addEventListener('keydown', resumeCtx);
+        
+        return () => {
+            window.removeEventListener('click', resumeCtx);
+            window.removeEventListener('keydown', resumeCtx);
+        };
+    } else {
+        localAudioService.shutdown();
+    }
+  }, [experimentalLocalAudio]);
 
   return (
     <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen flex">
@@ -74,6 +104,12 @@ export default function App() {
           {experimentalMidiPaint && (
             <div className="col-span-12">
               <MidiPaint />
+            </div>
+          )}
+
+          {experimentalDrumSequencer && (
+            <div className="col-span-12">
+              <DrumSequencer />
             </div>
           )}
 

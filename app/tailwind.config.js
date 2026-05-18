@@ -65,6 +65,9 @@ export default {
               "body": ["Manrope"],
               "label": ["Space Grotesk"]
           },
+          gridTemplateColumns: {
+              '16': 'repeat(16, minmax(0, 1fr))',
+          },
           borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "0.75rem" },
       },
   },
