@@ -95,7 +95,7 @@ const VelocityControl: React.FC<{ channel: number }> = ({ channel }) => {
   );
 };
 
-const CHANNELS = Array.from({ length: 3 });
+const CHANNELS = Array.from({ length: 16 });
 
 export const GlobalSettings: React.FC = () => {
   const [channel, setChannel] = usePatchState('globalChannel', '1');

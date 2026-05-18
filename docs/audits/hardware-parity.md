@@ -20,13 +20,6 @@
 - Hardcoded MIDI Channel Issue: The MIDI `channel` was hardcoded to `1` across `Arpeggiator`, `SynthControls`, and `VibratoLFO`, ignoring the user's `globalChannel` selection from `GlobalSettings`.
 - Fixes applied: Removed dead UI components, fixed terminology, and mapped components to respect `globalChannel`.
 
-## Target: Channel constraints (GlobalSettings, TopBar)
-- Verified UI channel constraints match the 3-voice polyphony of the YM2149F.
-
-## Findings
-- `GlobalSettings.tsx` implemented the channel dropdown with 16 options, violating the 3-channel constraint. Fixed by limiting the `CHANNELS` array to 3.
-- `TopBar.tsx` Panic button sent CC 123 (All Notes Off) across all 16 MIDI channels, which is excessive and misleading given only 3 voices exist. Fixed by iterating only 3 times.
-
 ## Target: Drum Pads, Boolean Sync (2026-05-03)
 - Drum Pad mappings verified against hardware spec for CH. 10.
 - Boolean CC synchronization verified.

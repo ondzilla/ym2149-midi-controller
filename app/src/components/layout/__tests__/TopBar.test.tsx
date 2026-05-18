@@ -10,7 +10,6 @@ vi.mock('../../../services/midiService', () => ({
     sendCC: vi.fn(),
     subscribe: vi.fn(() => () => {}),
     outputDevice: null,
-    outputs: [],
   }
 }));
 
@@ -29,7 +28,7 @@ describe('TopBar', () => {
     (usePatchStateModule.usePatchState as any).mockReturnValue([false]);
     render(<TopBar onOpenSettings={vi.fn()} />);
     expect(screen.getByText('YM2149_SYNTH_CORE')).toBeInTheDocument();
-    expect(screen.getByText(/MIDI: DISCONNECTED/)).toBeInTheDocument();
+    expect(screen.getByText('MIDI: DISCONNECTED')).toBeInTheDocument();
   });
 
   it('should display MIDI CONNECTED when outputDevice is present', () => {
@@ -55,15 +54,15 @@ describe('TopBar', () => {
     expect(mockOnOpenSettings).toHaveBeenCalledTimes(1);
   });
 
-  it('should send CC 123 to all 3 channels when panic button is clicked', async () => {
+  it('should send CC 123 to all 16 channels when panic button is clicked', async () => {
     render(<TopBar onOpenSettings={vi.fn()} />);
     const panicBtn = screen.getByRole('button', { name: /all notes off \(panic\)/i });
 
     await userEvent.click(panicBtn);
 
-    expect(midiService.sendCC).toHaveBeenCalledTimes(3);
+    expect(midiService.sendCC).toHaveBeenCalledTimes(16);
 
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 16; i++) {
       expect(midiService.sendCC).toHaveBeenCalledWith(i, 123, 0);
     }
   });

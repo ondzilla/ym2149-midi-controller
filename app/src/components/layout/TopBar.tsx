@@ -43,8 +43,8 @@ export function TopBar({ onOpenSettings }: TopBarProps) {
 
   const handlePanic = () => {
     try {
-      // Send All Notes Off (CC 123) to all 3 MIDI channels
-      for (let i = 1; i <= 3; i++) {
+      // Send All Notes Off (CC 123) to all 16 MIDI channels
+      for (let i = 1; i <= 16; i++) {
         midiService.sendCC(i, 123, 0);
       }
     } catch (error) {
