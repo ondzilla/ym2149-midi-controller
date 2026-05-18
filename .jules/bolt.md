@@ -32,3 +32,7 @@
 ## 2026-05-18 - [Cache Canvas Context in requestAnimationFrame]
 **Learning:** Calling `canvas.getContext('2d')` inside a high-frequency loop like `requestAnimationFrame` forces the browser to look up and return the rendering context up to 60 times a second, which adds unnecessary overhead.
 **Action:** Always cache the `CanvasRenderingContext2D` instance using a `useRef` and reuse it across frames to save execution time and avoid redundant API calls.
+
+## 2026-05-18 - [Cache Canvas Context in requestAnimationFrame]
+**Learning:** Calling `canvas.getContext('2d')` inside a high-frequency loop like `requestAnimationFrame` forces the browser to look up and return the rendering context up to 60 times a second, which adds unnecessary overhead.
+**Action:** Always cache the `CanvasRenderingContext2D` instance using a `useRef` and reuse it across frames to save execution time and avoid redundant API calls.
