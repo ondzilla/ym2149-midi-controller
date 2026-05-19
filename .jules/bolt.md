@@ -36,3 +36,7 @@
 ## 2026-05-18 - [Cache Canvas Context in requestAnimationFrame]
 **Learning:** Calling `canvas.getContext('2d')` inside a high-frequency loop like `requestAnimationFrame` forces the browser to look up and return the rendering context up to 60 times a second, which adds unnecessary overhead.
 **Action:** Always cache the `CanvasRenderingContext2D` instance using a `useRef` and reuse it across frames to save execution time and avoid redundant API calls.
+
+## 2026-05-19 - [Replace Math.pow with Multiplication in High-Frequency Loops]
+**Learning:** Using `Math.pow(value, 2)` inside nested loops or high-frequency contexts (like pixel processing within `requestAnimationFrame`) incurs significant function call overhead compared to direct multiplication. In `MidiPaint.tsx`, `getClosestChannel` runs 16 times per pixel in a column, resulting in up to ~368,640 redundant math operations per second.
+**Action:** Always replace `Math.pow(val, 2)` with direct multiplication `(val * val)` when executing math within heavy iteration structures or animation frames to improve CPU performance.
