@@ -57,6 +57,7 @@ export const MidiPaint: React.FC = () => {
   const lastDrawPosRef = useRef<{ x: number, y: number } | null>(null);
 
   const playheadXRef = useRef(0);
+  const playheadOverlayRef = useRef<HTMLDivElement | null>(null);
   const requestRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
   const activeNotesRef = useRef<Map<string, number>>(new Map()); // "channel_note" -> Velocity
@@ -71,11 +72,8 @@ export const MidiPaint: React.FC = () => {
         // If we just stopped playing, reset playhead
         if (!state.isPlaying) {
             playheadXRef.current = 0;
-            if (containerRef.current) {
-                const playheadElement = containerRef.current.querySelector('.playhead-line') as HTMLElement;
-                if (playheadElement) {
-                    playheadElement.style.left = '0%';
-                }
+            if (playheadOverlayRef.current) {
+                playheadOverlayRef.current.style.left = '0%';
             }
         }
     });
@@ -111,9 +109,6 @@ export const MidiPaint: React.FC = () => {
       const ctx = ctxRef.current;
       if (!ctx) return;
 
-      // Draw the playhead visually
-      // Wait, we don't want to draw the playhead onto the same canvas because getImageData would read it!
-      // The component should probably render a second canvas or a div for the playhead overlay.
 
       const x = Math.floor(playheadXRef.current);
 
@@ -189,12 +184,9 @@ export const MidiPaint: React.FC = () => {
       const pixelsPerMs = (128 * (bpm / 60)) / 1000;
       playheadXRef.current = (playheadXRef.current + (dt * pixelsPerMs)) % CANVAS_WIDTH;
 
-      // Force React update for playhead overlay position
-      if (containerRef.current) {
-         const playheadElement = containerRef.current.querySelector('.playhead-line') as HTMLElement;
-         if (playheadElement) {
-             playheadElement.style.left = `${(playheadXRef.current / CANVAS_WIDTH) * 100}%`;
-         }
+      // Update playhead overlay position via ref
+      if (playheadOverlayRef.current) {
+         playheadOverlayRef.current.style.left = `${(playheadXRef.current / CANVAS_WIDTH) * 100}%`;
       }
 
       requestRef.current = requestAnimationFrame(processFrame);
@@ -368,6 +360,7 @@ export const MidiPaint: React.FC = () => {
 
           {/* Playhead Overlay */}
           <div
+            ref={playheadOverlayRef}
             className="playhead-line absolute top-0 bottom-0 left-0 w-0.5 bg-primary shadow-[0_0_8px_var(--primary)] pointer-events-none z-10"
             style={{
                 left: '0%',
