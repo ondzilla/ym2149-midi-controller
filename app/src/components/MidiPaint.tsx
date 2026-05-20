@@ -31,7 +31,16 @@ const getClosestChannel = (r: number, g: number, b: number): number => {
   let closestChannel = 1;
   for (let i = 0; i < CHANNEL_COLORS.length; i++) {
     const [cr, cg, cb] = CHANNEL_COLORS[i];
-    const distance = Math.pow(r - cr, 2) + Math.pow(g - cg, 2) + Math.pow(b - cb, 2);
+
+    // ⚡ Bolt Optimization: Replace Math.pow with direct multiplication
+    // Math.pow has function call and generic type overhead.
+    // Direct multiplication (x * x) is significantly faster, especially
+    // when this function is called up to 128 times per frame in a loop.
+    const dr = r - cr;
+    const dg = g - cg;
+    const db = b - cb;
+    const distance = (dr * dr) + (dg * dg) + (db * db);
+
     if (distance < minDistance) {
       minDistance = distance;
       closestChannel = i + 1;

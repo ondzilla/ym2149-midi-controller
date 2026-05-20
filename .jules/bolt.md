@@ -36,3 +36,6 @@
 ## 2026-05-18 - [Cache Canvas Context in requestAnimationFrame]
 **Learning:** Calling `canvas.getContext('2d')` inside a high-frequency loop like `requestAnimationFrame` forces the browser to look up and return the rendering context up to 60 times a second, which adds unnecessary overhead.
 **Action:** Always cache the `CanvasRenderingContext2D` instance using a `useRef` and reuse it across frames to save execution time and avoid redundant API calls.
+## 2026-05-19 - [Replace Math.pow with direct multiplication in hot loops]
+**Learning:** High-frequency, pixel-level distance calculations inside nested loops or frequent callbacks (like `getClosestChannel` running up to 128 times per frame in a `requestAnimationFrame` loop) create severe overhead when using `Math.pow(value, 2)`. This adds overhead for generic typing and function invocations.
+**Action:** Replace `Math.pow(val, 2)` with direct multiplication `(val * val)`. The simplest performance boost for spatial calculations on hot paths in graphics code.
