@@ -33,3 +33,6 @@
 ## 2026-05-15 - [Component Layout Hierarchy]
 **Learning:** In a modular dashboard, placing high-interaction UI components (like the Expression Pad) higher up in the grid ensures that any state changes affecting other components remain visible to the user.
 **Action:** Prioritize the spatial placement of primary modulation controls above the modules they influence.
+## 2025-05-16 - [Drum Sequencer Toggles and Paused Playhead]
+**Learning:** Found sequencer grid step buttons acting as visual toggles without any programmatic state exposure. Additionally, the step indicator (playhead) was hardcoded to only show if `isPlaying` was true, causing it to vanish when paused, which disorients users about playback resumption point.
+**Action:** Always add `aria-pressed={isActive}` to step toggle buttons to ensure screen readers announce their active state. Do not hide playhead indicators when a sequencer is merely paused; maintain the visual indicator at the current step so users retain context.
