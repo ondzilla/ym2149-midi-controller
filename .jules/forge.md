@@ -17,3 +17,7 @@ Solution: Used a combination of a low-pass smoothing filter (`current = current 
 ## 2026-05-10 - [XY Pad State and MIDI Mapping]
 Challenge: Mapping two-dimensional pointer coordinates to two independent MIDI values (`detune` as a raw 0-127 string, and `vibratoDepth` as a 0-100 percentage) simultaneously without causing state synchronization loops or missing MIDI dispatches.
 Solution: Leveraged `usePatchState` with its `onSync` callback for side-effects (MIDI dispatch), directly mapping localized element coordinates (via `getBoundingClientRect` and pointer percentage tracking) to calculate the state values. Keyboard navigability was manually implemented to support multi-axis continuous state increment/decrement, translating ARIA `slider` conventions to 2D UI requirements.
+
+## 2026-05-20 - [Pointer Lock API Wrapping Constraint]
+Challenge: The Pointer Lock API provides relative unbounded mouse movements ('movementX', 'movementY'). These unbounded positive or negative accumulations must be wrapped continuously into a constrained positive range (0-127) for MIDI CC control.
+Solution: Used the modulo formula '((accumulator % 128) + 128) % 128' to safely handle negative wrap-arounds, ensuring continuous endless encoder-like behavior.
