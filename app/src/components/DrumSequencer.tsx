@@ -124,10 +124,11 @@ export const DrumSequencer: React.FC = () => {
                       ? 'bg-primary border-primary shadow-[0_0_8px_var(--primary)]'
                       : 'bg-surface-container-lowest border-outline-variant/30 hover:bg-surface-container-low'
                   } ${
-                      currentStep === colIndex && isPlaying
+                      currentStep === colIndex
                         ? 'ring-2 ring-white ring-inset'
                         : ''
                   }`}
+                  aria-pressed={isActive}
                   aria-label={`Toggle ${track.label} step ${colIndex + 1}`}
                   title={`Toggle ${track.label} step ${colIndex + 1}`}
                 />
