@@ -16,6 +16,7 @@ import { SettingsOverlay } from './components/layout/SettingsOverlay';
 import { QwertyKeyboard } from './components/QwertyKeyboard';
 import { MidiPaint } from './components/MidiPaint';
 import { DrumSequencer } from './components/DrumSequencer';
+import { InfiniteModulator } from './components/InfiniteModulator';
 import { usePatchState } from './hooks/usePatchState';
 import { localAudioService } from './services/localAudioService';
 import { useEffect } from 'react';
@@ -28,6 +29,7 @@ export default function App() {
   const [experimentalMidiPaint] = usePatchState('experimentalMidiPaint', false);
   const [experimentalDrumSequencer] = usePatchState('experimentalDrumSequencer', false);
   const [experimentalLocalAudio] = usePatchState('experimentalLocalAudio', false);
+  const [experimentalInfiniteModulator] = usePatchState('experimentalInfiniteModulator', false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
@@ -110,6 +112,12 @@ export default function App() {
           {experimentalDrumSequencer && (
             <div className="col-span-12">
               <DrumSequencer />
+            </div>
+          )}
+
+          {experimentalInfiniteModulator && (
+            <div className="col-span-12 xl:col-span-6">
+              <InfiniteModulator />
             </div>
           )}
 
