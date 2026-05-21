@@ -48,3 +48,6 @@ Action: Proposed the "Infinite Pointer Modulator" experimental feature leveragin
 ## 2026-05-15 - Pointer Lock API for Unbounded MIDI Streams
 Learning: The HTML5 Pointer Lock API (`Element.requestPointerLock()`) provides a lightweight, dependency-free method to capture unbounded relative mouse movement (`movementX`, `movementY`). This works exceptionally well for generating continuous MIDI streams on desktop environments because it circumvents the physical limits of the screen edges, allowing for "infinite" rotary or ribbon-like gestures that traditional XY pads cannot support.
 Action: Proposed the "Infinite Ribbon Controller" experimental feature to map unbounded mouse motion to YM2149F CC parameters like Detune (CC 1) and Vibrato Depth (CC 3).
+## 2026-05-16 - WebHID API for Legacy Hardware MIDI Streams
+Learning: The WebHID API (`navigator.hid`) enables direct browser access to legacy hardware like the Wii Remote. This works exceptionally well for generating continuous MIDI streams via accelerometer data. While zero-dependency is the goal, an exception is permissible for strictly vetted, lightweight parsing libraries used solely to translate complex raw HID byte reports into usable sensor data.
+Action: Proposed the "Wii Remote HID Controller" experimental feature leveraging this API to bring physical 3D tilt control to vintage sound parameters.
