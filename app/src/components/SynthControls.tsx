@@ -138,6 +138,7 @@ const AudioModulationControl: React.FC<{ activeChannel: number }> = ({ activeCha
         onClick={handleAudioModToggle}
         className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-surface-container-high ${audioMod ? 'bg-primary border-primary text-background shadow-[0_0_10px_#8eff71]' : 'bg-surface-container-lowest border-outline text-tertiary opacity-60'}`}
         title="Toggle Audio Modulation"
+        aria-label="Toggle Audio Modulation"
       >
         <span className="material-symbols-outlined" aria-hidden="true">
           {audioMod ? 'mic' : 'mic_off'}
