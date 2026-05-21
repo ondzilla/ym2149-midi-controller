@@ -16,6 +16,7 @@ import { SettingsOverlay } from './components/layout/SettingsOverlay';
 import { QwertyKeyboard } from './components/QwertyKeyboard';
 import { MidiPaint } from './components/MidiPaint';
 import { DrumSequencer } from './components/DrumSequencer';
+import { InfinitePointerModulator } from './components/InfinitePointerModulator';
 import { usePatchState } from './hooks/usePatchState';
 import { localAudioService } from './services/localAudioService';
 import { useEffect } from 'react';
@@ -27,6 +28,7 @@ export default function App() {
   const [experimentalQwertyPiano] = usePatchState('experimentalQwertyPiano', false);
   const [experimentalMidiPaint] = usePatchState('experimentalMidiPaint', false);
   const [experimentalDrumSequencer] = usePatchState('experimentalDrumSequencer', false);
+  const [experimentalInfiniteModulator] = usePatchState('experimentalInfiniteModulator', false);
   const [experimentalLocalAudio] = usePatchState('experimentalLocalAudio', false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -36,9 +38,9 @@ export default function App() {
         
         // Auto-resume audio context if suspended, which requires a user gesture
         const resumeCtx = () => {
-            // @ts-ignore - reaching into service internals for convenience
+            // @ts-expect-error - reaching into service internals for convenience
             if (localAudioService.ctx?.state === 'suspended') {
-                // @ts-ignore
+                // @ts-expect-error - reaching into service internals for convenience
                 localAudioService.ctx.resume();
             }
         };
@@ -110,6 +112,12 @@ export default function App() {
           {experimentalDrumSequencer && (
             <div className="col-span-12">
               <DrumSequencer />
+            </div>
+          )}
+
+          {experimentalInfiniteModulator && (
+            <div className="col-span-12 xl:col-span-6">
+              <InfinitePointerModulator />
             </div>
           )}
 

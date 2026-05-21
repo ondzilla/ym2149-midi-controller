@@ -30,7 +30,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   transform: vi.fn(),
   rect: vi.fn(),
   clip: vi.fn(),
-})) as any;
+})) as unknown as HTMLCanvasElement;
 
 // Add missing pointer capture methods to jsdom
 HTMLElement.prototype.setPointerCapture = vi.fn();
