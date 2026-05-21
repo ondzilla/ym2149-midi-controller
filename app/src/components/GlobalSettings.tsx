@@ -115,6 +115,7 @@ export const GlobalSettings: React.FC = () => {
   const [midiPaint, setMidiPaint] = usePatchState('experimentalMidiPaint', false);
   const [drumSequencer, setDrumSequencer] = usePatchState('experimentalDrumSequencer', false);
   const [localAudio, setLocalAudio] = usePatchState('experimentalLocalAudio', false);
+  const [infiniteModulator, setInfiniteModulator] = usePatchState('experimentalInfiniteModulator', false);
   const [showMidiLog, setShowMidiLog] = usePatchState('showMidiLog', false);
 
   const handleChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -158,6 +159,10 @@ export const GlobalSettings: React.FC = () => {
     setLocalAudio(!localAudio);
   };
 
+  const handleInfiniteModulator = () => {
+    setInfiniteModulator(!infiniteModulator);
+  };
+
   const handleMidiLog = () => {
     setShowMidiLog(!showMidiLog);
   };
@@ -195,6 +200,18 @@ export const GlobalSettings: React.FC = () => {
           activeColorClass="bg-secondary"
           activeShadowClass="shadow-[0_0_10px_#f5ce53]"
           activeTextColorClass="text-secondary"
+        />
+
+        <SettingToggle
+          label="Infinite Modulator"
+          isActive={infiniteModulator}
+          onClick={handleInfiniteModulator}
+          buttonText="Toggle Infinite Modulator"
+          activeText="ENABLED"
+          inactiveText="DISABLED"
+          activeColorClass="bg-tertiary"
+          activeShadowClass="shadow-[0_0_10px_#ff9cf4]"
+          activeTextColorClass="text-tertiary"
         />
 
         <SettingToggle

@@ -7,7 +7,7 @@ class LocalAudioService {
 
   public initialize() {
     if (this.ctx) return;
-    this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    this.ctx = new (window.AudioContext || (window as unknown as Window & typeof globalThis & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     
     // Resume context if suspended (common browser policy)
     if (this.ctx.state === 'suspended') {
@@ -30,6 +30,7 @@ class LocalAudioService {
             osc.disconnect();
             gain.disconnect();
         } catch (e) {
+          console.error(e);
             // Ignore errors if already stopped
         }
     });
@@ -128,7 +129,8 @@ class LocalAudioService {
               try {
                 nodes.osc.disconnect();
                 nodes.gain.disconnect();
-              } catch (e) {}
+              } catch (e) {
+          console.error(e); }
           }, 60);
 
           this.activeOscillators.delete(key);
@@ -153,7 +155,7 @@ class LocalAudioService {
       osc.start(t);
       osc.stop(t + 0.5);
       
-      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){} }, 600);
+      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){ console.error(e); } }, 600);
   }
 
   private playSnare(t: number) {
@@ -196,7 +198,7 @@ class LocalAudioService {
       osc.start(t);
       osc.stop(t + 0.3);
       
-      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){} }, 400);
+      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){ console.error(e); } }, 400);
   }
 
   private playDogYap(t: number) {
@@ -218,7 +220,7 @@ class LocalAudioService {
       osc.start(t);
       osc.stop(t + 0.15);
       
-      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){} }, 200);
+      setTimeout(() => { try { osc.disconnect(); gain.disconnect(); } catch(e){ console.error(e); } }, 200);
   }
 
   private playNoiseBurst(t: number, duration: number, density: number) {
@@ -251,7 +253,7 @@ class LocalAudioService {
           try {
              noise.disconnect();
              gainNode.disconnect();
-          } catch(e) {}
+          } catch(e) { console.error(e); }
       }, duration * 1000 + 50);
   }
 }
