@@ -48,3 +48,6 @@ Action: Proposed the "Infinite Pointer Modulator" experimental feature leveragin
 ## 2026-05-15 - Pointer Lock API for Unbounded MIDI Streams
 Learning: The HTML5 Pointer Lock API (`Element.requestPointerLock()`) provides a lightweight, dependency-free method to capture unbounded relative mouse movement (`movementX`, `movementY`). This works exceptionally well for generating continuous MIDI streams on desktop environments because it circumvents the physical limits of the screen edges, allowing for "infinite" rotary or ribbon-like gestures that traditional XY pads cannot support.
 Action: Proposed the "Infinite Ribbon Controller" experimental feature to map unbounded mouse motion to YM2149F CC parameters like Detune (CC 1) and Vibrato Depth (CC 3).
+## 2026-05-16 - Web Bluetooth API for Continuous Biometric MIDI Streams
+Learning: The Web Bluetooth API (`navigator.bluetooth`) is a verified zero-dependency Web API suitable for experimental desktop features, allowing connection to BLE peripherals (like heart rate monitors) to generate continuous MIDI CC control streams.
+Action: Proposed the "BLE Heart Rate Modulator" experimental feature to map biometric data from BLE devices to YM2149F CC parameters like Detune (CC 1) and Vibrato Depth (CC 3).
